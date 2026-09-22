@@ -160,6 +160,114 @@ export interface paths {
         patch: operations["ContratosController_actualizar"];
         trace?: never;
     };
+    "/api/v1/compras": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lista las compras pertenecientes al comerciante con paginación opcional
+         * @description Retorna el listado paginado de compras del comerciante autenticado, permitiendo filtrar opcionalmente por contrato.
+         */
+        get: operations["ComprasController_listar"];
+        put?: never;
+        /**
+         * Registra una compra en un contrato calculando el valor total
+         * @description Registra los animales comprados asociándolos a un contrato existente. El valor_total se calcula automáticamente en el backend multiplicando cantidad × peso_promedio × precio_kilo.
+         */
+        post: operations["ComprasController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/compras/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obtiene el detalle de una compra por su ID
+         * @description Consulta una compra específica asegurando aislamiento por tenant.
+         */
+        get: operations["ComprasController_buscarPorId"];
+        put?: never;
+        post?: never;
+        /**
+         * Elimina una compra en un contrato sin ventas registradas
+         * @description Permite eliminar una compra solo si el contrato aún no posee registros de venta. Si ya posee ventas, rechaza con 409 Conflict. Revierte algorítmicamente la cantidad y peso del contrato.
+         */
+        delete: operations["ComprasController_eliminar"];
+        options?: never;
+        head?: never;
+        /**
+         * Actualiza una compra en un contrato sin ventas registradas
+         * @description Permite editar una compra solo si el contrato aún no posee registros de venta. Si ya posee ventas, rechaza con 409 Conflict. Recalcula el valor_total y revierte/reaplica el saldo y peso promedio del contrato.
+         */
+        patch: operations["ComprasController_actualizar"];
+        trace?: never;
+    };
+    "/api/v1/ventas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lista las ventas pertenecientes al comerciante con paginación opcional
+         * @description Retorna el listado paginado de ventas del comerciante autenticado, permitiendo filtrar opcionalmente por contrato.
+         */
+        get: operations["VentasController_listar"];
+        put?: never;
+        /**
+         * Registra una venta ejecutando el motor financiero y congelando snapshots
+         * @description Registra la salida de animales de un contrato. Calcula el valor bruto, costo estimado por promedio simple a la fecha, utilidad total y repartos según el par de porcentajes del contrato. Descuenta la cantidad del contrato y lo cierra automáticamente si llega a 0.
+         */
+        post: operations["VentasController_registrar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ventas/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obtiene el detalle de una venta por su ID
+         * @description Consulta una venta específica asegurando aislamiento multi-tenant.
+         */
+        get: operations["VentasController_buscarPorId"];
+        /**
+         * Bloqueado: las ventas son inmutables (RF-22)
+         * @description Rechaza cualquier intento de modificación de un registro de venta.
+         */
+        put: operations["VentasController_actualizarPut"];
+        post?: never;
+        /**
+         * Bloqueado: las ventas son inmutables (RF-22)
+         * @description Rechaza cualquier intento de eliminación de un registro de venta.
+         */
+        delete: operations["VentasController_eliminar"];
+        options?: never;
+        head?: never;
+        /**
+         * Bloqueado: las ventas son inmutables (RF-22)
+         * @description Rechaza cualquier intento de modificación de un registro de venta.
+         */
+        patch: operations["VentasController_actualizarPatch"];
+        trace?: never;
+    };
     "/api/v1/health": {
         parameters: {
             query?: never;
@@ -213,6 +321,15 @@ export interface components {
              * @example maria@ejemplo.com
              */
             email: string;
+        };
+        RespuestaRegistroDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["UsuarioRegistradoDto"];
         };
         RespuestaErrorValidacionDto: {
             /**
@@ -330,6 +447,15 @@ export interface components {
             /** @description Perfil mínimo del comerciante autenticado */
             usuario: components["schemas"]["UsuarioRegistradoDto"];
         };
+        RespuestaAccesoDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["AccesoRespuestaDto"];
+        };
         RespuestaErrorNoAutorizadoDto: {
             /**
              * @description Indica si la operación fue exitosa (siempre false en respuestas de error)
@@ -408,6 +534,15 @@ export interface components {
              */
             contacto: string;
         };
+        RespuestaTerceroDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["TerceroRespuestaDto"];
+        };
         PaginaTercerosDto: {
             /** @description Listado de elementos paginados */
             elementos: components["schemas"]["TerceroRespuestaDto"][];
@@ -426,6 +561,15 @@ export interface components {
              * @example 0
              */
             offset: number;
+        };
+        RespuestaPaginaTercerosDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["PaginaTercerosDto"];
         };
         RespuestaErrorNoEncontradoDto: {
             /**
@@ -537,6 +681,15 @@ export interface components {
              */
             longitud: number;
         };
+        RespuestaFincaDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["FincaRespuestaDto"];
+        };
         PaginaFincasDto: {
             /** @description Listado de elementos paginados */
             elementos: components["schemas"]["FincaRespuestaDto"][];
@@ -555,6 +708,15 @@ export interface components {
              * @example 0
              */
             offset: number;
+        };
+        RespuestaPaginaFincasDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["PaginaFincasDto"];
         };
         ActualizarFincaDto: {
             /**
@@ -688,6 +850,15 @@ export interface components {
              */
             valor_kilo_referencia?: number | null;
         };
+        RespuestaContratoDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["ContratoRespuestaDto"];
+        };
         PaginaContratosDto: {
             /** @description Listado de elementos paginados */
             elementos: components["schemas"]["ContratoRespuestaDto"][];
@@ -706,6 +877,15 @@ export interface components {
              * @example 0
              */
             offset: number;
+        };
+        RespuestaPaginaContratosDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["PaginaContratosDto"];
         };
         ActualizarContratoDto: {
             /**
@@ -740,6 +920,290 @@ export interface components {
              */
             valor_kilo_referencia?: number;
         };
+        CrearCompraDto: {
+            /**
+             * @description Identificador UUID del contrato al que se asocia la compra
+             * @example c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33
+             */
+            contrato_id: string;
+            /**
+             * @description Fecha y hora de la compra en formato ISO 8601
+             * @example 2026-09-21T10:00:00.000Z
+             */
+            fecha: string;
+            /**
+             * @description Cantidad de animales comprados (entero estrictamente mayor que cero)
+             * @example 25
+             */
+            cantidad: number;
+            /**
+             * @description Peso promedio por animal en kilogramos (estrictamente mayor que cero)
+             * @example 320.5
+             */
+            peso_promedio: number;
+            /**
+             * @description Precio por kilogramo en moneda local (estrictamente mayor que cero)
+             * @example 8500
+             */
+            precio_kilo: number;
+            /**
+             * @description Nota o descripción de la compra (procedencia, lote, observaciones)
+             * @example Compra de 25 novillos en subasta ganadera
+             */
+            nota: string;
+        };
+        CompraRespuestaDto: {
+            /**
+             * @description Identificador único de la compra
+             * @example d3eebc99-9c0b-4ef8-bb6d-6bb9bd380a44
+             */
+            id: string;
+            /**
+             * @description Identificador UUID del contrato al que pertenece la compra
+             * @example c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33
+             */
+            contrato_id: string;
+            /**
+             * @description Fecha y hora de la compra en formato ISO 8601
+             * @example 2026-09-21T10:00:00.000Z
+             */
+            fecha: string;
+            /**
+             * @description Cantidad de animales comprados
+             * @example 25
+             */
+            cantidad: number;
+            /**
+             * @description Peso promedio por animal en kilogramos
+             * @example 320.5
+             */
+            peso_promedio: number;
+            /**
+             * @description Precio por kilogramo pagado
+             * @example 8500
+             */
+            precio_kilo: number;
+            /**
+             * @description Valor total de la compra calculado en el backend (cantidad × peso_promedio × precio_kilo)
+             * @example 68106250
+             */
+            valor_total: number;
+            /**
+             * @description Nota descriptiva u observaciones de la compra
+             * @example Compra de 25 novillos en subasta ganadera
+             */
+            nota: string;
+        };
+        RespuestaCompraDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["CompraRespuestaDto"];
+        };
+        PaginaComprasDto: {
+            /** @description Listado de elementos paginados */
+            elementos: components["schemas"]["CompraRespuestaDto"][];
+            /**
+             * @description Cantidad total de registros encontrados para el tenant
+             * @example 45
+             */
+            total: number;
+            /**
+             * @description Límite de registros solicitado o aplicado por página
+             * @example 20
+             */
+            limite: number;
+            /**
+             * @description Cantidad de registros omitidos desde el inicio
+             * @example 0
+             */
+            offset: number;
+        };
+        RespuestaPaginaComprasDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["PaginaComprasDto"];
+        };
+        ActualizarCompraDto: {
+            /**
+             * @description Fecha y hora de la compra en formato ISO 8601
+             * @example 2026-09-21T10:30:00.000Z
+             */
+            fecha?: string;
+            /**
+             * @description Cantidad de animales comprados (entero estrictamente mayor que cero)
+             * @example 30
+             */
+            cantidad?: number;
+            /**
+             * @description Peso promedio por animal en kilogramos (estrictamente mayor que cero)
+             * @example 325
+             */
+            peso_promedio?: number;
+            /**
+             * @description Precio por kilogramo en moneda local (estrictamente mayor que cero)
+             * @example 8600
+             */
+            precio_kilo?: number;
+            /**
+             * @description Nota descriptiva u observaciones de la compra
+             * @example Ajuste de peso por pesaje verificado en báscula
+             */
+            nota?: string;
+        };
+        CrearVentaDto: {
+            /**
+             * @description Identificador UUID del contrato del que se extrae la venta
+             * @example c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33
+             */
+            contrato_id: string;
+            /**
+             * @description Fecha y hora de la venta en formato ISO 8601
+             * @example 2026-09-21T15:00:00.000Z
+             */
+            fecha: string;
+            /**
+             * @description Cantidad de animales vendidos (entero estrictamente mayor que cero)
+             * @example 20
+             */
+            cantidad_vendida: number;
+            /**
+             * @description Peso promedio por animal vendido en kilogramos (estrictamente mayor que cero)
+             * @example 410.5
+             */
+            peso_promedio_venta: number;
+            /**
+             * @description Precio por kilogramo en moneda local en la venta (estrictamente mayor que cero)
+             * @example 9200
+             */
+            precio_kilo_venta: number;
+        };
+        VentaRespuestaDto: {
+            /**
+             * @description Identificador único UUID de la venta
+             * @example d3f2c510-7411-4820-94f3-23a968600a98
+             */
+            id: string;
+            /**
+             * @description Identificador UUID del contrato al que pertenece la venta
+             * @example c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33
+             */
+            contrato_id: string;
+            /**
+             * @description Fecha y hora de la venta en formato ISO 8601
+             * @example 2026-09-21T15:00:00.000Z
+             */
+            fecha: string;
+            /**
+             * @description Cantidad de animales vendidos
+             * @example 20
+             */
+            cantidad_vendida: number;
+            /**
+             * @description Peso promedio por animal en la venta en kilogramos
+             * @example 410.5
+             */
+            peso_promedio_venta: number;
+            /**
+             * @description Precio por kilogramo en la venta
+             * @example 9200
+             */
+            precio_kilo_venta: number;
+            /**
+             * @description Valor bruto obtenido en la venta (cantidad_vendida × peso_promedio_venta × precio_kilo_venta)
+             * @example 75532000
+             */
+            valor_bruto: number;
+            /**
+             * @description Snapshot inmutable del precio de compra por animal promedio simple a la fecha de la venta
+             * @example 2400000
+             */
+            precio_compra_por_animal_promedio: number;
+            /**
+             * @description Snapshot inmutable del peso promedio simple de compra a la fecha de la venta
+             * @example 320
+             */
+            peso_promedio_compra_simple: number;
+            /**
+             * @description Costo estimado de compra para los animales vendidos (cantidad_vendida × precio_compra_por_animal_promedio)
+             * @example 48000000
+             */
+            costo_estimado_compra: number;
+            /**
+             * @description Utilidad total generada por el lote vendido (valor_bruto − costo_estimado_compra)
+             * @example 27532000
+             */
+            utilidad_total: number;
+            /**
+             * @description Participación asignada al comerciante según contrato (utilidad_total × % comerciante)
+             * @example 16519200
+             */
+            valor_comerciante: number;
+            /**
+             * @description Participación asignada al tercero según contrato (utilidad_total × % tercero)
+             * @example 11012800
+             */
+            valor_tercero: number;
+            /**
+             * @description Kilos ganados promedio por animal (peso_promedio_venta − peso_promedio_compra_simple)
+             * @example 90.5
+             */
+            kilos_ganados_promedio: number;
+            /**
+             * @description Utilidad real neta del comerciante (igual a valor_comerciante; costos informativos no restan)
+             * @example 16519200
+             */
+            utilidad_real: number;
+            /**
+             * @description Porcentaje de utilidad total del lote vendido ((utilidad_total / costo_estimado_compra) × 100)
+             * @example 57.3583
+             */
+            porcentaje_utilidad_total: number;
+        };
+        RespuestaVentaDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["VentaRespuestaDto"];
+        };
+        PaginaVentasDto: {
+            /** @description Listado de elementos paginados */
+            elementos: components["schemas"]["VentaRespuestaDto"][];
+            /**
+             * @description Cantidad total de registros encontrados para el tenant
+             * @example 45
+             */
+            total: number;
+            /**
+             * @description Límite de registros solicitado o aplicado por página
+             * @example 20
+             */
+            limite: number;
+            /**
+             * @description Cantidad de registros omitidos desde el inicio
+             * @example 0
+             */
+            offset: number;
+        };
+        RespuestaPaginaVentasDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["PaginaVentasDto"];
+        };
     };
     responses: never;
     parameters: never;
@@ -768,7 +1232,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UsuarioRegistradoDto"];
+                    "application/json": components["schemas"]["RespuestaRegistroDto"];
                 };
             };
             /** @description Datos de registro inválidos o incompletos */
@@ -853,7 +1317,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AccesoRespuestaDto"];
+                    "application/json": components["schemas"]["RespuestaAccesoDto"];
                 };
             };
             /** @description Credenciales con formato inválido */
@@ -938,7 +1402,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginaTercerosDto"];
+                    "application/json": components["schemas"]["RespuestaPaginaTercerosDto"];
                 };
             };
             /** @description No autorizado: token JWT ausente o inválido */
@@ -998,7 +1462,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TerceroRespuestaDto"];
+                    "application/json": components["schemas"]["RespuestaTerceroDto"];
                 };
             };
             /** @description Datos de creación del tercero inválidos o incompletos */
@@ -1078,7 +1542,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TerceroRespuestaDto"];
+                    "application/json": components["schemas"]["RespuestaTerceroDto"];
                 };
             };
             /** @description Identificador no es un UUID válido */
@@ -1301,7 +1765,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TerceroRespuestaDto"];
+                    "application/json": components["schemas"]["RespuestaTerceroDto"];
                 };
             };
             /** @description Datos de actualización inválidos o identificador no es UUID válido */
@@ -1404,7 +1868,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginaFincasDto"];
+                    "application/json": components["schemas"]["RespuestaPaginaFincasDto"];
                 };
             };
             /** @description No autorizado: token JWT ausente o inválido */
@@ -1464,7 +1928,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["FincaRespuestaDto"];
+                    "application/json": components["schemas"]["RespuestaFincaDto"];
                 };
             };
             /** @description Datos de la finca inválidos (e.g. coordenadas fuera de rango) */
@@ -1565,7 +2029,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["FincaRespuestaDto"];
+                    "application/json": components["schemas"]["RespuestaFincaDto"];
                 };
             };
             /** @description Identificador no es un UUID válido */
@@ -1788,7 +2252,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["FincaRespuestaDto"];
+                    "application/json": components["schemas"]["RespuestaFincaDto"];
                 };
             };
             /** @description Datos de actualización inválidos o identificador no es UUID válido */
@@ -1891,7 +2355,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginaContratosDto"];
+                    "application/json": components["schemas"]["RespuestaPaginaContratosDto"];
                 };
             };
             /** @description No autorizado: token JWT ausente o inválido */
@@ -1951,7 +2415,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ContratoRespuestaDto"];
+                    "application/json": components["schemas"]["RespuestaContratoDto"];
                 };
             };
             /** @description Error de validación: campos requeridos ausentes, valores numéricos inválidos o suma de porcentajes distinta de 100 */
@@ -2048,7 +2512,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ContratoRespuestaDto"];
+                    "application/json": components["schemas"]["RespuestaContratoDto"];
                 };
             };
             /** @description Identificador UUID con formato inválido */
@@ -2154,7 +2618,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ContratoRespuestaDto"];
+                    "application/json": components["schemas"]["RespuestaContratoDto"];
                 };
             };
             /** @description Datos inválidos o intento de modificar porcentajes de participación u otros campos inmutables */
@@ -2231,6 +2695,899 @@ export interface operations {
                      *       "mensaje": "Error interno del servidor",
                      *       "codigoEstado": 500,
                      *       "ruta": "/api/v1/contratos",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    ComprasController_listar: {
+        parameters: {
+            query?: {
+                /** @description Cantidad máxima de elementos a retornar (entre 1 y 100) */
+                limite?: number;
+                /** @description Número de elementos a omitir desde el inicio (mínimo 0) */
+                offset?: number;
+                /** @description Filtrar compras por ID de contrato */
+                contrato_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Listado de compras obtenido exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaPaginaComprasDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    ComprasController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearCompraDto"];
+            };
+        };
+        responses: {
+            /** @description Compra registrada exitosamente */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaCompraDto"];
+                };
+            };
+            /** @description Datos de la compra inválidos (campos faltantes, valores <= 0) o contrato cerrado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Error de validación en la solicitud: La cantidad debe ser mayor que cero",
+                     *       "codigoEstado": 400,
+                     *       "errores": [
+                     *         "La cantidad debe ser mayor que cero"
+                     *       ],
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description El contrato especificado no existe o pertenece a otro comerciante */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "El contrato especificado no existe",
+                     *       "codigoEstado": 404,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    ComprasController_buscarPorId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Compra encontrada y retornada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaCompraDto"];
+                };
+            };
+            /** @description Identificador UUID con formato inválido */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Error de validación en la solicitud",
+                     *       "codigoEstado": 400,
+                     *       "errores": [
+                     *         {
+                     *           "campo": "id",
+                     *           "mensajes": [
+                     *             "Validation failed (uuid v4 is expected)"
+                     *           ]
+                     *         }
+                     *       ],
+                     *       "ruta": "/api/v1/compras/invalido",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Compra no encontrada en la cuenta del comerciante autenticado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Compra no encontrada",
+                     *       "codigoEstado": 404,
+                     *       "ruta": "/api/v1/compras/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    ComprasController_eliminar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Compra eliminada exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Identificador UUID con formato inválido */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Compra no encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Compra no encontrada",
+                     *       "codigoEstado": 404,
+                     *       "ruta": "/api/v1/compras/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Conflicto de integridad financiera: el contrato ya posee ventas registradas */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No se puede eliminar una compra de un contrato que ya posee ventas registradas",
+                     *       "codigoEstado": 409,
+                     *       "ruta": "/api/v1/compras/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorConflictoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    ComprasController_actualizar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualizarCompraDto"];
+            };
+        };
+        responses: {
+            /** @description Compra actualizada y contrato sincronizado exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaCompraDto"];
+                };
+            };
+            /** @description Datos de actualización inválidos o identificador no es UUID válido */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Error de validación en la solicitud: La cantidad debe ser mayor que cero",
+                     *       "codigoEstado": 400,
+                     *       "errores": [
+                     *         "La cantidad debe ser mayor que cero"
+                     *       ],
+                     *       "ruta": "/api/v1/compras/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Compra no encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Compra no encontrada",
+                     *       "codigoEstado": 404,
+                     *       "ruta": "/api/v1/compras/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Conflicto de integridad financiera: el contrato ya posee ventas registradas */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No se puede editar una compra de un contrato que ya posee ventas registradas",
+                     *       "codigoEstado": 409,
+                     *       "ruta": "/api/v1/compras/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorConflictoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/compras",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    VentasController_listar: {
+        parameters: {
+            query?: {
+                /** @description Cantidad máxima de elementos a retornar (entre 1 y 100) */
+                limite?: number;
+                /** @description Número de elementos a omitir desde el inicio (mínimo 0) */
+                offset?: number;
+                /** @description Filtrar ventas por ID de contrato */
+                contrato_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Listado de ventas obtenido exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaPaginaVentasDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    VentasController_registrar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearVentaDto"];
+            };
+        };
+        responses: {
+            /** @description Venta registrada e indicadores calculados exitosamente */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaVentaDto"];
+                };
+            };
+            /** @description Sobreventa (cantidad > saldo disponible), inconsistencia cronológica o contrato cerrado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Error de validación en la solicitud: La cantidad vendida supera la cantidad disponible en el contrato",
+                     *       "codigoEstado": 400,
+                     *       "errores": [
+                     *         "La cantidad vendida supera la cantidad disponible en el contrato"
+                     *       ],
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description El contrato especificado no existe o no pertenece al comerciante */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "El contrato especificado no existe o no pertenece al comerciante",
+                     *       "codigoEstado": 404,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    VentasController_buscarPorId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Venta encontrada y retornada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaVentaDto"];
+                };
+            };
+            /** @description Identificador UUID con formato inválido */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Venta no encontrada en la cuenta del comerciante autenticado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Venta no encontrada",
+                     *       "codigoEstado": 404,
+                     *       "ruta": "/api/v1/ventas/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    VentasController_actualizarPut: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Las ventas son inmutables y no admiten modificaciones */
+            405: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    VentasController_eliminar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Las ventas son inmutables y no pueden ser eliminadas */
+            405: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    VentasController_actualizarPatch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ventas",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Las ventas son inmutables y no admiten modificaciones */
+            405: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ventas",
                      *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
                      *     }
                      */
