@@ -9,7 +9,12 @@
  * módulo de cliente pueda importar `getClientEnv` sin evaluar `getServerEnv`.
  */
 
-export type Env = { apiUrl: string };
+export type Env = {
+  /** URL base de la API del backend; incluye el prefijo `/api/v1`. */
+  apiUrl: string;
+  /** Indica si el código corre en un entorno de producción (`NODE_ENV`). */
+  isProduction: boolean;
+};
 
 /**
  * Devuelve el valor de una variable de entorno obligatoria.
@@ -37,6 +42,7 @@ export function getClientEnv(): Env {
       "NEXT_PUBLIC_API_URL",
       process.env.NEXT_PUBLIC_API_URL,
     ),
+    isProduction: process.env.NODE_ENV === "production",
   };
 }
 
@@ -46,5 +52,6 @@ export function getClientEnv(): Env {
 export function getServerEnv(): Env {
   return {
     apiUrl: readRequiredEnv("API_URL", process.env.API_URL),
+    isProduction: process.env.NODE_ENV === "production",
   };
 }

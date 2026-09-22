@@ -88,3 +88,41 @@
   e interactiva queda para Work Items posteriores). `bash .rei/init.sh` finaliza con código
   de salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_02-28__autenticacion-bff-login-registro-rutas-protegidas`
+
+- **Work Item:** `2026-09-22_02-28__autenticacion-bff-login-registro-rutas-protegidas` —
+  Autenticación: BFF, login, registro y rutas protegidas (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó el flujo de autenticación completo alrededor de la
+  cookie httpOnly `elinain_session`. (1) BFF en `app/api/auth/*`: `login` (204 + cookie sin
+  exponer el token), `registro` con auto-login en servidor (201 + cookie, 409 propagado sin
+  cookie) y `logout` (204 + limpieza de cookie), más los helpers internos `_lib/sesion.ts`
+  (atributos de cookie: httpOnly, `sameSite: lax`, `secure` por `isProduction`, `path: /` y
+  `maxAge` derivado del `exp` del JWT) y `_lib/respuestas.ts` (código HTTP real con mensajes
+  en español). (2) Feature `auth`: esquemas zod, alias de DTOs del OpenAPI, mensajes de error
+  por estado, `api/auth.ts` sobre `createBffClient`, hooks de mutación (`useLogin`,
+  `useRegistro`, `useLogout`) y formularios `LoginForm`/`RegistroForm`/`LogoutButton`. (3)
+  Páginas `(auth)/login`, `(auth)/registro` y la landing protegida `(dashboard)/dashboard`,
+  más `app/providers.tsx` (TanStack Query) montado en el layout raíz. (4) `middleware.ts` como
+  guardia de navegación por vigencia del `exp` del JWT, sin firma ni backend. Piezas
+  transversales nuevas: `shared/api/bff-client.ts`, `shared/api/session.ts` y `isProduction`
+  en `shared/config/env.ts`. No se añadieron dependencias.
+- **Archivos modificados:** creados `shared/api/{bff-client,session}.ts`,
+  `shared/api/__tests__/session.test.ts`, `app/api/auth/{login,registro,logout}/route.ts`,
+  `app/api/auth/_lib/{sesion,respuestas}.ts`, `features/auth/{types,schemas,mensajes-error,index}.ts`,
+  `features/auth/api/auth.ts`, `features/auth/hooks/{useLogin,useRegistro,useLogout}.ts`,
+  `features/auth/components/{LoginForm,RegistroForm,LogoutButton}.tsx`,
+  `features/auth/__tests__/{schemas,mensajes-error}.test.ts`,
+  `app/providers.tsx`, `app/(auth)/{layout.tsx,login/page.tsx,registro/page.tsx}`,
+  `app/(dashboard)/{layout.tsx,dashboard/page.tsx}` y `middleware.ts`; modificados
+  `app/layout.tsx`, `shared/config/env.ts` y `shared/config/__tests__/env.test.ts`;
+  eliminado `features/.gitkeep`.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (8 suites / 75 tests) en verde; `V5` (validación manual de login, registro/409, auto-login,
+  rutas protegidas, redirección de autenticados y logout) queda a cargo del usuario con los
+  pasos documentados en `impl.md`. `bash .rei/init.sh` finaliza con código de salida `0`.
+- **Estado final:** `done`.
