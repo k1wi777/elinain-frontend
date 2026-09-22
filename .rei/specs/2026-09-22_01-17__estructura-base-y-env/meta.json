@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-22_01-17__estructura-base-y-env",
+  "title": "Estructura base del proyecto y configuración de entorno",
+  "description": "Crear la estructura base de carpetas del frontend manteniendo app/ en la raíz (crear features/ y shared/ con sus subcarpetas según architecture.md) y dejar configurado el acceso al backend mediante variables de entorno. Incluye corregir el formato de .env y .env.example (dotenv espera KEY=value), mover los valores locales a .env.local, permitir versionar .env.example desde .gitignore y crear shared/config/env.ts como único punto de lectura tipada de API_URL (servidor/BFF) y NEXT_PUBLIC_API_URL (cliente). No se migra a src/: la estructura raíz es la decisión confirmada.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-22T01:17:36-05:00"
+}
