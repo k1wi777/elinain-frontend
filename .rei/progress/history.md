@@ -166,3 +166,45 @@
   usuario con los pasos documentados en `impl.md`. `bash .rei/init.sh` finaliza con código de
   salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_10-07__fincas-listado-mapa-geocodificacion-y-crud`
+
+- **Work Item:** `2026-09-22_10-07__fincas-listado-mapa-geocodificacion-y-crud` — Fincas:
+  listado y mapa de pines, CRUD con ubicación geocodificada y eliminación con 409
+  (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó la gestión de fincas sobre la infraestructura
+  existente (R1–R52, T1–T15). (1) BFF de fincas en `app/api/fincas/*`: `GET` paginado y
+  `POST` en `route.ts`, `GET`/`PATCH`/`DELETE` en `[id]/route.ts`, con parseo defensivo,
+  propagación del código HTTP real (red → `502`), el `PATCH` sin `tercero_id` y mensajes en
+  español sin exponer el `mensaje` crudo, incluido el `409` de contratos vinculados.
+  (2) BFF de geocodificación `app/api/geocodificacion/route.ts` como proxy autenticado a
+  Nominatim (guardia `sesionVigente`, `400`/`404`/`502`) con `_lib/nominatim.ts` (User-Agent
+  propio, `Accept-Language: es`, caché con límite, cadencia ~1 req/s serializada y
+  `parsearRespuestaNominatim` puro). (3) Feature `fincas` autocontenido: alias de DTOs del
+  OpenAPI, esquemas zod, mensajes de error, resolución de propietarios, API sobre
+  `createBffClient`, hooks de TanStack Query con invalidación y componentes (tabla paginada,
+  mapa Leaflet client-only con `dynamic(..., { ssr: false })`, formulario con selector de
+  mapa de pin arrastrable/por clic, modales de detalle y borrado). (4) Ampliación mínima de
+  `features/terceros` (`listarTodosLosTerceros`, `useTodosLosTerceros`, `clavesTerceros.todos`
+  y export de `Tercero`). (5) Composición de propietarios en `app/` mediante wrappers client,
+  rutas `/fincas`, `/fincas/nueva` y `/fincas/[id]/editar`, `/fincas` protegido en
+  `middleware.ts` y enlace "Fincas" en el layout. (6) Tests de lógica pura (esquemas,
+  mensajes incluido el `409`, query keys, propietarios y parseo de Nominatim).
+- **Archivos modificados:** creados `app/api/fincas/{route.ts,[id]/route.ts}`,
+  `app/api/geocodificacion/{route.ts,_lib/nominatim.ts,_lib/__tests__/nominatim.test.ts}`,
+  `features/fincas/**` (tipos, query keys, esquemas, mensajes, propietarios, `api/`, `hooks/`,
+  `components/`, `index.ts` y tests), `app/(dashboard)/fincas/**` y
+  `features/terceros/hooks/useTodosLosTerceros.ts`; modificados `features/terceros/{api/terceros.ts,
+  query-keys.ts,index.ts,__tests__/query-keys.test.ts}`, `middleware.ts` y
+  `app/(dashboard)/layout.tsx`. Sin cambios en `package.json`, `shared/api/openapi/*` ni
+  `shared/ui`; sin dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos (con `npx next
+  typegen` previo) y `V4` tests (16 suites / 133 tests) en verde; `V5` (validación manual de
+  listado/vacío, mapa con pines, popup y detalle, crear con geocodificación, editar, eliminar
+  y `409`) queda a cargo del usuario con los pasos documentados en `impl.md`. `bash
+  .rei/init.sh` finaliza con código de salida `0`.
+- **Estado final:** `done`.

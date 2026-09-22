@@ -25,6 +25,12 @@ export default function DashboardLayout({ children }: Props) {
             >
               Socios de participación
             </Link>
+            <Link
+              href="/fincas"
+              className="text-sm text-zinc-600 hover:text-zinc-900"
+            >
+              Fincas
+            </Link>
           </nav>
         </div>
         <LogoutButton />

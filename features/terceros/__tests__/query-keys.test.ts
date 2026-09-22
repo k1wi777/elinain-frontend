@@ -18,4 +18,8 @@ describe("clavesTerceros", () => {
       filtros,
     ]);
   });
+
+  it("todos() identifica la colección completa sin paginar", () => {
+    expect(clavesTerceros.todos()).toEqual(["terceros", "todos"]);
+  });
 });

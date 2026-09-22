@@ -1,5 +1,6 @@
 import { createBffClient } from "@/shared/api/bff-client";
 import type { HttpClient } from "@/shared/api/http-client";
+import { LIMITE_MAXIMO } from "@/shared/api/pagination";
 import type {
   ActualizarTercero,
   CrearTercero,
@@ -11,7 +12,7 @@ import type {
 /**
  * Acceso a las operaciones de terceros del BFF.
  *
- * Las cuatro funciones delegan en `createBffClient` (mismo origen, con la cookie httpOnly
+ * Las funciones delegan en `createBffClient` (mismo origen, con la cookie httpOnly
  * adjunta por el navegador) y propagan el `ApiError` que produzca el cliente HTTP. Los
  * componentes nunca conocen las URLs ni llaman a `fetch`.
  */
@@ -28,6 +29,32 @@ export async function listarTerceros(
   const cliente: HttpClient = createBffClient();
 
   return cliente.get<PaginaTerceros>("/api/terceros", { params: filtros });
+}
+
+/**
+ * Lista todos los terceros del comerciante, sin limitarse a una página.
+ *
+ * Recorre el listado paginado con {@link LIMITE_MAXIMO} hasta alcanzar el total reportado
+ * por el backend; lo usa `app/` para resolver los nombres de los propietarios de fincas.
+ *
+ * @throws ApiError si falla alguna página o la conexión.
+ */
+export async function listarTodosLosTerceros(): Promise<Tercero[]> {
+  const acumulados: Tercero[] = [];
+  let offset = 0;
+
+  for (;;) {
+    const pagina = await listarTerceros({ limite: LIMITE_MAXIMO, offset });
+    acumulados.push(...pagina.elementos);
+
+    if (pagina.elementos.length === 0 || acumulados.length >= pagina.total) {
+      break;
+    }
+
+    offset += LIMITE_MAXIMO;
+  }
+
+  return acumulados;
 }
 
 /**

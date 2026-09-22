@@ -13,4 +13,6 @@ export const clavesTerceros = {
   listas: () => ["terceros", "list"] as const,
   /** Clave de una página concreta del listado. */
   lista: (filtros: FiltrosTerceros) => ["terceros", "list", filtros] as const,
+  /** Clave de la colección completa de terceros, sin paginar. */
+  todos: () => ["terceros", "todos"] as const,
 };
