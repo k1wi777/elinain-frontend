@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 
-import L from "leaflet";
+import type { LatLngExpression } from "leaflet";
 import {
   MapContainer,
   Marker,
@@ -12,13 +12,15 @@ import {
 } from "react-leaflet";
 
 import { crearIconoPin } from "@/features/fincas/components/icono-pin";
+import {
+  CENTRO_COLOMBIA,
+  LIMITES_COLOMBIA,
+  ZOOM_MINIMO,
+  ZOOM_POR_DEFECTO,
+} from "@/features/fincas/mapa";
 import type { PosicionFinca } from "@/features/fincas/types";
 
 import "leaflet/dist/leaflet.css";
-
-/** Centro y zoom por defecto del mapa cuando la finca todavía no tiene posición. */
-const CENTRO_POR_DEFECTO: L.LatLngExpression = [4.5709, -74.2973];
-const ZOOM_POR_DEFECTO = 6;
 
 /** Zoom aplicado al centrar el mapa en una ubicación encontrada. */
 const ZOOM_UBICACION = 13;
@@ -73,9 +75,9 @@ function SincronizarCentro({ centro }: { centro: PosicionFinca | null }) {
  */
 export function SelectorMapa({ posicion, centro, onCambiarPosicion }: Props) {
   const icono = useMemo(() => crearIconoPin(), []);
-  const centroInicial: L.LatLngExpression = posicion
+  const centroInicial: LatLngExpression = posicion
     ? [posicion.latitud, posicion.longitud]
-    : CENTRO_POR_DEFECTO;
+    : CENTRO_COLOMBIA;
 
   return (
     <div
@@ -86,6 +88,9 @@ export function SelectorMapa({ posicion, centro, onCambiarPosicion }: Props) {
       <MapContainer
         center={centroInicial}
         zoom={posicion ? ZOOM_UBICACION : ZOOM_POR_DEFECTO}
+        minZoom={ZOOM_MINIMO}
+        maxBounds={LIMITES_COLOMBIA}
+        maxBoundsViscosity={1}
         className="h-80 w-full"
       >
         <TileLayer

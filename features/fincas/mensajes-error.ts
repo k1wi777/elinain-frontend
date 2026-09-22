@@ -27,6 +27,11 @@ const MENSAJE_GEOCODIFICACION_NO_ENCONTRADA =
 const MENSAJE_GEOCODIFICACION_GENERICO =
   "No se pudo buscar la dirección. Inténtalo de nuevo.";
 
+const MENSAJE_GEOCODIFICACION_INVERSA_NO_ENCONTRADA =
+  "No se pudo determinar una dirección para ese punto.";
+const MENSAJE_GEOCODIFICACION_INVERSA_GENERICO =
+  "No se pudo obtener la dirección del punto. Inténtalo de nuevo.";
+
 /**
  * Mensaje para un fallo al cargar el listado de fincas.
  *
@@ -99,4 +104,21 @@ export function mensajeErrorGeocodificacion(status: number): string {
   }
 
   return MENSAJE_GEOCODIFICACION_GENERICO;
+}
+
+/**
+ * Mensaje para un fallo al obtener la dirección de un punto del mapa.
+ *
+ * @param status Código HTTP del fallo; `0` indica fallo de conexión.
+ */
+export function mensajeErrorGeocodificacionInversa(status: number): string {
+  if (status === 404) {
+    return MENSAJE_GEOCODIFICACION_INVERSA_NO_ENCONTRADA;
+  }
+
+  if (status === 0) {
+    return MENSAJE_CONEXION;
+  }
+
+  return MENSAJE_GEOCODIFICACION_INVERSA_GENERICO;
 }

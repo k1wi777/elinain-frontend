@@ -26,4 +26,13 @@ describe("clavesFincas", () => {
       "finca-1",
     ]);
   });
+
+  it("sugerencias() incluye la consulta de dirección", () => {
+    expect(clavesFincas.sugerencias("calle 10")).toEqual([
+      "fincas",
+      "geocodificacion",
+      "sugerencias",
+      "calle 10",
+    ]);
+  });
 });

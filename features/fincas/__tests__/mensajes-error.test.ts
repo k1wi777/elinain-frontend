@@ -1,6 +1,7 @@
 import {
   mensajeErrorEliminarFinca,
   mensajeErrorGeocodificacion,
+  mensajeErrorGeocodificacionInversa,
   mensajeErrorGuardarFinca,
   mensajeErrorListarFincas,
 } from "@/features/fincas/mensajes-error";
@@ -79,6 +80,24 @@ describe("mensajeErrorGeocodificacion", () => {
   it("usa un mensaje genérico para el resto de estados", () => {
     expect(mensajeErrorGeocodificacion(502)).toBe(
       "No se pudo buscar la dirección. Inténtalo de nuevo.",
+    );
+  });
+});
+
+describe("mensajeErrorGeocodificacionInversa", () => {
+  it("mapea 404 a punto sin dirección", () => {
+    expect(mensajeErrorGeocodificacionInversa(404)).toBe(
+      "No se pudo determinar una dirección para ese punto.",
+    );
+  });
+
+  it("mapea 0 a un error de conexión", () => {
+    expect(mensajeErrorGeocodificacionInversa(0)).toBe(MENSAJE_CONEXION);
+  });
+
+  it("usa un mensaje genérico para el resto de estados", () => {
+    expect(mensajeErrorGeocodificacionInversa(502)).toBe(
+      "No se pudo obtener la dirección del punto. Inténtalo de nuevo.",
     );
   });
 });

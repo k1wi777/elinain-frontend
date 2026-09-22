@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 
 import { Button, Input, Select } from "@/shared/ui";
+import { AutocompletarDireccion } from "@/features/fincas/components/AutocompletarDireccion";
 import { useGeocodificacion } from "@/features/fincas/hooks/useGeocodificacion";
-import { mensajeErrorGeocodificacion } from "@/features/fincas/mensajes-error";
+import { useGeocodificacionInversa } from "@/features/fincas/hooks/useGeocodificacionInversa";
+import {
+  mensajeErrorGeocodificacion,
+  mensajeErrorGeocodificacionInversa,
+} from "@/features/fincas/mensajes-error";
 import { TEXTO_PROPIETARIO_DESCONOCIDO } from "@/features/fincas/propietarios";
 import {
   esquemaFinca,
@@ -18,6 +23,7 @@ import type {
   Finca,
   PosicionFinca,
   Propietario,
+  ResultadoGeocodificacion,
 } from "@/features/fincas/types";
 
 /**
@@ -74,9 +80,9 @@ function aPosicion(
  * Formulario reusable de fincas.
  *
  * El mismo componente sirve para crear y editar: en modo edición precarga los datos y
- * deshabilita el propietario, que no se puede modificar. La dirección solo centra el mapa
- * mediante geocodificación; las coordenadas que se envían son siempre las del pin, que el
- * usuario puede ajustar arrastrándolo o haciendo clic en el mapa.
+ * deshabilita el propietario, que no se puede modificar. La dirección puede elegirse por
+ * sugerencias, buscarse con el botón (que solo centra el mapa) o completarse desde el pin
+ * con geocodificación inversa. Las coordenadas que se envían son siempre las del pin.
  */
 export function FincaForm({
   modo,
@@ -106,8 +112,12 @@ export function FincaForm({
   });
 
   const geocodificacion = useGeocodificacion();
+  const geocodificacionInversa = useGeocodificacionInversa();
   const [centro, setCentro] = useState<PosicionFinca | null>(null);
+  const [errorInverso, setErrorInverso] = useState<string | null>(null);
+  const solicitudInversa = useRef(0);
 
+  const direccion = useWatch({ control, name: "direccion" });
   const latitud = useWatch({ control, name: "latitud" });
   const longitud = useWatch({ control, name: "longitud" });
   const posicion = aPosicion(latitud, longitud);
@@ -132,9 +142,9 @@ export function FincaForm({
   }
 
   const ubicarDireccion = async () => {
-    const direccion = getValues("direccion").trim();
+    const consulta = getValues("direccion").trim();
 
-    if (direccion === "") {
+    if (consulta === "") {
       setError("direccion", { message: "Ingresa la dirección de la finca." });
       return;
     }
@@ -142,10 +152,10 @@ export function FincaForm({
     geocodificacion.reset();
 
     try {
-      const resultado = await geocodificacion.mutateAsync(direccion);
+      const resultado = await geocodificacion.mutateAsync(consulta);
 
-      // La dirección solo centra el mapa: el pin se coloca o ajusta con clic o arrastre,
-      // de modo que las coordenadas guardadas provienen siempre de su posición.
+      // La búsqueda por botón solo centra el mapa: el pin se coloca o ajusta con clic o
+      // arrastre, de modo que las coordenadas guardadas provienen siempre de su posición.
       setCentro({
         latitud: resultado.latitud,
         longitud: resultado.longitud,
@@ -155,9 +165,44 @@ export function FincaForm({
     }
   };
 
+  const seleccionarSugerencia = (sugerencia: ResultadoGeocodificacion) => {
+    setValue("direccion", sugerencia.etiqueta, { shouldValidate: true });
+    setValue("latitud", sugerencia.latitud, { shouldValidate: true });
+    setValue("longitud", sugerencia.longitud, { shouldValidate: true });
+    setCentro({ latitud: sugerencia.latitud, longitud: sugerencia.longitud });
+    setErrorInverso(null);
+  };
+
   const cambiarPosicion = (nuevaLatitud: number, nuevaLongitud: number) => {
     setValue("latitud", nuevaLatitud, { shouldValidate: true });
     setValue("longitud", nuevaLongitud, { shouldValidate: true });
+
+    // Un contador de solicitud descarta las respuestas que llegan tarde: solo la
+    // interacción más reciente puede escribir la dirección.
+    const solicitud = solicitudInversa.current + 1;
+    solicitudInversa.current = solicitud;
+
+    geocodificacionInversa.mutate(
+      { latitud: nuevaLatitud, longitud: nuevaLongitud },
+      {
+        onSuccess: (resultado) => {
+          if (solicitud !== solicitudInversa.current) {
+            return;
+          }
+
+          setValue("direccion", resultado.etiqueta, { shouldValidate: true });
+          setErrorInverso(null);
+        },
+        onError: (error) => {
+          if (solicitud !== solicitudInversa.current) {
+            return;
+          }
+
+          // Se conserva la dirección previa: el fallo no bloquea el guardado.
+          setErrorInverso(mensajeErrorGeocodificacionInversa(error.status));
+        },
+      },
+    );
   };
 
   const enviar = handleSubmit((datos) => onGuardar(datos));
@@ -186,12 +231,16 @@ export function FincaForm({
       />
 
       <div className="flex items-end gap-2">
-        <div className="flex-1">
-          <Input
+        <div className="relative flex-1">
+          <AutocompletarDireccion
             label="Dirección"
-            type="text"
             error={errors.direccion?.message}
-            {...register("direccion")}
+            valor={direccion}
+            onCambiarTexto={(texto) => {
+              setErrorInverso(null);
+              setValue("direccion", texto, { shouldValidate: true });
+            }}
+            onSeleccionar={seleccionarSugerencia}
           />
         </div>
         <Button
@@ -204,13 +253,19 @@ export function FincaForm({
       </div>
 
       <p className="text-xs text-zinc-500">
-        La dirección solo centra el mapa. Arrastra el pin o haz clic en el mapa
-        para fijar la ubicación exacta de la finca.
+        Escribe para ver sugerencias o haz clic en el mapa para completar la
+        dirección. Las coordenadas que se guardan son siempre las del pin.
       </p>
 
       {geocodificacion.error ? (
         <p role="alert" className="text-sm text-red-600">
           {mensajeErrorGeocodificacion(geocodificacion.error.status)}
+        </p>
+      ) : null}
+
+      {errorInverso ? (
+        <p role="alert" className="text-sm text-red-600">
+          {errorInverso}
         </p>
       ) : null}
 

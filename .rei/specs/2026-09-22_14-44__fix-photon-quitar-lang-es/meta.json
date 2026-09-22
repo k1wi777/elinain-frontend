@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-22_14-44__fix-photon-quitar-lang-es",
+  "title": "Fix: Photon rechaza lang=es y rompe búsqueda, sugerencias e inversa",
+  "description": "Corregir el fallo por el que la geocodificación no funciona: al seleccionar un punto del mapa aparece 'No se pudo obtener la dirección del punto. Inténtalo de nuevo.' y nunca se rellena la dirección. Causa diagnosticada y reproducida: Photon (photon.komoot.io) NO soporta el idioma español; al enviar `lang=es` responde HTTP 400 con {\"lang\":[{\"message\":\"Language is not supported. Supported are: default, de, en, fr\",\"value\":\"es\"}]}. Como `consultarPhoton` lanza ante una respuesta no ok, el BFF responde 502 y la UI muestra el mensaje genérico. El problema afecta a las TRES operaciones (búsqueda por botón, sugerencias del autocompletado e inversa), porque las tres construyen la URL con `lang=es` en app/api/geocodificacion/_lib/photon.ts. Comprobado que sin `lang` Photon responde 200 con direcciones correctas y countrycode CO (por ejemplo 'Carrera 83, Localidad Engativá, Bogotá, ... Colombia'); los nombres locales ya vienen en español desde OpenStreetMap, por lo que no se pierde nada. Solución: eliminar el parámetro `lang=es` de las URLs de búsqueda y de inversa (usar el idioma por defecto de Photon). Se debe añadir cobertura de test que evite la regresión (p. ej. verificar que las URLs construidas no incluyen `lang`) y documentar la verificación por HTTP de que los tres endpoints devuelven 200 con sesión. Fuera de alcance: las mejoras de rendimiento (Work Item aparte) y cualquier cambio de proveedor.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-22T14:44:14-05:00"
+}

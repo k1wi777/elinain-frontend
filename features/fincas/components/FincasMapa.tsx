@@ -9,6 +9,12 @@ import { Button } from "@/shared/ui";
 import { FincaDetalleModal } from "@/features/fincas/components/FincaDetalleModal";
 import { crearIconoPin } from "@/features/fincas/components/icono-pin";
 import { useTodasLasFincas } from "@/features/fincas/hooks/useTodasLasFincas";
+import {
+  CENTRO_COLOMBIA,
+  LIMITES_COLOMBIA,
+  ZOOM_MINIMO,
+  ZOOM_POR_DEFECTO,
+} from "@/features/fincas/mapa";
 import { mensajeErrorListarFincas } from "@/features/fincas/mensajes-error";
 import {
   indexarPropietarios,
@@ -17,10 +23,6 @@ import {
 import type { Finca, Propietario } from "@/features/fincas/types";
 
 import "leaflet/dist/leaflet.css";
-
-/** Centro y zoom por defecto cuando todavía no hay fincas. */
-const CENTRO_POR_DEFECTO: L.LatLngExpression = [4.5709, -74.2973];
-const ZOOM_POR_DEFECTO = 6;
 
 /** Zoom máximo al ajustar la vista al conjunto de fincas. */
 const ZOOM_MAXIMO_AJUSTE = 15;
@@ -96,8 +98,11 @@ export function FincasMapa({ propietarios }: Props) {
         className="overflow-hidden rounded-md border border-zinc-300"
       >
         <MapContainer
-          center={CENTRO_POR_DEFECTO}
+          center={CENTRO_COLOMBIA}
           zoom={ZOOM_POR_DEFECTO}
+          minZoom={ZOOM_MINIMO}
+          maxBounds={LIMITES_COLOMBIA}
+          maxBoundsViscosity={1}
           className="h-[32rem] w-full"
         >
           <TileLayer

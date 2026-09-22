@@ -17,4 +17,7 @@ export const clavesFincas = {
   mapa: () => ["fincas", "mapa"] as const,
   /** Clave del detalle de una finca concreta. */
   detalle: (id: string) => ["fincas", "detail", id] as const,
+  /** Clave de las sugerencias de dirección para una consulta concreta. */
+  sugerencias: (consulta: string) =>
+    ["fincas", "geocodificacion", "sugerencias", consulta] as const,
 };

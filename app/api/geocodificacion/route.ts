@@ -1,10 +1,8 @@
-import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { sesionVigente } from "@/shared/api/session";
-import { SESSION_COOKIE_NAME } from "@/shared/api/session-cookie";
 import { respuestaError } from "@/app/api/_lib/respuestas";
-import { geocodificar } from "@/app/api/geocodificacion/_lib/nominatim";
+import { geocodificarDireccion } from "@/app/api/geocodificacion/_lib/photon";
+import { haySesionVigente } from "@/app/api/geocodificacion/_lib/sesion";
 
 /** Mensajes de geocodificación que sobrescriben la base genérica del BFF. */
 const MENSAJES_GEOCODIFICACION = {
@@ -13,17 +11,14 @@ const MENSAJES_GEOCODIFICACION = {
 } as const;
 
 /**
- * Route Handler del BFF que geocodifica una dirección contra Nominatim.
+ * Route Handler del BFF que geocodifica una dirección contra Photon.
  *
  * Exige una sesión vigente antes de consultar el servicio externo: es la misma guardia de
  * navegación que aplica el middleware. Sin coincidencias responde `404`; un fallo de
- * Nominatim se traduce a `502` a través de `respuestaError`.
+ * Photon se traduce a `502` a través de `respuestaError`.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-
-  if (!sesionVigente(token)) {
+  if (!(await haySesionVigente())) {
     return respuestaError(401);
   }
 
@@ -34,7 +29,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    const coincidencia = await geocodificar(consulta);
+    const coincidencia = await geocodificarDireccion(consulta);
 
     if (coincidencia === null) {
       return respuestaError(404, MENSAJES_GEOCODIFICACION);
