@@ -208,3 +208,41 @@
   y `409`) queda a cargo del usuario con los pasos documentados en `impl.md`. `bash
   .rei/init.sh` finaliza con código de salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_11-56__contratos-listado-filtro-detalle-y-edicion`
+
+- **Work Item:** `2026-09-22_11-56__contratos-listado-filtro-detalle-y-edicion` — Contratos:
+  listado filtrable, apertura, detalle y edición de campos mutables (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó la gestión de contratos de participación sobre la
+  infraestructura existente (R1–R50, T1–T15). (1) BFF de contratos en `app/api/contratos/*`:
+  `GET` paginado y `POST` en `route.ts`, `GET` y `PATCH` en `[id]/route.ts`, con parseo
+  defensivo, propagación del código HTTP real (red → `502`) y mensajes en español sin exponer
+  el cuerpo crudo; sin `DELETE`, y el `PATCH` descartando `tercero_id`, `finca_id`,
+  `fecha_apertura` y los porcentajes. (2) Feature `contratos` autocontenido: alias de DTOs del
+  OpenAPI, utilidades puras (`fechas` en zona Colombia UTC−5, `participacion`, `filtros` con
+  offset acotado, `relaciones`), esquemas zod de crear/editar (suma 100 y acoplamiento
+  estado/`fecha_cierre`), mensajes de error, query keys, API sobre `createBffClient` y hooks
+  de TanStack Query con invalidación, más los componentes `ContratosListado` (filtro y
+  paginación en cliente), `ContratoForm` (un formulario, dos modos), `ContratoCrear`,
+  `ContratoEditar` y `ContratoDetalle` (con placeholder de secciones futuras). (3) Ampliación
+  mínima de `features/fincas` (`useTodasLasFincas` y tipo `Finca`). (4) Composición en `app/`
+  mediante wrappers client, rutas `/contratos`, `/contratos/nuevo`, `/contratos/[id]` y
+  `/contratos/[id]/editar`, `/contratos` protegido en `middleware.ts` y enlace "Contratos" en
+  el layout. (5) Tests de lógica pura (esquemas, mensajes, query keys, filtros, fechas,
+  participación y relaciones).
+- **Archivos modificados:** creados `app/api/contratos/{route.ts,[id]/route.ts}`,
+  `features/contratos/**` (tipos, query keys, mensajes, `fechas`, `participacion`, `filtros`,
+  `relaciones`, `schemas`, `api/`, `hooks/`, `components/`, `index.ts` y tests),
+  `app/(dashboard)/contratos/**`; modificados `features/fincas/index.ts`, `middleware.ts` y
+  `app/(dashboard)/layout.tsx`. Sin cambios en `package.json`, `shared/api/openapi/*`,
+  `shared/ui`, ESLint, Prettier ni Jest; sin dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos (con `npx next
+  typegen` previo) y `V4` tests (23 suites / 192 tests; 7 suites y 59 tests nuevos de
+  `contratos`) en verde; `V5` (validación manual de listado/filtro, apertura, detalle con
+  placeholder, edición con inmutables y acoplamiento de fecha) queda a cargo del usuario con
+  los pasos documentados en `impl.md`. `bash .rei/init.sh` finaliza con código de salida `0`.
+- **Estado final:** `done`.
