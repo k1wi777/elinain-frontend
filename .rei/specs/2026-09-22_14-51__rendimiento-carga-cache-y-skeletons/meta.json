@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-22_14-51__rendimiento-carga-cache-y-skeletons",
+  "title": "Rendimiento: caché por defecto de TanStack Query, skeletons de carga y guía de producción",
+  "description": "Mejorar la percepción de velocidad de la aplicación tras detectar que las páginas muestran 'Cargando…' durante un tiempo perceptible aunque haya pocos datos. Diagnóstico medido: el backend (Railway) tarda ~0.68–0.99 s por petición, el QueryClient se crea sin opciones (staleTime por defecto 0, así que cada navegación vuelve a pedir datos) y las páginas son Server Components delgados que dejan la carga al cliente tras la hidratación, de modo que siempre hay dos fases (shell del servidor + fetch del cliente). Además, `npm run dev` compila cada ruta en la primera visita, lo que añade segundos; en producción (npm run build && npm start) el comportamiento es muy distinto. Alcance acordado con el usuario (mejoras rápidas, bajo riesgo): (1) configurar el QueryClient con valores por defecto sensatos (staleTime, desactivar refetchOnWindowFocus y un retry razonable) para que navegar entre vistas reutilice los datos ya cargados; (2) añadir estados de carga (loading.tsx / skeletons) que den retroalimentación inmediata en la navegación y en la carga inicial de los segmentos del área protegida; (3) documentar la recomendación de validar el rendimiento en una build de producción, que es como se percibirá realmente. Fuera de alcance: prefetch en servidor con HydrationBoundary, paralelizar o reducir el 'traer todos' de terceros/fincas/contratos, y cualquier cambio de arquitectura; esos quedan como posibles Work Items posteriores.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-22T14:51:25-05:00"
+}

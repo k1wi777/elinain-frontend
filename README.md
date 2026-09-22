@@ -48,6 +48,8 @@ Las variables viven en un archivo `.env.local` en la raíz del proyecto y **no s
 | `npm test`                           | Suite completa de Jest.                                 |
 | `npm run test:related -- <archivos>` | Solo los tests relacionados con los archivos indicados. |
 
+> **Rendimiento:** valida el rendimiento percibido con `npm run build` + `npm start`. `npm run dev` compila cada ruta on-demand en la primera visita y añade segundos que no existen en la build de producción, que es la experiencia real.
+
 ## Estructura
 
 ```text

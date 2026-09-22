@@ -8,6 +8,7 @@ export { Button } from "@/shared/ui/Button";
 export { Input } from "@/shared/ui/Input";
 export { Modal } from "@/shared/ui/Modal";
 export { Select } from "@/shared/ui/Select";
+export { Skeleton } from "@/shared/ui/Skeleton";
 export { Table, type ColumnaTabla } from "@/shared/ui/Table";
 export type { PaginacionTabla } from "@/shared/ui/TablePagination";
 export { Toast } from "@/shared/ui/Toast";

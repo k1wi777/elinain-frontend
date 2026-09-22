@@ -275,3 +275,106 @@
   `/api/contratos` con `{elementos,total,limite,offset}`, sin sobre); la validación de UI en
   navegador queda a cargo del usuario. `bash .rei/init.sh` finaliza con código de salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_13-39__fincas-mapa-colombia-sugerencias-photon-y-direccion-inversa`
+
+- **Work Item:** `2026-09-22_13-39__fincas-mapa-colombia-sugerencias-photon-y-direccion-inversa`
+  — Fincas: mapa acotado a Colombia, sugerencias de dirección con Photon y relleno inverso desde
+  el pin (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementaron T1–T10 (R1–R40). (1) BFF de geocodificación migrado por
+  completo de Nominatim a Photon: `_lib/photon.ts` (constantes, `User-Agent` propio, cadencia
+  ~1 req/s serializada, caché FIFO con claves `b:`/`s:`/`r:`, `bbox` de Colombia y `lang=es`, más
+  las funciones puras `extraerCoordenadas`, `formatearDireccion`, `esDeColombia`,
+  `parsearRespuestaPhoton`, `mapearSugerenciasPhoton` y `parsearRespuestaInversaPhoton`),
+  `_lib/sesion.ts` (guardia `haySesionVigente`) y los endpoints `route.ts`, `sugerencias/route.ts`
+  e `inversa/route.ts` (búsqueda `404` sin coincidencia; sugerencias `200` con lista vacía y `400`
+  bajo el mínimo; inversa valida `lat`/`lon`, rango y área de Colombia; `502` ante fallo del
+  proveedor). (2) Feature `fincas`: `api/geocodificacion.ts` ampliado, hooks
+  `useSugerenciasDireccion` (`useQuery` con `enabled`, `staleTime` y `retry:false`) y
+  `useGeocodificacionInversa` (`useMutation`), combobox accesible `AutocompletarDireccion`
+  (debounce 350 ms, mínimo 3 caracteres, ARIA y teclado), integración en `FincaForm` con relleno
+  inverso en clic/`dragend` y contador de solicitud, `mapa.ts` con las constantes de Colombia y
+  límites aplicados en `SelectorMapa` y `FincasMapa`. (3) `shared/lib/useValorDebounced.ts` como
+  hook genérico de temporizador. (4) Retiro completo de Nominatim (`nominatim.ts` y su test).
+- **Archivos modificados:** creados
+  `app/api/geocodificacion/{_lib/photon.ts,_lib/sesion.ts,_lib/__tests__/photon.test.ts,sugerencias/route.ts,inversa/route.ts}`,
+  `features/fincas/{mapa.ts,hooks/useSugerenciasDireccion.ts,hooks/useGeocodificacionInversa.ts,components/AutocompletarDireccion.tsx}`
+  y `shared/lib/useValorDebounced.ts`; modificados `app/api/geocodificacion/route.ts`,
+  `features/fincas/{api/geocodificacion.ts,query-keys.ts,mensajes-error.ts}`,
+  `features/fincas/components/{FincaForm,SelectorMapa,FincasMapa}.tsx` y
+  `features/fincas/__tests__/{mensajes-error,query-keys}.test.ts`; eliminados
+  `app/api/geocodificacion/_lib/nominatim.ts` y su test. Sin cambios en `package.json`,
+  `shared/api/openapi/*`, `shared/ui`, ESLint, Prettier ni Jest; sin dependencias nuevas.
+- **Desviación aprobada:** el hook genérico se implementó como
+  `shared/lib/useValorDebounced.ts` (camelCase, convención de hooks) en lugar de
+  `use-valor-debounced.ts`, documentado en `impl.md`.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos (con `npx next typegen`
+  previo) y `V4` tests (24 suites / 220 tests; 19 de `photon.test.ts`) en verde; se confirmó por
+  HTTP que los tres endpoints devuelven `401` sin sesión. `V5` (mapas acotados, sugerencias
+  accesibles, selección, relleno inverso en clic/arrastre y manejo de errores) queda a cargo del
+  usuario con los pasos documentados en `impl.md`. `bash .rei/init.sh` finaliza con código de
+  salida `0`.
+- **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_14-44__fix-photon-quitar-lang-es`
+
+- **Work Item:** `2026-09-22_14-44__fix-photon-quitar-lang-es` — Fix: Photon rechaza
+  `lang=es` y rompe búsqueda, sugerencias e inversa (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se eliminó el parámetro `lang=es` de las URLs que el BFF construye
+  para Photon, causa del `400` del proveedor (y del `502` del BFF) en las tres operaciones
+  de geocodificación. En `_lib/photon.ts`, `crearUrlBusqueda` conserva `q`, `limit` y
+  `bbox=BBOX_COLOMBIA` y pasa a exportarse; se extrajo la función pura y exportada
+  `crearUrlInversa(latitud, longitud)` con `lon`, `lat` y `limit=1`, reutilizada por
+  `geocodificarInversa`. Se añadieron 4 tests de regresión en `photon.test.ts` que verifican
+  la ausencia de `lang` y la presencia de `q`/`limit`/`bbox` y `lat`/`lon`/`limit=1`, más el
+  host y los paths. No se tocaron proveedor, caché, cadencia, `User-Agent`, mensajes, Route
+  Handlers, `_lib/sesion.ts`, la UI, el OpenAPI ni otros BFF.
+- **Archivos modificados:** `app/api/geocodificacion/_lib/photon.ts` y
+  `app/api/geocodificacion/_lib/__tests__/photon.test.ts`. Sin cambios en `package.json`,
+  `shared/api/openapi/*`, `shared/ui`, ESLint, Prettier ni Jest; sin dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (24 suites / 224 tests; 4 nuevos en `photon.test.ts`) en verde; se confirmó por `curl` que
+  `/api/` y `/reverse` sin `lang` responden `200` y que con `lang=es` Photon responde `400`.
+  `V5` (dev server con sesión: los tres endpoints → `200`; sin cookie → `401`; UI del mapa)
+  queda a cargo del usuario con los pasos documentados en `impl.md`. `bash .rei/init.sh`
+  finaliza con código de salida `0`.
+- **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_14-51__rendimiento-carga-cache-y-skeletons`
+
+- **Work Item:** `2026-09-22_14-51__rendimiento-carga-cache-y-skeletons` — Rendimiento:
+  caché por defecto de TanStack Query, skeletons de carga y guía de producción (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** mejoras de percepción de velocidad sin cambios de arquitectura.
+  (1) `app/providers.tsx`: constante `OPCIONES_POR_DEFECTO: QueryClientConfig` pasada a
+  `new QueryClient(...)`, con solo `defaultOptions.queries` (`staleTime: 60_000`,
+  `refetchOnWindowFocus: false`, `retry: 1`); `mutations` conserva sus defaults y las opciones
+  propias de cada consulta siguen prevaleciendo. (2) `shared/ui/Skeleton.tsx` presentacional y
+  sin dominio (named export, `cn()`, `className` opcional, base
+  `animate-pulse rounded-md bg-zinc-200`, `aria-hidden`), exportado en `shared/ui/index.ts`.
+  (3) `loading.tsx` del área protegida y de `terceros`, `fincas` y `contratos`, con
+  `aria-busy`/`sr-only` y el mismo contenedor/ancho que sus `page.tsx`. (4) Nota en el
+  `README.md` para validar el rendimiento en build de producción (`npm run build` + `npm start`).
+  Sin `HydrationBoundary`/`dehydrate`, prefetch, streaming/PPR ni cambios en el BFF/OpenAPI/hooks.
+- **Archivos modificados:** creados `shared/ui/Skeleton.tsx`,
+  `app/(dashboard)/{loading.tsx,terceros/loading.tsx,fincas/loading.tsx,contratos/loading.tsx}`;
+  modificados `app/providers.tsx`, `shared/ui/index.ts` y `README.md`. Sin cambios en
+  `package.json`/`package-lock.json`, `shared/api/openapi/*`, el BFF ni los hooks; sin
+  dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (24 suites / 224 tests) en verde; `npm run build` con salida `0` (21 rutas, incluidas
+  `/terceros`, `/fincas` y `/contratos`); `bash .rei/init.sh` finaliza con código de salida `0`.
+  `V5` (navegación con caché, feedback inmediato y comparación dev/producción) queda a cargo del
+  usuario con los pasos documentados en `impl.md`.
+- **Estado final:** `done`.
