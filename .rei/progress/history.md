@@ -411,3 +411,36 @@
   descripción y "Próximamente." con sesión). `bash .rei/init.sh` finaliza con código de salida
   `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_15-38__landing-institucional-y-retiro-plantilla-next`
+
+- **Work Item:** `2026-09-22_15-38__landing-institucional-y-retiro-plantilla-next` — Landing
+  institucional de Elinain y retiro de la plantilla de Next.js (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se sustituyó la landing plantilla de create-next-app por una landing
+  pública e institucional de Elinain. (1) `app/page.tsx` reescrito como Server Component
+  presentacional, en español, con `metadata` propio y las ocho secciones del plan (cabecera,
+  hero con el `<h1>` y CTAs, problema, capacidades, público objetivo, visión, CTA final y
+  pie); estructura semántica `header`/`main`/`footer`/`nav`, un único `<h1>` y un `<h2>` por
+  sección, y CTAs con `next/link` hacia `/login` y `/registro` usando las clases visuales de
+  las variantes `primario`/`secundario` del sistema de diseño. (2) `git rm` de los cinco
+  assets de la plantilla que dejaban de usarse (`public/next.svg`, `vercel.svg`, `file.svg`,
+  `globe.svg`, `window.svg`), quedando `public/` vacío. Sin formularios, sin llamadas a la
+  API/BFF, sin interactividad y sin dependencias nuevas.
+- **Archivos modificados:** modificado `app/page.tsx` (reescritura completa con `metadata`
+  propio); eliminados `public/next.svg`, `public/vercel.svg`, `public/file.svg`,
+  `public/globe.svg` y `public/window.svg`. Sin cambios en `package.json`/`package-lock.json`,
+  `shared/api/openapi/*`, `middleware.ts`, `app/globals.css`, `app/layout.tsx`,
+  `app/favicon.ico`, el BFF ni ningún feature.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (24 suites / 224 tests) en verde; `V5` con validación HTTP independiente contra el dev
+  server preexistente (`/` → `200` con el `<h1>` y el `title` de la landing, 3 enlaces a
+  `/login` y 3 a `/registro`, sin referencias a los assets eliminados; `/login` y `/registro`
+  → `200`); `grep` sobre archivos versionados sin referencias a los assets eliminados (solo
+  restos generados en `.next/`, gitignored). La navegación real, el recorrido con teclado y la
+  revisión de responsive y contraste quedan a cargo del usuario. `bash .rei/init.sh` finaliza
+  con código de salida `0`.
+- **Estado final:** `done`.
