@@ -56,3 +56,35 @@
   (24/24, 16 nuevos) en verde; `V5` no aplica (módulos headless sin UI ni flujo
   interactivo). `bash .rei/init.sh` finaliza con código de salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_01-56__paginacion-y-sistema-de-diseno`
+
+- **Work Item:** `2026-09-22_01-56__paginacion-y-sistema-de-diseno` — Hook genérico de
+  paginación y sistema de diseño base (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se entregaron dos piezas base en la capa transversal. (1)
+  Paginación en `shared/api`: `pagination.ts` con la aritmética pura (`normalizarLimite`,
+  `calcularTotalPaginas`, `calcularPagina`, `calcularOffset`, `normalizarPagina`) y las
+  constantes `LIMITE_POR_DEFECTO = 20`/`LIMITE_MINIMO = 1`/`LIMITE_MAXIMO = 100`, más
+  `usePagination.ts` (`'use client'`), que guarda `limite`/`offset`, recibe `total` por
+  parámetro y deriva en render los indicadores y acciones sin `useEffect`. (2) Sistema de
+  diseño en `shared/ui`: `Button` (variantes primario/secundario/peligro), `Input` y
+  `Select` (label + `aria-invalid`/`aria-describedby`), `Table` genérica con estados de
+  carga/vacío y paginación, `TablePagination` interno (con el tipo estructural
+  `PaginacionTabla`), `Modal` sobre `<dialog>` nativo y `Toast` presentacional; barrel
+  `shared/ui/index.ts` sin exportar `TablePagination`. Se añadió `cn()` en `shared/lib` y se
+  eliminaron `shared/lib/.gitkeep` y `shared/ui/.gitkeep`.
+- **Archivos modificados:** creados
+  `shared/api/{pagination,usePagination}.ts`, `shared/api/__tests__/pagination.test.ts`,
+  `shared/lib/cn.ts`, `shared/lib/__tests__/cn.test.ts`,
+  `shared/ui/{Button,Input,Select,Table,TablePagination,Modal,Toast}.tsx` y
+  `shared/ui/index.ts`; eliminados `shared/lib/.gitkeep` y `shared/ui/.gitkeep`. Sin cambios
+  en dependencias, configuración ni `app/`.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (44/44) en verde; `V5` no aplica (el Work Item solo entrega la base; la validación visual
+  e interactiva queda para Work Items posteriores). `bash .rei/init.sh` finaliza con código
+  de salida `0`.
+- **Estado final:** `done`.

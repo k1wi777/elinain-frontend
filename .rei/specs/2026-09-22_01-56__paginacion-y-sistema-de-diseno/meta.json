@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-22_01-56__paginacion-y-sistema-de-diseno",
+  "title": "Hook genérico de paginación y sistema de diseño base",
+  "description": "Entregar dos piezas base del frontend en un mismo Work Item. (1) Hook genérico de paginación: reusable, maneja limite/offset, recibe el total de la respuesta y calcula la página actual y el total de páginas; debe servir igual para terceros, fincas y contratos sin modificaciones. (2) Sistema de diseño base en shared/ui: componentes Button, Input, Select, Table (con soporte de paginación), Modal y Toast (notificación de éxito/error), sin lógica de negocio, solo presentación y props genéricas. Restricciones acordadas: Tailwind + componentes propios (sin dependencias nuevas de UI), accesibilidad, TypeScript estricto y estructura raíz sin src/. El usuario es la fuente de verdad de este alcance; no se debe basar en el documento de tareas del frontend.",
+  "type": "feature",
+  "status": "done",
+  "created_at": "2026-09-22T01:56:05-05:00"
+}
