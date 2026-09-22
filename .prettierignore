@@ -10,6 +10,9 @@ package-lock.json
 next-env.d.ts
 *.tsbuildinfo
 
+# Tipos y spec generados desde OpenAPI
+shared/api/openapi/
+
 # Arnés de REI (documentos y scripts)
 .rei/
 AGENTS.md

@@ -28,3 +28,31 @@
   (8/8) en verde; `V5` no aplica (cambio estructural y de configuración sin comportamiento
   interactivo). `bash .rei/init.sh` finaliza con código de salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_01-38__cliente-http-base`
+
+- **Work Item:** `2026-09-22_01-38__cliente-http-base` — Cliente HTTP base en
+  `shared/api` (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó el cliente HTTP base del frontend en `shared/api`
+  sobre `axios`, con tres puntos de entrada: `http-client.ts` (núcleo isomorfo con
+  cabeceras JSON por defecto, `buildUrl`, `Authorization: Bearer` opcional y normalización
+  de rechazos en `ApiError`), `server-client.ts` (server-only; lee la cookie httpOnly vía
+  `cookies()` y `getServerEnv()`) y `public-client.ts` (sin token; `getClientEnv()`).
+  Se añadieron `request.ts` (helpers puros de cabeceras y URL), `errors.ts` (`ApiError`,
+  `mapErrorResponse`, `toApiError`), `session-cookie.ts` (`SESSION_COOKIE_NAME`), `types.ts`
+  (`ApiSchemas`) y tests de lógica pura. Se copió el OpenAPI del backend a
+  `shared/api/openapi/api-1.json` y se generaron los tipos con `openapi-typescript`
+  (`schema.d.ts`), ambos versionados y excluidos de Prettier/ESLint. No se creó barrel
+  `shared/api/index.ts` y se eliminó `shared/api/.gitkeep`.
+- **Archivos modificados:** creados `shared/api/{types,session-cookie,request,errors,http-client,server-client,public-client}.ts`,
+  `shared/api/openapi/{api-1.json,schema.d.ts}`, `shared/api/__tests__/{request,errors}.test.ts`;
+  modificados `package.json`, `package-lock.json`, `.prettierignore` y `eslint.config.mjs`;
+  eliminado `shared/api/.gitkeep`.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (24/24, 16 nuevos) en verde; `V5` no aplica (módulos headless sin UI ni flujo
+  interactivo). `bash .rei/init.sh` finaliza con código de salida `0`.
+- **Estado final:** `done`.

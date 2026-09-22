@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-22_01-38__cliente-http-base",
+  "title": "Cliente HTTP base en shared/api",
+  "description": "Construir el cliente HTTP base del frontend en shared/api sobre axios. Debe manejar automáticamente los headers (JSON y Authorization Bearer leyendo en servidor la cookie httpOnly de sesión, con enfoque server-first), mapear de forma centralizada las respuestas de error del backend (RespuestaErrorValidacionDto, RespuestaErrorNoAutorizadoDto, RespuestaErrorConflictoDto, RespuestaErrorNoEncontradoDto y RespuestaErrorServidorDto) a un formato único que consuma el resto del frontend sin duplicar lógica, y generar los tipos desde el OpenAPI del backend (api-1.json) con openapi-typescript. Al ser axios una dependencia nueva, debe justificarse según conventions.md. Fuera de alcance: Route Handlers de autenticación/BFF (T0.5), hook genérico de paginación (T0.3) y sistema de diseño shared/ui (T0.4).",
+  "type": "feature",
+  "status": "done",
+  "created_at": "2026-09-22T01:38:25-05:00"
+}

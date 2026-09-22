@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "coverage/**",
+    // Tipos y spec generados desde OpenAPI:
+    "shared/api/openapi/**",
   ]),
 ]);
 

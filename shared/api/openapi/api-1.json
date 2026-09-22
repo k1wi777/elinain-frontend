@@ -1,0 +1,2518 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/usuarios/registro": {
+      "post": {
+        "operationId": "UsuariosController_registrar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearUsuarioDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Comerciante registrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioRegistradoDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos de registro inválidos o incompletos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: El email debe ser un correo válido; La contraseña debe tener al menos 8 caracteres",
+                  "errores": [
+                    "El email debe ser un correo válido",
+                    "La contraseña debe tener al menos 8 caracteres"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/usuarios/registro",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "El correo electrónico ya se encuentra registrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorConflictoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "El correo electrónico ya se encuentra registrado",
+                  "errores": [
+                    "El correo electrónico ya se encuentra registrado"
+                  ],
+                  "codigoEstado": 409,
+                  "ruta": "/api/v1/usuarios/registro",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/usuarios/registro",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Registra el perfil del comerciante",
+        "tags": [
+          "usuarios"
+        ]
+      }
+    },
+    "/api/v1/usuarios/acceso": {
+      "post": {
+        "operationId": "UsuariosController_acceder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CredencialesAccesoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Acceso concedido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccesoRespuestaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Credenciales con formato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: El email debe ser un correo válido",
+                  "errores": [
+                    "El email debe ser un correo válido"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/usuarios/acceso",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciales de acceso inválidas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Credenciales de acceso inválidas",
+                  "errores": [
+                    "Credenciales de acceso inválidas"
+                  ],
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/usuarios/acceso",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/usuarios/acceso",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Inicia sesión y emite el JWT de acceso",
+        "tags": [
+          "usuarios"
+        ]
+      }
+    },
+    "/api/v1/terceros": {
+      "post": {
+        "operationId": "TercerosController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearTerceroDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tercero creado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerceroRespuestaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos de creación del tercero inválidos o incompletos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: El nombre es obligatorio; El tipo de tercero debe ser criador, cebador o comisionista",
+                  "errores": [
+                    "El nombre es obligatorio",
+                    "El tipo de tercero debe ser criador, cebador o comisionista"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registra un nuevo tercero asociado al comerciante",
+        "tags": [
+          "terceros"
+        ]
+      },
+      "get": {
+        "operationId": "TercerosController_listar",
+        "parameters": [
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Cantidad máxima de elementos a retornar (entre 1 y 100)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Número de elementos a omitir desde el inicio (mínimo 0)",
+            "schema": {
+              "minimum": 0,
+              "example": 0,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listado de terceros paginado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginaTercerosDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lista los terceros pertenecientes al comerciante autenticado con paginación",
+        "tags": [
+          "terceros"
+        ]
+      }
+    },
+    "/api/v1/terceros/{id}": {
+      "get": {
+        "operationId": "TercerosController_buscarPorId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tercero encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerceroRespuestaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Identificador no es un UUID válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: Validation failed (uuid is expected)",
+                  "errores": [
+                    "Validation failed (uuid is expected)"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/terceros/invalido",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tercero no encontrado o no pertenece al comerciante",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Tercero no encontrado",
+                  "errores": [
+                    "Tercero no encontrado"
+                  ],
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/terceros/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtiene el detalle de un tercero por ID",
+        "tags": [
+          "terceros"
+        ]
+      },
+      "patch": {
+        "operationId": "TercerosController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarTerceroDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tercero actualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerceroRespuestaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos de actualización inválidos o identificador no es UUID válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: El tipo de tercero debe ser criador, cebador o comisionista",
+                  "errores": [
+                    "El tipo de tercero debe ser criador, cebador o comisionista"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/terceros/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tercero no encontrado o no pertenece al comerciante",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Tercero no encontrado",
+                  "errores": [
+                    "Tercero no encontrado"
+                  ],
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/terceros/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Actualiza los datos de un tercero",
+        "tags": [
+          "terceros"
+        ]
+      },
+      "delete": {
+        "operationId": "TercerosController_eliminar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Tercero eliminado correctamente"
+          },
+          "400": {
+            "description": "Identificador no es un UUID válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: Validation failed (uuid is expected)",
+                  "errores": [
+                    "Validation failed (uuid is expected)"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/terceros/invalido",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tercero no encontrado o no pertenece al comerciante",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Tercero no encontrado",
+                  "errores": [
+                    "Tercero no encontrado"
+                  ],
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/terceros/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No se puede eliminar el tercero porque tiene contratos activos asociados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorConflictoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No se puede eliminar el tercero porque tiene contratos activos asociados",
+                  "errores": [
+                    "No se puede eliminar el tercero porque tiene contratos activos asociados"
+                  ],
+                  "codigoEstado": 409,
+                  "ruta": "/api/v1/terceros/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/terceros",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Elimina un tercero si no tiene contratos vinculados",
+        "tags": [
+          "terceros"
+        ]
+      }
+    },
+    "/api/v1/fincas": {
+      "post": {
+        "operationId": "FincasController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearFincaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Finca registrada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FincaRespuestaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos de la finca inválidos (e.g. coordenadas fuera de rango)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: La latitud debe estar entre -90 y 90; La longitud debe estar entre -180 y 180",
+                  "errores": [
+                    "La latitud debe estar entre -90 y 90",
+                    "La longitud debe estar entre -180 y 180"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "El tercero asociado no existe o no pertenece al comerciante",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "El tercero especificado no existe o no pertenece al comerciante autenticado",
+                  "errores": [
+                    "El tercero especificado no existe o no pertenece al comerciante autenticado"
+                  ],
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registra una nueva finca geolocalizada asociada a un tercero",
+        "tags": [
+          "fincas"
+        ]
+      },
+      "get": {
+        "operationId": "FincasController_listar",
+        "parameters": [
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Cantidad máxima de elementos a retornar (entre 1 y 100)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Número de elementos a omitir desde el inicio (mínimo 0)",
+            "schema": {
+              "minimum": 0,
+              "example": 0,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listado de fincas paginado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginaFincasDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lista las fincas pertenecientes a los terceros del comerciante con paginación",
+        "tags": [
+          "fincas"
+        ]
+      }
+    },
+    "/api/v1/fincas/{id}": {
+      "get": {
+        "operationId": "FincasController_buscarPorId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Finca encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FincaRespuestaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Identificador no es un UUID válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: Validation failed (uuid is expected)",
+                  "errores": [
+                    "Validation failed (uuid is expected)"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/fincas/invalido",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Finca no encontrada o no pertenece a un tercero del comerciante",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Finca no encontrada",
+                  "errores": [
+                    "Finca no encontrada"
+                  ],
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/fincas/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtiene el detalle de una finca por ID",
+        "tags": [
+          "fincas"
+        ]
+      },
+      "patch": {
+        "operationId": "FincasController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarFincaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Finca actualizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FincaRespuestaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos de actualización inválidos o identificador no es UUID válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: El área en hectáreas debe ser mayor o igual a 0",
+                  "errores": [
+                    "El área en hectáreas debe ser mayor o igual a 0"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/fincas/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Finca no encontrada o no pertenece a un tercero del comerciante",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Finca no encontrada",
+                  "errores": [
+                    "Finca no encontrada"
+                  ],
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/fincas/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Actualiza los datos o coordenadas de una finca",
+        "tags": [
+          "fincas"
+        ]
+      },
+      "delete": {
+        "operationId": "FincasController_eliminar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Finca eliminada correctamente"
+          },
+          "400": {
+            "description": "Identificador no es un UUID válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: Validation failed (uuid is expected)",
+                  "errores": [
+                    "Validation failed (uuid is expected)"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/fincas/invalido",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Finca no encontrada o no pertenece a un tercero del comerciante",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Finca no encontrada",
+                  "errores": [
+                    "Finca no encontrada"
+                  ],
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/fincas/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No se puede eliminar la finca porque tiene contratos activos asociados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorConflictoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No se puede eliminar la finca porque tiene contratos activos asociados",
+                  "errores": [
+                    "No se puede eliminar la finca porque tiene contratos activos asociados"
+                  ],
+                  "codigoEstado": 409,
+                  "ruta": "/api/v1/fincas/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/fincas",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Elimina una finca si no tiene contratos vinculados",
+        "tags": [
+          "fincas"
+        ]
+      }
+    },
+    "/api/v1/contratos": {
+      "post": {
+        "description": "Registra un nuevo contrato vinculando un tercero, una finca y el par inmutable de porcentajes de participación. El estado se inicializa automáticamente en \"activo\". Invariante de negocio obligatoria: la suma de porcentaje_comerciante y porcentaje_tercero debe ser exactamente igual a 100%.",
+        "operationId": "ContratosController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearContratoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contrato aperturado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContratoRespuestaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación: campos requeridos ausentes, valores numéricos inválidos o suma de porcentajes distinta de 100",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la solicitud: La suma del porcentaje del comerciante y el porcentaje del tercero debe ser exactamente igual a 100",
+                  "codigoEstado": 400,
+                  "errores": [
+                    "La suma del porcentaje del comerciante y el porcentaje del tercero debe ser exactamente igual a 100"
+                  ],
+                  "ruta": "/api/v1/contratos",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/contratos",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso no encontrado: el tercero no existe en el tenant o la finca no existe/no pertenece al tercero",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "La finca especificada no existe o no pertenece al tercero indicado",
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/contratos",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/contratos",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Apertura un nuevo contrato de participación (lote)",
+        "tags": [
+          "contratos"
+        ]
+      },
+      "get": {
+        "description": "Retorna todos los contratos accesibles por el tenant en sesión activa.",
+        "operationId": "ContratosController_listar",
+        "parameters": [
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Cantidad máxima de elementos a retornar (entre 1 y 100)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Número de elementos a omitir desde el inicio (mínimo 0)",
+            "schema": {
+              "minimum": 0,
+              "example": 0,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listado de contratos obtenido exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginaContratosDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/contratos",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/contratos",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lista los contratos pertenecientes al comerciante autenticado con paginación opcional",
+        "tags": [
+          "contratos"
+        ]
+      }
+    },
+    "/api/v1/contratos/{id}": {
+      "get": {
+        "description": "Consulta un contrato específico asegurando aislamiento tenant.",
+        "operationId": "ContratosController_buscarPorId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contrato encontrado y retornado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContratoRespuestaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Identificador UUID con formato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la solicitud",
+                  "codigoEstado": 400,
+                  "errores": [
+                    {
+                      "campo": "id",
+                      "mensajes": [
+                        "Validation failed (uuid v4 is expected)"
+                      ]
+                    }
+                  ],
+                  "ruta": "/api/v1/contratos/invalido",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/contratos",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contrato no encontrado o no perteneciente al comerciante",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Contrato no encontrado",
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/contratos/00000000-0000-0000-0000-000000000000",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/contratos",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtiene el detalle de un contrato por su ID",
+        "tags": [
+          "contratos"
+        ]
+      },
+      "patch": {
+        "description": "Permite modificar datos mutables (raza, peso_promedio_actual, cantidad_actual, valor_kilo_referencia, estado, fecha_cierre). Los porcentajes de participación son inmutables y no se pueden alterar.",
+        "operationId": "ContratosController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarContratoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contrato actualizado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContratoRespuestaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos o intento de modificar porcentajes de participación u otros campos inmutables",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la solicitud",
+                  "codigoEstado": 400,
+                  "errores": [
+                    {
+                      "campo": "porcentaje_comerciante",
+                      "mensajes": [
+                        "property porcentaje_comerciante should not exist"
+                      ]
+                    }
+                  ],
+                  "ruta": "/api/v1/contratos/00000000-0000-0000-0000-000000000000",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/contratos",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Contrato no encontrado para actualizar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Contrato no encontrado",
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/contratos/00000000-0000-0000-0000-000000000000",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/contratos",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Actualiza campos informativos o estado de un contrato",
+        "tags": [
+          "contratos"
+        ]
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "operationId": "HealthController_verificar",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Elinain API",
+    "description": "API del MVP de gestión ganadera multi-tenant Elinain",
+    "version": "0.1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "CrearUsuarioDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "description": "Nombre del comerciante",
+            "example": "María Quintero"
+          },
+          "email": {
+            "type": "string",
+            "description": "Correo electrónico único del comerciante",
+            "example": "maria@ejemplo.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Contraseña en texto plano (se almacena con hash bcrypt, nunca en claro)",
+            "example": "Secreto123",
+            "minLength": 8
+          }
+        },
+        "required": [
+          "nombre",
+          "email",
+          "password"
+        ]
+      },
+      "UsuarioRegistradoDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único del comerciante",
+            "example": "a3bb189e-8bf9-3888-9912-ace4e6543002"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Nombre del comerciante",
+            "example": "María Quintero"
+          },
+          "email": {
+            "type": "string",
+            "description": "Correo electrónico del comerciante",
+            "example": "maria@ejemplo.com"
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "email"
+        ]
+      },
+      "RespuestaErrorValidacionDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa (siempre false en respuestas de error)",
+            "example": false
+          },
+          "ruta": {
+            "type": "string",
+            "description": "Ruta URL donde ocurrió el error",
+            "example": "/api/v1/recurso"
+          },
+          "marcaTiempo": {
+            "type": "string",
+            "description": "Marca de tiempo en formato ISO 8601 en que ocurrió el error",
+            "example": "2026-09-21T16:00:00.000Z"
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del fallo de validación",
+            "example": "Error de validación en la petición: Parámetros inválidos o incompletos"
+          },
+          "errores": {
+            "description": "Lista detallada de restricciones de validación no cumplidas",
+            "example": [
+              "Parámetros inválidos o incompletos"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "codigoEstado": {
+            "type": "number",
+            "description": "Código de estado HTTP 400 (Bad Request)",
+            "example": 400
+          }
+        },
+        "required": [
+          "exito",
+          "ruta",
+          "marcaTiempo",
+          "mensaje",
+          "codigoEstado"
+        ]
+      },
+      "RespuestaErrorConflictoDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa (siempre false en respuestas de error)",
+            "example": false
+          },
+          "ruta": {
+            "type": "string",
+            "description": "Ruta URL donde ocurrió el error",
+            "example": "/api/v1/recurso"
+          },
+          "marcaTiempo": {
+            "type": "string",
+            "description": "Marca de tiempo en formato ISO 8601 en que ocurrió el error",
+            "example": "2026-09-21T16:00:00.000Z"
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del conflicto de estado o integridad referencial",
+            "example": "Conflicto con el estado actual del recurso"
+          },
+          "errores": {
+            "description": "Detalle del conflicto presentado",
+            "example": [
+              "El registro ya existe o posee dependencias activas vinculadas"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "codigoEstado": {
+            "type": "number",
+            "description": "Código de estado HTTP 409 (Conflict)",
+            "example": 409
+          }
+        },
+        "required": [
+          "exito",
+          "ruta",
+          "marcaTiempo",
+          "mensaje",
+          "codigoEstado"
+        ]
+      },
+      "RespuestaErrorServidorDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa (siempre false en respuestas de error)",
+            "example": false
+          },
+          "ruta": {
+            "type": "string",
+            "description": "Ruta URL donde ocurrió el error",
+            "example": "/api/v1/recurso"
+          },
+          "marcaTiempo": {
+            "type": "string",
+            "description": "Marca de tiempo en formato ISO 8601 en que ocurrió el error",
+            "example": "2026-09-21T16:00:00.000Z"
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo de error interno no controlado",
+            "example": "Error interno del servidor"
+          },
+          "codigoEstado": {
+            "type": "number",
+            "description": "Código de estado HTTP 500 (Internal Server Error)",
+            "example": 500
+          }
+        },
+        "required": [
+          "exito",
+          "ruta",
+          "marcaTiempo",
+          "mensaje",
+          "codigoEstado"
+        ]
+      },
+      "CredencialesAccesoDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Correo electrónico del comerciante",
+            "example": "maria@ejemplo.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Contraseña del comerciante",
+            "example": "Secreto123"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AccesoRespuestaDto": {
+        "type": "object",
+        "properties": {
+          "tokenAcceso": {
+            "type": "string",
+            "description": "JWT de acceso firmado con expiración (usar como Bearer)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "usuario": {
+            "description": "Perfil mínimo del comerciante autenticado",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UsuarioRegistradoDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "tokenAcceso",
+          "usuario"
+        ]
+      },
+      "RespuestaErrorNoAutorizadoDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa (siempre false en respuestas de error)",
+            "example": false
+          },
+          "ruta": {
+            "type": "string",
+            "description": "Ruta URL donde ocurrió el error",
+            "example": "/api/v1/recurso"
+          },
+          "marcaTiempo": {
+            "type": "string",
+            "description": "Marca de tiempo en formato ISO 8601 en que ocurrió el error",
+            "example": "2026-09-21T16:00:00.000Z"
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del fallo de autenticación",
+            "example": "No autorizado: token JWT ausente o credenciales inválidas"
+          },
+          "errores": {
+            "description": "Lista descriptiva del motivo de no autorización",
+            "example": [
+              "Credenciales de acceso inválidas"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "codigoEstado": {
+            "type": "number",
+            "description": "Código de estado HTTP 401 (Unauthorized)",
+            "example": 401
+          }
+        },
+        "required": [
+          "exito",
+          "ruta",
+          "marcaTiempo",
+          "mensaje",
+          "codigoEstado"
+        ]
+      },
+      "CrearTerceroDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "description": "Nombre completo o razón social del tercero",
+            "example": "Juan Pérez Ganadería S.A.S."
+          },
+          "documento": {
+            "type": "string",
+            "description": "Número de documento de identidad o NIT",
+            "example": "900123456-7"
+          },
+          "contacto": {
+            "type": "string",
+            "description": "Información de contacto (teléfono, email, dirección)",
+            "example": "+57 300 123 4567"
+          }
+        },
+        "required": [
+          "nombre",
+          "documento",
+          "contacto"
+        ]
+      },
+      "TerceroRespuestaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único UUID del tercero",
+            "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+          },
+          "usuario_id": {
+            "type": "string",
+            "description": "Identificador único UUID del comerciante propietario",
+            "example": "b1ffcd88-8b0a-3ef7-aa5c-5aa8ac270a22"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Nombre completo o razón social del tercero",
+            "example": "Juan Pérez Ganadería S.A.S."
+          },
+          "documento": {
+            "type": "string",
+            "description": "Número de documento de identidad o NIT",
+            "example": "900123456-7"
+          },
+          "contacto": {
+            "type": "string",
+            "description": "Información de contacto",
+            "example": "+57 300 123 4567"
+          }
+        },
+        "required": [
+          "id",
+          "usuario_id",
+          "nombre",
+          "documento",
+          "contacto"
+        ]
+      },
+      "PaginaTercerosDto": {
+        "type": "object",
+        "properties": {
+          "elementos": {
+            "description": "Listado de elementos paginados",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TerceroRespuestaDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Cantidad total de registros encontrados para el tenant",
+            "example": 45
+          },
+          "limite": {
+            "type": "number",
+            "description": "Límite de registros solicitado o aplicado por página",
+            "example": 20
+          },
+          "offset": {
+            "type": "number",
+            "description": "Cantidad de registros omitidos desde el inicio",
+            "example": 0
+          }
+        },
+        "required": [
+          "elementos",
+          "total",
+          "limite",
+          "offset"
+        ]
+      },
+      "RespuestaErrorNoEncontradoDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa (siempre false en respuestas de error)",
+            "example": false
+          },
+          "ruta": {
+            "type": "string",
+            "description": "Ruta URL donde ocurrió el error",
+            "example": "/api/v1/recurso"
+          },
+          "marcaTiempo": {
+            "type": "string",
+            "description": "Marca de tiempo en formato ISO 8601 en que ocurrió el error",
+            "example": "2026-09-21T16:00:00.000Z"
+          },
+          "mensaje": {
+            "type": "string",
+            "description": "Mensaje descriptivo del recurso no encontrado",
+            "example": "Recurso no encontrado"
+          },
+          "errores": {
+            "description": "Detalle del recurso no encontrado",
+            "example": [
+              "Recurso no encontrado"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "codigoEstado": {
+            "type": "number",
+            "description": "Código de estado HTTP 404 (Not Found)",
+            "example": 404
+          }
+        },
+        "required": [
+          "exito",
+          "ruta",
+          "marcaTiempo",
+          "mensaje",
+          "codigoEstado"
+        ]
+      },
+      "ActualizarTerceroDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "description": "Nombre completo o razón social del tercero",
+            "example": "Juan Pérez Ganadería Renovada"
+          },
+          "documento": {
+            "type": "string",
+            "description": "Número de documento de identidad o NIT",
+            "example": "900123456-8"
+          },
+          "contacto": {
+            "type": "string",
+            "description": "Información de contacto actualizada",
+            "example": "+57 311 987 6543"
+          }
+        }
+      },
+      "CrearFincaDto": {
+        "type": "object",
+        "properties": {
+          "tercero_id": {
+            "type": "string",
+            "description": "Identificador UUID del tercero propietario de la finca",
+            "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Nombre de la finca",
+            "example": "Hacienda La Esperanza"
+          },
+          "direccion": {
+            "type": "string",
+            "description": "Dirección o vereda de ubicación",
+            "example": "Vereda El Porvenir, Km 14 Vía Montería"
+          },
+          "latitud": {
+            "type": "number",
+            "description": "Latitud geográfica (-90 a 90)",
+            "example": 8.754321,
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitud": {
+            "type": "number",
+            "description": "Longitud geográfica (-180 a 180)",
+            "example": -75.881234,
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "tercero_id",
+          "nombre",
+          "direccion",
+          "latitud",
+          "longitud"
+        ]
+      },
+      "FincaRespuestaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único UUID de la finca",
+            "example": "c2eedd77-7a0c-4ff6-995d-4aa7ac160b33"
+          },
+          "tercero_id": {
+            "type": "string",
+            "description": "Identificador UUID del tercero propietario",
+            "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Nombre de la finca",
+            "example": "Hacienda La Esperanza"
+          },
+          "direccion": {
+            "type": "string",
+            "description": "Dirección o vereda de ubicación",
+            "example": "Vereda El Porvenir, Km 14 Vía Montería"
+          },
+          "latitud": {
+            "type": "number",
+            "description": "Latitud geográfica",
+            "example": 8.754321
+          },
+          "longitud": {
+            "type": "number",
+            "description": "Longitud geográfica",
+            "example": -75.881234
+          }
+        },
+        "required": [
+          "id",
+          "tercero_id",
+          "nombre",
+          "direccion",
+          "latitud",
+          "longitud"
+        ]
+      },
+      "PaginaFincasDto": {
+        "type": "object",
+        "properties": {
+          "elementos": {
+            "description": "Listado de elementos paginados",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FincaRespuestaDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Cantidad total de registros encontrados para el tenant",
+            "example": 45
+          },
+          "limite": {
+            "type": "number",
+            "description": "Límite de registros solicitado o aplicado por página",
+            "example": 20
+          },
+          "offset": {
+            "type": "number",
+            "description": "Cantidad de registros omitidos desde el inicio",
+            "example": 0
+          }
+        },
+        "required": [
+          "elementos",
+          "total",
+          "limite",
+          "offset"
+        ]
+      },
+      "ActualizarFincaDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "description": "Nombre de la finca",
+            "example": "Hacienda La Gran Esperanza"
+          },
+          "direccion": {
+            "type": "string",
+            "description": "Dirección o vereda",
+            "example": "Vereda El Porvenir, Sector 2"
+          },
+          "latitud": {
+            "type": "number",
+            "description": "Latitud geográfica (-90 a 90)",
+            "example": 8.765432,
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitud": {
+            "type": "number",
+            "description": "Longitud geográfica (-180 a 180)",
+            "example": -75.876543,
+            "minimum": -180,
+            "maximum": 180
+          }
+        }
+      },
+      "CrearContratoDto": {
+        "type": "object",
+        "properties": {
+          "tercero_id": {
+            "type": "string",
+            "description": "Identificador UUID del tercero socio en participación",
+            "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+          },
+          "finca_id": {
+            "type": "string",
+            "description": "Identificador UUID de la finca donde pastará el lote",
+            "example": "b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22"
+          },
+          "fecha_apertura": {
+            "type": "string",
+            "description": "Fecha y hora de apertura del contrato en formato ISO 8601",
+            "example": "2026-09-21T10:00:00.000Z"
+          },
+          "porcentaje_comerciante": {
+            "type": "number",
+            "description": "Porcentaje de participación del comerciante (entre 0 y 100)",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 60
+          },
+          "porcentaje_tercero": {
+            "type": "number",
+            "description": "Porcentaje de participación del tercero (entre 0 y 100)",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 40
+          },
+          "raza": {
+            "type": "string",
+            "description": "Raza o cruce del lote inicial (opcional)",
+            "example": "Brahman Blanco"
+          },
+          "peso_promedio_actual": {
+            "type": "number",
+            "description": "Peso promedio actual inicial del lote en kg (opcional)",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "example": 350.5
+          },
+          "cantidad_actual": {
+            "type": "number",
+            "description": "Cantidad de cabezas iniciales en el lote (opcional)",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "example": 50
+          },
+          "valor_kilo_referencia": {
+            "type": "number",
+            "description": "Valor por kilo de referencia pactado (opcional)",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "example": 8500
+          }
+        },
+        "required": [
+          "tercero_id",
+          "finca_id",
+          "fecha_apertura",
+          "porcentaje_comerciante",
+          "porcentaje_tercero"
+        ]
+      },
+      "ContratoRespuestaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único UUID del contrato",
+            "example": "d3eedd77-7a0c-4ff6-995d-4aa7ac160b44"
+          },
+          "tercero_id": {
+            "type": "string",
+            "description": "Identificador UUID del tercero socio en participación",
+            "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+          },
+          "finca_id": {
+            "type": "string",
+            "description": "Identificador UUID de la finca asociada",
+            "example": "b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22"
+          },
+          "fecha_apertura": {
+            "type": "string",
+            "description": "Fecha de apertura del contrato en formato ISO 8601 con zona horaria",
+            "example": "2026-09-21T10:00:00.000Z"
+          },
+          "porcentaje_comerciante": {
+            "type": "number",
+            "description": "Porcentaje de participación del comerciante (0 a 100)",
+            "example": 60
+          },
+          "porcentaje_tercero": {
+            "type": "number",
+            "description": "Porcentaje de participación del tercero (0 a 100)",
+            "example": 40
+          },
+          "estado": {
+            "type": "string",
+            "description": "Estado del contrato",
+            "enum": [
+              "activo",
+              "cerrado"
+            ],
+            "example": "activo"
+          },
+          "fecha_cierre": {
+            "type": "string",
+            "description": "Fecha de cierre del contrato cuando el inventario llega a cero",
+            "example": null,
+            "nullable": true
+          },
+          "raza": {
+            "type": "string",
+            "description": "Raza o cruce del lote de ganado",
+            "example": "Brahman Blanco",
+            "nullable": true
+          },
+          "peso_promedio_actual": {
+            "type": "number",
+            "description": "Peso promedio actual de los animales en kilogramos",
+            "example": 350.5,
+            "nullable": true
+          },
+          "cantidad_actual": {
+            "type": "number",
+            "description": "Cantidad actual de cabezas de ganado en el lote",
+            "example": 50,
+            "nullable": true
+          },
+          "valor_kilo_referencia": {
+            "type": "number",
+            "description": "Valor por kilo de referencia pactado",
+            "example": 8500,
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "tercero_id",
+          "finca_id",
+          "fecha_apertura",
+          "porcentaje_comerciante",
+          "porcentaje_tercero",
+          "estado"
+        ]
+      },
+      "PaginaContratosDto": {
+        "type": "object",
+        "properties": {
+          "elementos": {
+            "description": "Listado de elementos paginados",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContratoRespuestaDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Cantidad total de registros encontrados para el tenant",
+            "example": 45
+          },
+          "limite": {
+            "type": "number",
+            "description": "Límite de registros solicitado o aplicado por página",
+            "example": 20
+          },
+          "offset": {
+            "type": "number",
+            "description": "Cantidad de registros omitidos desde el inicio",
+            "example": 0
+          }
+        },
+        "required": [
+          "elementos",
+          "total",
+          "limite",
+          "offset"
+        ]
+      },
+      "ActualizarContratoDto": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "description": "Estado del contrato",
+            "enum": [
+              "activo",
+              "cerrado"
+            ],
+            "example": "cerrado"
+          },
+          "fecha_cierre": {
+            "type": "string",
+            "description": "Fecha y hora de cierre del contrato en formato ISO 8601",
+            "example": "2026-12-31T18:00:00.000Z"
+          },
+          "raza": {
+            "type": "string",
+            "description": "Raza o cruce del lote",
+            "example": "Gyr Lechero"
+          },
+          "peso_promedio_actual": {
+            "type": "number",
+            "description": "Peso promedio actual de los animales en kg",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "example": 410
+          },
+          "cantidad_actual": {
+            "type": "number",
+            "description": "Cantidad actual de cabezas de ganado",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "example": 35
+          },
+          "valor_kilo_referencia": {
+            "type": "number",
+            "description": "Valor por kilo de referencia",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "example": 9000
+          }
+        }
+      }
+    }
+  }
+}
