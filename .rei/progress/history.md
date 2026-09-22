@@ -246,3 +246,32 @@
   placeholder, edición con inmutables y acoplamiento de fecha) queda a cargo del usuario con
   los pasos documentados en `impl.md`. `bash .rei/init.sh` finaliza con código de salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_12-25__fix-desenvolver-sobre-respuestas-backend`
+
+- **Work Item:** `2026-09-22_12-25__fix-desenvolver-sobre-respuestas-backend` — Fix:
+  desenvolver el sobre `{exito, datos}` de las respuestas del backend (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se corrigió el fallo por el que el BFF devolvía `500` en login y
+  registro y por el que los listados de terceros, fincas y contratos recibían una forma
+  equivocada. El backend envuelve toda respuesta exitosa en `{exito: true, datos}`, pero el
+  OpenAPI documenta el payload plano. Se creó el helper puro
+  `desenvolverRespuesta` en `shared/api/response.ts`, que desenvuelve solo cuando el cuerpo
+  es un objeto no nulo, no array, con `exito === true` (booleano estricto) y propiedad propia
+  `datos`, y devuelve el cuerpo tal cual en cualquier otro caso (arrays, primitivos, `null`,
+  `undefined`, cuerpos sin sobre, `exito: false`, `{mensaje}` de `204`/BFF). Se aplicó en un
+  único punto central —el interceptor de respuesta exitosa de `shared/api/http-client.ts`—,
+  sin tocar el interceptor de rechazo ni los cinco métodos. No se modificaron el OpenAPI,
+  ningún Route Handler BFF, `errors.ts` ni `session.ts`, y no se añadieron dependencias.
+- **Archivos modificados:** creados `shared/api/response.ts` y
+  `shared/api/__tests__/response.test.ts`; modificado `shared/api/http-client.ts`.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (24 suites / 205 tests; 13 nuevos de `response.test.ts`) en verde; `V5` reproducido de
+  forma independiente por HTTP contra el backend real (registro `201` y login `204` con
+  `set-cookie`; login inválido `401` con `{mensaje}`; `/api/terceros`, `/api/fincas` y
+  `/api/contratos` con `{elementos,total,limite,offset}`, sin sobre); la validación de UI en
+  navegador queda a cargo del usuario. `bash .rei/init.sh` finaliza con código de salida `0`.
+- **Estado final:** `done`.

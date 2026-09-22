@@ -6,6 +6,7 @@ import {
   buildDefaultHeaders,
   buildUrl,
 } from "@/shared/api/request";
+import { desenvolverRespuesta } from "@/shared/api/response";
 
 /** Opciones para construir un cliente HTTP. */
 export type HttpClientOptions = {
@@ -74,7 +75,10 @@ export function createHttpClient({
   });
 
   client.interceptors.response.use(
-    (response) => response,
+    (response) => {
+      response.data = desenvolverRespuesta(response.data);
+      return response;
+    },
     (error: unknown) => Promise.reject(toApiError(error)),
   );
 
