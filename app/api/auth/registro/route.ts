@@ -3,12 +3,17 @@ import { NextResponse } from "next/server";
 import { ApiError } from "@/shared/api/errors";
 import { createServerClient } from "@/shared/api/server-client";
 import type { ApiSchemas } from "@/shared/api/types";
-import { respuestaError } from "@/app/api/auth/_lib/respuestas";
+import { respuestaError } from "@/app/api/_lib/respuestas";
 import { fijarSesion } from "@/app/api/auth/_lib/sesion";
 
 type CrearUsuarioDto = ApiSchemas["CrearUsuarioDto"];
 type UsuarioRegistradoDto = ApiSchemas["UsuarioRegistradoDto"];
 type AccesoRespuestaDto = ApiSchemas["AccesoRespuestaDto"];
+
+/** Mensaje de conflicto de registro que sobrescribe la base genérica del BFF. */
+const MENSAJES_REGISTRO = {
+  409: "Este correo ya está registrado.",
+} as const;
 
 /**
  * Valida de forma defensiva el cuerpo del registro.
@@ -65,8 +70,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     await cliente.post<UsuarioRegistradoDto>("/usuarios/registro", datos);
   } catch (error) {
     return error instanceof ApiError
-      ? respuestaError(error.status)
-      : respuestaError(500);
+      ? respuestaError(error.status, MENSAJES_REGISTRO)
+      : respuestaError(500, MENSAJES_REGISTRO);
   }
 
   try {
@@ -82,7 +87,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     return respuesta;
   } catch (error) {
     return error instanceof ApiError
-      ? respuestaError(error.status)
-      : respuestaError(500);
+      ? respuestaError(error.status, MENSAJES_REGISTRO)
+      : respuestaError(500, MENSAJES_REGISTRO);
   }
 }

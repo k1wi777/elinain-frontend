@@ -126,3 +126,43 @@
   rutas protegidas, redirección de autenticados y logout) queda a cargo del usuario con los
   pasos documentados en `impl.md`. `bash .rei/init.sh` finaliza con código de salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_03-04__crud-terceros-listado-modal-eliminacion`
+
+- **Work Item:** `2026-09-22_03-04__crud-terceros-listado-modal-eliminacion` — Terceros:
+  listado paginado, crear/editar en modal y eliminar con confirmación (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó el CRUD de terceros (socios de participación) sobre
+  la infraestructura existente. (1) BFF en `app/api/terceros/*`: `GET` paginado y `POST`
+  (crear) en `route.ts`, `PATCH` y `DELETE` en `[id]/route.ts`, con parseo defensivo,
+  propagación del código HTTP real (`0` → `502`) y mensajes en español sin exponer el
+  `mensaje` crudo; `DELETE` responde `204`. (2) Helper transversal `respuestaError` movido a
+  `app/api/_lib/respuestas.ts` (base genérica + `mensajes?` por código), reutilizado por
+  `login`/`registro` conservando sus mensajes de `401`/`409`; se eliminó
+  `app/api/auth/_lib/respuestas.ts`. (3) Feature `terceros`: alias de DTOs del OpenAPI,
+  `esquemaTercero` zod, mensajes de error por estado (incluido el `409` de contratos
+  activos), query keys `['terceros', 'list', filtros]`, `api/` sobre `createBffClient`, hooks
+  de consulta y mutaciones con invalidación y los componentes `TerceroForm` (crear/editar),
+  `EliminarTerceroModal` y `TercerosTable` (tabla, paginación, modal y `Toast`). (4) Ruta
+  `(dashboard)/terceros/page.tsx`, enlace en el layout del dashboard y `/terceros` +
+  `/terceros/:path*` en `RUTAS_PROTEGIDAS`/matcher de `middleware.ts`. (5) Tests puros de
+  esquemas, mensajes de error y query keys.
+- **Archivos modificados:** creados `app/api/_lib/respuestas.ts`,
+  `app/api/terceros/{route.ts,[id]/route.ts}`, `app/(dashboard)/terceros/page.tsx`,
+  `features/terceros/{types,schemas,mensajes-error,query-keys,index}.ts`,
+  `features/terceros/api/terceros.ts`,
+  `features/terceros/hooks/{useTerceros,useCrearTercero,useActualizarTercero,useEliminarTercero}.ts`,
+  `features/terceros/components/{TerceroForm,EliminarTerceroModal,TercerosTable}.tsx` y
+  `features/terceros/__tests__/{schemas,mensajes-error,query-keys}.test.ts`; modificados
+  `app/api/auth/{login,registro}/route.ts`, `app/(dashboard)/layout.tsx` y `middleware.ts`;
+  eliminado `app/api/auth/_lib/respuestas.ts`. Sin cambios en `package.json`,
+  `shared/api/openapi/*` ni en los tests/configuración transversales.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos (con `npx next
+  typegen` previo) y `V4` tests (11 suites / 93 tests) en verde; `V5` (validación manual de
+  listado/vacío, crear, editar, eliminar y `409` de contratos activos) queda a cargo del
+  usuario con los pasos documentados en `impl.md`. `bash .rei/init.sh` finaliza con código de
+  salida `0`.
+- **Estado final:** `done`.

@@ -3,11 +3,17 @@ import { NextResponse } from "next/server";
 import { ApiError } from "@/shared/api/errors";
 import { createServerClient } from "@/shared/api/server-client";
 import type { ApiSchemas } from "@/shared/api/types";
-import { respuestaError } from "@/app/api/auth/_lib/respuestas";
+import { respuestaError } from "@/app/api/_lib/respuestas";
 import { fijarSesion } from "@/app/api/auth/_lib/sesion";
 
 type CredencialesAccesoDto = ApiSchemas["CredencialesAccesoDto"];
 type AccesoRespuestaDto = ApiSchemas["AccesoRespuestaDto"];
+
+/** Mensajes de acceso que sobrescriben la base genérica del BFF. */
+const MENSAJES_ACCESO = {
+  401: "Correo o contraseña incorrectos.",
+  409: "Este correo ya está registrado.",
+} as const;
 
 /**
  * Valida de forma defensiva el cuerpo del acceso.
@@ -65,7 +71,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     return respuesta;
   } catch (error) {
     return error instanceof ApiError
-      ? respuestaError(error.status)
-      : respuestaError(500);
+      ? respuestaError(error.status, MENSAJES_ACCESO)
+      : respuestaError(500, MENSAJES_ACCESO);
   }
 }

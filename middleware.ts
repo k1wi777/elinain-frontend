@@ -4,7 +4,7 @@ import { sesionVigente } from "@/shared/api/session";
 import { SESSION_COOKIE_NAME } from "@/shared/api/session-cookie";
 
 /** Rutas que requieren una sesión vigente. */
-const RUTAS_PROTEGIDAS = ["/dashboard"];
+const RUTAS_PROTEGIDAS = ["/dashboard", "/terceros"];
 
 /** Rutas de acceso que no deben verse con una sesión vigente. */
 const RUTAS_ACCESO = ["/login", "/registro"];
@@ -41,5 +41,12 @@ export function middleware(request: NextRequest): NextResponse {
 }
 
 export const config = {
-  matcher: ["/dashboard", "/dashboard/:path*", "/login", "/registro"],
+  matcher: [
+    "/dashboard",
+    "/dashboard/:path*",
+    "/terceros",
+    "/terceros/:path*",
+    "/login",
+    "/registro",
+  ],
 };
