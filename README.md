@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Elinain — Frontend
 
-## Getting Started
+Frontend web de **Elinain**, una plataforma SaaS para la gestión integral del negocio de **compra, engorde y comercialización de ganado bovino**: inventario, compras y ventas, costos operativos, sanidad animal, ganado en participación con terceros y facturación, con métricas reales de rentabilidad.
 
-First, run the development server:
+Este repositorio contiene únicamente la **interfaz web**. Consume la API REST del backend y no gestiona persistencia propia.
+
+## Stack
+
+- [Next.js 16](https://nextjs.org/) (App Router) + [React 19](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/) en modo `strict`
+- [Tailwind CSS v4](https://tailwindcss.com/)
+- [TanStack Query](https://tanstack.com/query) para server state
+- [react-hook-form](https://react-hook-form.com/) + [zod](https://zod.dev/) para formularios y validación
+- [react-leaflet](https://react-leaflet.js.org/) para mapas
+- [Jest](https://jestjs.io/) para tests
+
+## Requisitos
+
+- Node.js 20.9 o superior
+- npm
+
+## Puesta en marcha
 
 ```bash
+git clone <url-del-repositorio>
+cd elinain-frontend
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La aplicación queda disponible en [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Variables de entorno
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Las variables viven en un archivo `.env.local` en la raíz del proyecto y **no se versionan**. Cuando se integre la API se usará `NEXT_PUBLIC_API_URL` para las peticiones directas al backend; el resto de operaciones pasan por el BFF en `app/api/`.
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Comando                              | Qué hace                                                |
+| ------------------------------------ | ------------------------------------------------------- |
+| `npm run dev`                        | Servidor de desarrollo.                                 |
+| `npm run build`                      | Build de producción.                                    |
+| `npm start`                          | Sirve el build de producción.                           |
+| `npm run lint`                       | ESLint.                                                 |
+| `npm run typecheck`                  | Chequeo de tipos (`tsc --noEmit`).                      |
+| `npm run format`                     | Formatea el código con Prettier.                        |
+| `npm run format:check`               | Comprueba el formato sin modificarlo.                   |
+| `npm test`                           | Suite completa de Jest.                                 |
+| `npm run test:related -- <archivos>` | Solo los tests relacionados con los archivos indicados. |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Estructura
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```text
+app/          Rutas de Next.js (App Router) y BFF en app/api/
+features/     Porciones de negocio autocontenidas
+shared/       Código transversal sin dominio (api, ui, lib, config)
+public/       Recursos estáticos
+.rei/         Arnés de REI: workflow, specs y documentación del proyecto
+```
 
-## Deploy on Vercel
+La organización detallada y las reglas de dependencia entre capas están en [`.rei/docs/project/architecture.md`](.rei/docs/project/architecture.md).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Documentación del proyecto
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Tema                        | Dónde                                                                    |
+| --------------------------- | ------------------------------------------------------------------------ |
+| Arquitectura                | [`.rei/docs/project/architecture.md`](.rei/docs/project/architecture.md) |
+| Convenciones de código      | [`.rei/docs/project/conventions.md`](.rei/docs/project/conventions.md)   |
+| Verificación y checkpoints  | [`.rei/docs/project/verification.md`](.rei/docs/project/verification.md) |
+| Contexto para agentes de IA | [`AGENTS.md`](AGENTS.md)                                                 |
+
+Antes de trabajar en el repositorio, ejecuta el arnés de verificación:
+
+```bash
+bash .rei/init.sh
+```
+
+## Convenciones de contribución
+
+- Los commits siguen [Conventional Commits](https://www.conventionalcommits.org/) y se escriben **en inglés** en modo imperativo (por ejemplo `feat: add terceros table`).
+- El código se formatea con Prettier; no se discute el formato a mano (`npm run format`).
