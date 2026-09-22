@@ -37,6 +37,24 @@ export default function DashboardLayout({ children }: Props) {
             >
               Contratos
             </Link>
+            <Link
+              href="/ventas"
+              className="text-sm text-zinc-600 hover:text-zinc-900"
+            >
+              Ventas
+            </Link>
+            <Link
+              href="/ciclos"
+              className="text-sm text-zinc-600 hover:text-zinc-900"
+            >
+              Ciclos
+            </Link>
+            <Link
+              href="/costos"
+              className="text-sm text-zinc-600 hover:text-zinc-900"
+            >
+              Costos
+            </Link>
           </nav>
         </div>
         <LogoutButton />

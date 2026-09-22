@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-22_15-12__placeholders-modulos-ventas-ciclos-costos",
+  "title": "Preparación de módulos bloqueados por backend: features y páginas 'Próximamente' de ventas, ciclos y costos",
+  "description": "Dejar preparado el patrón de integración de los módulos que el backend todavía no expone (ventas, ciclos y costos), sin lógica de negocio ni llamadas a la API. Alcance acordado con el usuario: (1) crear las carpetas features/ventas, features/ciclos y features/costos con un index.ts mínimo que establezca el patrón del feature (componente de marcador de posición + barrel), listas para rellenarse cuando el backend libere los endpoints; (2) crear las rutas protegidas /ventas, /ciclos y /costos con una vista simple de 'Próximamente' que anticipe qué vivirá ahí, y añadir sus enlaces a la navegación del área protegida; (3) proteger esas rutas en middleware.ts como las demás del dashboard. NO se maquetan formularios ni se usan datos de ejemplo (el usuario descartó explícitamente esa parte del enunciado original): es solo preparación estructural y de navegación. Sin dependencias nuevas, sin tocar el OpenAPI local ni el BFF, y sin lógica pura nueva que testear. Fuera de alcance: cualquier integración real, formularios, tipos de dominio del backend y el módulo de compras (solo se menciona como referencia en el placeholder de detalle de contrato).",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-22T15:12:02-05:00"
+}

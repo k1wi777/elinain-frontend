@@ -4,7 +4,15 @@ import { sesionVigente } from "@/shared/api/session";
 import { SESSION_COOKIE_NAME } from "@/shared/api/session-cookie";
 
 /** Rutas que requieren una sesión vigente. */
-const RUTAS_PROTEGIDAS = ["/dashboard", "/terceros", "/fincas", "/contratos"];
+const RUTAS_PROTEGIDAS = [
+  "/dashboard",
+  "/terceros",
+  "/fincas",
+  "/contratos",
+  "/ventas",
+  "/ciclos",
+  "/costos",
+];
 
 /** Rutas de acceso que no deben verse con una sesión vigente. */
 const RUTAS_ACCESO = ["/login", "/registro"];
@@ -50,6 +58,12 @@ export const config = {
     "/fincas/:path*",
     "/contratos",
     "/contratos/:path*",
+    "/ventas",
+    "/ventas/:path*",
+    "/ciclos",
+    "/ciclos/:path*",
+    "/costos",
+    "/costos/:path*",
     "/login",
     "/registro",
   ],

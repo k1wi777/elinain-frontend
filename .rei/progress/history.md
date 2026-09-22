@@ -378,3 +378,36 @@
   `V5` (navegación con caché, feedback inmediato y comparación dev/producción) queda a cargo del
   usuario con los pasos documentados en `impl.md`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_15-12__placeholders-modulos-ventas-ciclos-costos`
+
+- **Work Item:** `2026-09-22_15-12__placeholders-modulos-ventas-ciclos-costos` —
+  Preparación de módulos bloqueados por backend: features y páginas "Próximamente" de ventas,
+  ciclos y costos (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se dejó preparado el patrón de integración de los módulos bloqueados
+  por el backend, sin lógica de negocio ni llamadas a la API. (1) Pieza presentacional
+  compartida `shared/ui/Proximamente.tsx` (`titulo`, `descripcion` + aviso "Próximamente."),
+  sin dominio y con named export, exportada en `shared/ui/index.ts`. (2) Los features `ventas`,
+  `ciclos` y `costos` con su componente `<Modulo>Proximamente` y su barrel de una sola
+  exportación con JSDoc. (3) Las páginas `app/(dashboard)/{ventas,ciclos,costos}/page.tsx`
+  como Server Components delgados con `metadata` por módulo. (4) Los enlaces "Ventas",
+  "Ciclos" y "Costos" en la `<nav>` del layout del área protegida. (5) Las rutas y sus
+  `:path*` en `RUTAS_PROTEGIDAS` y el `config.matcher` de `middleware.ts`.
+- **Archivos modificados:** creados `shared/ui/Proximamente.tsx`,
+  `features/ventas/components/VentasProximamente.tsx`, `features/ciclos/components/CiclosProximamente.tsx`,
+  `features/costos/components/CostosProximamente.tsx`, `features/ventas/index.ts`,
+  `features/ciclos/index.ts`, `features/costos/index.ts`, `app/(dashboard)/ventas/page.tsx`,
+  `app/(dashboard)/ciclos/page.tsx` y `app/(dashboard)/costos/page.tsx`; modificados
+  `shared/ui/index.ts`, `app/(dashboard)/layout.tsx` y `middleware.ts`. Sin cambios en
+  `package.json`/`package-lock.json`, `shared/api/openapi/*`, el BFF (`app/api/*`) ni los
+  features existentes; sin dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (24 suites / 224 tests) en verde; `V5` reejecutada de forma independiente por HTTP contra
+  el dev server activo (las tres rutas redirigen a `/login` sin sesión y muestran título,
+  descripción y "Próximamente." con sesión). `bash .rei/init.sh` finaliza con código de salida
+  `0`.
+- **Estado final:** `done`.
