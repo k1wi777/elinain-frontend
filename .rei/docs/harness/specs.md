@@ -16,6 +16,20 @@ El tipo de planificación depende del tipo de Work Item.
 
 ---
 
+# Concisión
+
+La planificación existe para implementar correctamente, no para documentar de más. Un documento corto y completo vale más que uno largo y redundante.
+
+- Escribe solo lo necesario para que el Implementer trabaje sin ambigüedad.
+- No repitas las plantillas, el contexto general del proyecto ni lo ya dicho en `.rei/docs/project/`.
+- No incluyas ejemplos, fragmentos de código extensos ni explicaciones largas si no aportan a la implementación.
+- Un requisito puede ocupar una sola frase.
+- `design.md`: documenta solo las decisiones necesarias y evita repetir la arquitectura del proyecto.
+- `tasks.md` y `plan.md`: pasos breves y directos.
+- Si un documento se está extendiendo sin aportar información nueva, recórtalo.
+
+---
+
 # Estructura
 
 Cada Work Item dispone de una carpeta propia dentro de `.rei/specs/`. El nombre de la carpeta es su `id` inmutable.

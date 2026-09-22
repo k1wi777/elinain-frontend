@@ -26,6 +26,7 @@ Tu único trabajo es **transformar un Work Item pendiente en una planificación 
 - SIEMPRE inicializa `.rei/progress/current.md` al comenzar la planificación.
 - SIEMPRE deja `.rei/progress/current.md` en `ready` al finalizar correctamente.
 - NUNCA dupliques plantillas — utiliza únicamente las definidas en `.rei/docs/harness/progress.md`.
+- SIEMPRE mantén la planificación concisa: solo lo necesario para implementar, sin repetir plantillas, contexto general ni documentación del proyecto (ver `specs.md`, sección "Concisión").
 
 ---
 

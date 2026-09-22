@@ -29,6 +29,8 @@ Normalmente implica uno o varios de los siguientes casos:
 
 Las Features utilizan el flujo completo de Spec Driven Development y generan `requirements.md`, `design.md` y `tasks.md`.
 
+Una Feature **no** se elige por el tamaño del cambio ni por el número de archivos afectados, sino porque el trabajo **necesita especificarse** antes de implementarse.
+
 **Selecciona Feature cuando:**
 
 - el trabajo todavía necesita ser especificado;
@@ -40,26 +42,26 @@ Las Features utilizan el flujo completo de Spec Driven Development y generan `re
 
 ## Task
 
-Una Task representa un cambio pequeño cuyo alcance puede definirse completamente mediante una planificación breve.
+Una Task representa un cambio cuyo alcance puede definirse completamente de antemano mediante una planificación breve. Puede tocar varios archivos: lo que la define no es el tamaño, sino que no requiere decisiones de diseño ni documentar requisitos.
 
 Algunos ejemplos son:
 
-- pequeños ajustes de interfaz;
+- ajustes de interfaz;
 - corrección de errores localizados;
-- cambios menores de comportamiento;
-- modificaciones puntuales sobre código existente.
+- cambios de comportamiento puntuales;
+- implementaciones concretas sobre código existente ya especificadas por el usuario (por ejemplo, un cliente HTTP, un hook o un conjunto de componentes).
 
 Las Tasks utilizan un flujo simplificado y generan únicamente `plan.md`.
 
 **Selecciona Task cuando:**
 
 - el objetivo está claramente definido;
-- el cambio es pequeño y localizado;
+- el cambio es puntual o acotado, aunque toque varios archivos;
 - no es necesario generar requisitos ni diseño detallado.
 
 ---
 
-**Regla de desempate:** si existe cualquier duda sobre el tipo, selecciona **Feature**.
+**Regla de desempate:** el tipo lo determina la **necesidad de especificación**, no el tamaño ni el número de archivos. Por defecto, ante un cambio puntual con alcance definible de antemano, selecciona **Task**. Elige **Feature** únicamente cuando el trabajo encaje de forma clara en los criterios de Feature (necesita especificarse, hay varias decisiones de diseño por tomar, cambia la arquitectura o el comportamiento, o hay que documentar requisitos).
 
 ---
 

@@ -49,7 +49,7 @@ Al recibir una nueva solicitud:
 4. Genera el `id` inmutable del Work Item con el formato `YYYY-MM-DD_HH-mm__slug-en-kebab-case`, usando la fecha y hora de creación. Si ya existe el mismo identificador, añade un sufijo numérico al slug (`-2`, `-3`, ...).
 5. Crea o actualiza `.rei/specs/<work-item-id>/meta.json` siguiendo `.rei/docs/harness/meta.md` y registra el mismo `id` y `created_at`.
 6. Redacta el contenido de `meta.json` representando el acuerdo alcanzado con el usuario, proporcionando el contexto suficiente para comprender el objetivo del trabajo sin convertir la descripción en una especificación.
-7. Define el `type` del trabajo (`feature` o `task`).
+7. Define el `type` del trabajo (`feature` o `task`) según los criterios de `.rei/docs/harness/workflow.md`. Por defecto usa `task` para cambios puntuales con alcance definible de antemano; reserva `feature` para el trabajo que necesita especificarse (varias decisiones de diseño, cambio de arquitectura o de comportamiento, o requisitos a documentar).
 8. Inicializa el trabajo con `status = pending`.
 9. Consulta `meta.json` y continúa el workflow correspondiente.
 

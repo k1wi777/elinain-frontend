@@ -100,6 +100,7 @@ El Work Item fue bloqueado durante la implementación.
 - SIEMPRE marca cada tarea en `tasks.md` (o paso en `plan.md`) **inmediatamente** al completarla.
 - SIEMPRE mantén actualizado `.rei/progress/current.md`.
 - SIEMPRE documenta la implementación en `.rei/progress/work-items/<work-item-id>/impl.md`.
+- Mantén `impl.md` conciso: evidencia, decisiones y observaciones relevantes, sin repetir la planificación.
 - SIEMPRE verifica tu trabajo antes de solicitar revisión.
 
 ---

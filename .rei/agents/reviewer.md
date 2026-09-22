@@ -109,6 +109,7 @@ Si durante la revisión no es posible determinar si el Work Item cumple la plani
 - NUNCA apruebes si existe una desviación respecto a la planificación.
 - SIEMPRE justifica cada rechazo de forma concreta.
 - SIEMPRE documenta el resultado en `.rei/progress/work-items/<work-item-id>/review.md`.
+- Mantén `review.md` conciso: resultado, verificaciones y observaciones, sin repetir la planificación.
 - NUNCA dupliques plantillas — utiliza únicamente las definidas en `.rei/docs/harness/progress.md`.
 
 ---
