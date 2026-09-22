@@ -1,0 +1,22 @@
+# Dependencias y artefactos de build
+node_modules/
+.next/
+out/
+build/
+coverage/
+
+# Lockfiles y archivos generados
+package-lock.json
+next-env.d.ts
+*.tsbuildinfo
+
+# Arnés de REI (documentos y scripts)
+.rei/
+AGENTS.md
+CLAUDE.md
+
+# Estáticos
+public/
+
+# Entorno
+.env*
