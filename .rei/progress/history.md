@@ -444,3 +444,48 @@
   revisión de responsive y contraste quedan a cargo del usuario. `bash .rei/init.sh` finaliza
   con código de salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_19-13__compras-registro-listado-edicion-y-eliminacion-en-contrato`
+
+- **Work Item:** `2026-09-22_19-13__compras-registro-listado-edicion-y-eliminacion-en-contrato`
+  — Compras: listado filtrado por contrato y registro, edición y eliminación embebidos en el
+  detalle de contrato (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó la gestión de compras de un contrato (R1–R21, T1–T9).
+  (1) Refactor: `features/contratos/fechas.ts` y su test se movieron a `shared/lib/fechas.ts` y
+  `shared/lib/__tests__/fechas.test.ts`, actualizando los imports de `features/contratos/schemas.ts`
+  y de `ContratoForm`, `ContratoDetalle`, `ContratosListado`, `ContratoCrear` y `ContratoEditar` a
+  `@/shared/lib/fechas`. (2) BFF de compras en `app/api/compras/*`: `GET` paginado y filtrado por
+  `contrato_id` y `POST` validado en `route.ts`; `GET`/`PATCH` (solo campos mutables, descarta
+  `contrato_id` y exige al menos uno) y `DELETE` que responde `200` en `[id]/route.ts`, con
+  propagación del código HTTP real (red → `502`) y mensajes en español, incluidos los `409` de
+  modificar y eliminar. (3) Feature `compras` autocontenido: alias de DTOs del OpenAPI,
+  `api/compras.ts` sobre `createBffClient`, query keys `clavesCompras`, hooks de consulta y
+  mutaciones que invalidan `clavesCompras.listas()`, `esquemaCompra` zod (cinco campos, cantidad
+  entera `> 0`, peso/precio `> 0`, nota requerida) con la utilidad de fechas, `mensajes-error` con
+  los `409` y el `0` de conexión, y componentes `CompraForm` (`datetime-local`, contrato no
+  editable), `CompraFormModal` (no se cierra al fallar), `EliminarCompraModal` (confirmación
+  previa) y `ComprasSeccion` (tabla paginada en servidor con estados de carga/vacío/error,
+  acciones y `Toast`). (4) Composición en `app/`: `detalle-con-relaciones.tsx` renderiza
+  `<ComprasSeccion contratoId={id} />` y el placeholder de `ContratoDetalle` pasa a
+  "Próximamente: ventas, ciclos y costos.". (5) Tests puros de `schemas`, `mensajes-error` y
+  `query-keys`, más el de fechas movido. Sin ruta global `/compras` ni cambios en el contrato del
+  backend.
+- **Archivos modificados:** creados `app/api/compras/{route.ts,[id]/route.ts}`,
+  `features/compras/**` (tipos, query keys, esquema, mensajes, `api/`, `hooks/`, `components/`,
+  `index.ts` y tests); movidos `features/contratos/fechas.ts` → `shared/lib/fechas.ts` y
+  `features/contratos/__tests__/fechas.test.ts` → `shared/lib/__tests__/fechas.test.ts`;
+  modificados `features/contratos/schemas.ts`,
+  `features/contratos/components/{ContratoForm,ContratoDetalle,ContratosListado,ContratoCrear,ContratoEditar}.tsx`
+  y `app/(dashboard)/contratos/_components/detalle-con-relaciones.tsx`. Sin cambios en
+  `package.json`/`package-lock.json`, `shared/api/openapi/*`, `shared/ui`, ESLint, Prettier ni
+  Jest; sin dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (27 suites / 248 tests) en verde; comprobación HTTP independiente del BFF (`GET /api/compras`
+  sin sesión → `401`). `V5` (registro, edición, eliminación y `409` de contrato con ventas, además
+  de accesibilidad) queda a cargo del usuario con los pasos documentados en `impl.md`.
+  `bash .rei/init.sh` finaliza con código de salida `0`.
+- **Estado final:** `done`.

@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { fechaLocalAIso } from "@/shared/lib/fechas";
 import { Toast } from "@/shared/ui";
 import { ContratoForm } from "@/features/contratos/components/ContratoForm";
-import { fechaLocalAIso } from "@/features/contratos/fechas";
 import { useActualizarContrato } from "@/features/contratos/hooks/useActualizarContrato";
 import { useContrato } from "@/features/contratos/hooks/useContrato";
 import {

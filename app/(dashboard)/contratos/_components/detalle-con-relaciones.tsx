@@ -1,5 +1,6 @@
 "use client";
 
+import { ComprasSeccion } from "@/features/compras";
 import {
   ContratoDetalle,
   type FincaContrato,
@@ -15,10 +16,12 @@ type Props = {
 };
 
 /**
- * Composición del detalle de contrato con terceros y fincas.
+ * Composición del detalle de contrato con terceros, fincas y compras.
  *
  * Carga los terceros y las fincas para resolver los nombres y los pasa por props a
- * `features/contratos`, sin que el feature importe de otros features.
+ * `features/contratos`, sin que el feature importe de otros features. Las compras se
+ * componen aquí, junto al detalle, sin que `features/compras` importe de `features/contratos`
+ * ni al revés.
  */
 export function DetalleConRelaciones({ id }: Props) {
   const terceros = useTodosLosTerceros();
@@ -46,10 +49,13 @@ export function DetalleConRelaciones({ id }: Props) {
   }));
 
   return (
-    <ContratoDetalle
-      id={id}
-      terceros={tercerosContrato}
-      fincas={fincasContrato}
-    />
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8">
+      <ContratoDetalle
+        id={id}
+        terceros={tercerosContrato}
+        fincas={fincasContrato}
+      />
+      <ComprasSeccion contratoId={id} />
+    </div>
   );
 }

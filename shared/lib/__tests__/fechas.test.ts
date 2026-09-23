@@ -2,7 +2,7 @@ import {
   fechaLocalAIso,
   formatearFechaHora,
   isoAFechaLocal,
-} from "@/features/contratos/fechas";
+} from "@/shared/lib/fechas";
 
 /**
  * Los valores de entrada y salida son absolutos (ISO 8601 con desfase), por lo que estas

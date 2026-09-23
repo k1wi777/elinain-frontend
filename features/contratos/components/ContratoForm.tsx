@@ -10,8 +10,8 @@ import {
   type Resolver,
 } from "react-hook-form";
 
+import { isoAFechaLocal } from "@/shared/lib/fechas";
 import { Button, Input, Select } from "@/shared/ui";
-import { isoAFechaLocal } from "@/features/contratos/fechas";
 import { formatearParticipacion } from "@/features/contratos/participacion";
 import {
   fincasDeTercero,

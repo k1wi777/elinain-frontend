@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fechaLocalAIso } from "@/features/contratos/fechas";
+import { fechaLocalAIso } from "@/shared/lib/fechas";
 
 /**
  * Esquemas de validación de los formularios de contratos.

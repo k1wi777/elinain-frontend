@@ -4,13 +4,13 @@ import { useState, type ChangeEvent } from "react";
 import Link from "next/link";
 
 import { usePagination } from "@/shared/api/usePagination";
+import { formatearFechaHora } from "@/shared/lib/fechas";
 import {
   Select,
   Table,
   type ColumnaTabla,
   type PaginacionTabla,
 } from "@/shared/ui";
-import { formatearFechaHora } from "@/features/contratos/fechas";
 import {
   filtrarContratosPorEstado,
   paginarContratos,
