@@ -41,8 +41,8 @@ export function FincaCrear({ propietarios }: Props) {
 
   return (
     <section className="mx-auto w-full max-w-2xl">
-      <h1 className="mb-2 text-2xl font-semibold text-zinc-900">Nueva finca</h1>
-      <p className="mb-6 text-sm text-zinc-600">
+      <h1 className="mb-2 text-2xl font-semibold text-white">Nueva finca</h1>
+      <p className="mb-6 text-sm text-zinc-400">
         Registra la finca, ubícala en el mapa y ajusta el pin con la posición
         exacta.
       </p>

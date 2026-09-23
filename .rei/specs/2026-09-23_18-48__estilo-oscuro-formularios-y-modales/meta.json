@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-23_18-48__estilo-oscuro-formularios-y-modales",
+  "title": "Estilo oscuro de formularios y modales con glassmorphism",
+  "description": "Alinear visualmente todos los formularios y modales de la app con la estética oscura premium del shell, añadiendo glassmorphism a los modales. Enfoque acordado con el usuario: hacer que los controles compartidos shared/ui (Input, Select y Modal) sean oscuros por defecto y que Modal use glassmorphism, de modo que todos los formularios y modales queden alineados de una vez. Alcance: modal de crear/editar socio y su modal de eliminación (terceros); formularios y páginas de crear/editar finca, su modal de eliminación y el desplegable de autocompletar dirección (fincas); formularios y páginas de crear/editar contrato (contratos); modales de registro/edición de las pestañas del detalle de contrato (compras, ciclos, costos y ventas) y el modal de resultado de venta; y los modales de alerta de eliminación de compra, ciclo, costo, finca y socio. Se corrigen los textos y contenedores que aún usan colores claros (text-zinc-900, text-zinc-700, text-zinc-600, bordes/fondos claros) para que se lean sobre el tema oscuro. La autenticación (login/registro) queda fuera porque ya es oscura y usa su propio campo. Se conservan intactos la lógica de formularios, validaciones zod, react-hook-form, hooks, api/, schemas, queries, mutaciones, rutas, mensajes y accesibilidad (labels, aria-invalid, aria-describedby, foco, Escape, foco atrapado por dialog). No se añaden dependencias.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-23T18:48:17-05:00"
+}

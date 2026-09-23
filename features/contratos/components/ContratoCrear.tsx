@@ -65,10 +65,8 @@ export function ContratoCrear({ terceros, fincas }: Props) {
 
   return (
     <section className="mx-auto w-full max-w-2xl">
-      <h1 className="mb-2 text-2xl font-semibold text-zinc-900">
-        Nuevo contrato
-      </h1>
-      <p className="mb-6 text-sm text-zinc-600">
+      <h1 className="mb-2 text-2xl font-semibold text-white">Nuevo contrato</h1>
+      <p className="mb-6 text-sm text-zinc-400">
         Abre un contrato de participación definiendo el socio, la finca, la
         fecha de apertura y los porcentajes.
       </p>

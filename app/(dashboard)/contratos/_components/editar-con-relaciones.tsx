@@ -25,12 +25,12 @@ export function EditarConRelaciones({ id }: Props) {
   const fincas = useTodasLasFincas();
 
   if (terceros.isPending || fincas.isPending) {
-    return <p className="text-sm text-zinc-500">Cargando…</p>;
+    return <p className="text-sm text-zinc-400">Cargando…</p>;
   }
 
   if (terceros.error || fincas.error) {
     return (
-      <p role="alert" className="text-sm text-red-600">
+      <p role="alert" className="text-sm text-red-400">
         No se pudieron cargar los socios de participación ni las fincas.
       </p>
     );

@@ -83,7 +83,7 @@ export function SelectorMapa({ posicion, centro, onCambiarPosicion }: Props) {
     <div
       role="application"
       aria-label="Mapa para ubicar la finca"
-      className="overflow-hidden rounded-md border border-zinc-300"
+      className="overflow-hidden rounded-md border border-white/8 bg-white/[0.03]"
     >
       <MapContainer
         center={centroInicial}

@@ -39,7 +39,7 @@ const SelectorMapa = dynamic(
   {
     ssr: false,
     loading: () => (
-      <p className="rounded-md border border-zinc-300 px-4 py-8 text-center text-sm text-zinc-500">
+      <p className="rounded-md border border-white/8 bg-white/[0.03] px-4 py-8 text-center text-sm text-zinc-500">
         Cargando mapa…
       </p>
     ),
@@ -252,19 +252,19 @@ export function FincaForm({
         </Button>
       </div>
 
-      <p className="text-xs text-zinc-500">
+      <p className="text-xs text-zinc-400">
         Escribe para ver sugerencias o haz clic en el mapa para completar la
         dirección. Las coordenadas que se guardan son siempre las del pin.
       </p>
 
       {geocodificacion.error ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {mensajeErrorGeocodificacion(geocodificacion.error.status)}
         </p>
       ) : null}
 
       {errorInverso ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {errorInverso}
         </p>
       ) : null}
@@ -276,14 +276,14 @@ export function FincaForm({
           onCambiarPosicion={cambiarPosicion}
         />
         {errors.latitud || errors.longitud ? (
-          <p role="alert" className="text-sm text-red-600">
+          <p role="alert" className="text-sm text-red-400">
             {errors.latitud?.message ?? errors.longitud?.message}
           </p>
         ) : null}
       </div>
 
       {mensajeError ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {mensajeError}
         </p>
       ) : null}

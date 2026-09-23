@@ -140,13 +140,13 @@ export function CompraForm({
       />
 
       {modo === "editar" ? (
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-zinc-400">
           El contrato de la compra no se puede modificar.
         </p>
       ) : null}
 
       {mensajeError ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {mensajeError}
         </p>
       ) : null}

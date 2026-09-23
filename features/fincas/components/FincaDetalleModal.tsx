@@ -28,7 +28,7 @@ type Props = {
  *
  * Se abre desde el popup del mapa ("Ver detalle") sin cambiar de ruta, muestra nombre,
  * propietario, dirección y coordenadas, y ofrece la acción de editar. Reutiliza el `Modal`
- * accesible del sistema de diseño con la variante `tema="oscuro"`.
+ * accesible del sistema de diseño, que ya usa el tema oscuro del shell.
  */
 export function FincaDetalleModal({ finca, propietarios, onCerrar }: Props) {
   const propietariosPorId = indexarPropietarios(propietarios);
@@ -37,7 +37,6 @@ export function FincaDetalleModal({ finca, propietarios, onCerrar }: Props) {
     <Modal
       abierto={finca !== null}
       titulo="Detalle de la finca"
-      tema="oscuro"
       onCerrar={onCerrar}
       pie={
         finca ? (

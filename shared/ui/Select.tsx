@@ -23,7 +23,7 @@ export type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
 };
 
 const ESTILOS_CONTROL =
-  "rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/40 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
+  "rounded-md border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white focus:border-elinain-gold focus:ring-2 focus:ring-elinain-gold/40 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [color-scheme:dark] [&>option]:bg-elinain-surface [&>option]:text-white";
 
 /**
  * Selector accesible con etiqueta y mensaje de error vinculados.
@@ -45,7 +45,7 @@ export function Select({
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={controlId} className="text-sm font-medium text-zinc-700">
+      <label htmlFor={controlId} className="text-sm font-medium text-zinc-300">
         {label}
       </label>
       <select
@@ -54,7 +54,8 @@ export function Select({
         aria-describedby={error ? errorId : undefined}
         className={cn(
           ESTILOS_CONTROL,
-          error && "border-red-500 focus:border-red-500 focus:ring-red-500/40",
+          error &&
+            "border-red-500/60 focus:border-red-500 focus:ring-red-500/40",
           className,
         )}
         {...props}
@@ -66,7 +67,7 @@ export function Select({
         ))}
       </select>
       {error ? (
-        <p id={errorId} className="text-sm text-red-600">
+        <p id={errorId} className="text-sm text-red-400">
           {error}
         </p>
       ) : null}

@@ -1127,3 +1127,32 @@
   ambas rutas protegidas) queda a cargo del usuario con los pasos documentados en `impl.md`; no se
   marca como superada.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_18-48__estilo-oscuro-formularios-y-modales`
+
+- **Work Item:** `2026-09-23_18-48__estilo-oscuro-formularios-y-modales` — Estilo oscuro de
+  formularios y modales con glassmorphism (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se alinearon todos los formularios y modales con la estética oscura del
+  shell centralizando el cambio en `shared/ui`. `Input`, `Select` y `Modal` pasan a oscuro por
+  defecto (borde `white/10`, fondo `white/[0.03]`, texto blanco, foco dorado, `color-scheme:dark`
+  y `option` nativas oscuras); el `Modal` usa `glass-panel` con backdrop difuminado y perdió la
+  prop `tema` (variante clara sin consumidores, ajustando `FincaDetalleModal`); la variante
+  `secundario` de `Button` se volvió legible sobre oscuro. Después se corrigieron únicamente
+  textos, tarjetas y desplegables claros en terceros, fincas, contratos, compras, ciclos, costos,
+  ventas y los wrappers `_components` de fincas y contratos. No se tocó lógica de formularios,
+  zod, `react-hook-form`, props públicas, hooks, `api/`, `schemas.ts`, queries, mutaciones, rutas,
+  mensajes ni accesibilidad; sin dependencias nuevas.
+- **Archivos modificados:** `shared/ui/{Input,Select,Modal,Button}.tsx`, componentes de
+  `features/{terceros,fincas,contratos,compras,ciclos,costos,ventas}` y los wrappers
+  `app/(dashboard)/{fincas,contratos}/_components/*`. Sin cambios en `features/auth/*`,
+  `package.json`/`package-lock.json`, `shared/api/openapi/*`, ESLint, Prettier ni Jest.
+- **Resultado de la verificación:** V1 (`format:check`), V2 (`lint`), V3 (`typecheck`) y V4
+  (`test`, 52 suites / 404 tests) en verde, ejecutados por el Reviewer; `bash .rei/init.sh`
+  finaliza con código de salida `0`. V5 (validación manual sobre formularios y modales de rutas
+  protegidas) queda a cargo del usuario con los pasos documentados en `impl.md`; no se marca como
+  superada.
+- **Estado final:** `done`.

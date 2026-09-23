@@ -140,7 +140,7 @@ export function VentaForm({
       />
 
       {mensajeError ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {mensajeError}
         </p>
       ) : null}

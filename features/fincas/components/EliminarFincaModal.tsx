@@ -50,14 +50,14 @@ export function EliminarFincaModal({
         </>
       }
     >
-      <p className="text-sm text-zinc-700">
+      <p className="text-sm text-zinc-300">
         ¿Seguro que quieres eliminar la finca{" "}
         <span className="font-medium">{finca?.nombre}</span>? Esta acción no se
         puede deshacer.
       </p>
 
       {mensajeError ? (
-        <p role="alert" className="mt-3 text-sm text-red-600">
+        <p role="alert" className="mt-3 text-sm text-red-400">
           {mensajeError}
         </p>
       ) : null}

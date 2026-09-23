@@ -140,13 +140,13 @@ export function CostoForm({
         {...register("descripcion")}
       />
 
-      <p className="rounded-md bg-zinc-50 px-3 py-2 text-xs text-zinc-600">
+      <p className="rounded-md border border-white/8 bg-white/[0.03] px-3 py-2 text-xs text-zinc-400">
         Recuerda: los costos son informativos y no afectan el cálculo de la
         utilidad real.
       </p>
 
       {mensajeError ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {mensajeError}
         </p>
       ) : null}

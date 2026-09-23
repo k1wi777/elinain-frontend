@@ -60,7 +60,7 @@ export function FincaEditar({ id, propietarios }: Props) {
 
   if (finca.error) {
     return (
-      <p role="alert" className="mx-auto w-full max-w-2xl text-sm text-red-600">
+      <p role="alert" className="mx-auto w-full max-w-2xl text-sm text-red-400">
         {mensajeErrorGuardarFinca(finca.error.status)}
       </p>
     );
@@ -68,10 +68,8 @@ export function FincaEditar({ id, propietarios }: Props) {
 
   return (
     <section className="mx-auto w-full max-w-2xl">
-      <h1 className="mb-2 text-2xl font-semibold text-zinc-900">
-        Editar finca
-      </h1>
-      <p className="mb-6 text-sm text-zinc-600">
+      <h1 className="mb-2 text-2xl font-semibold text-white">Editar finca</h1>
+      <p className="mb-6 text-sm text-zinc-400">
         Actualiza los datos de la finca. El propietario no se puede modificar.
       </p>
 

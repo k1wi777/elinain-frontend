@@ -51,7 +51,7 @@ export function EliminarCompraModal({
         </>
       }
     >
-      <p className="text-sm text-zinc-700">
+      <p className="text-sm text-zinc-300">
         ¿Seguro que quieres eliminar la compra del{" "}
         <span className="font-medium">
           {compra ? formatearFecha(compra.fecha) : ""}
@@ -60,7 +60,7 @@ export function EliminarCompraModal({
       </p>
 
       {mensajeError ? (
-        <p role="alert" className="mt-3 text-sm text-red-600">
+        <p role="alert" className="mt-3 text-sm text-red-400">
           {mensajeError}
         </p>
       ) : null}

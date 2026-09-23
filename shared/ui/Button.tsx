@@ -15,7 +15,7 @@ const ESTILOS_POR_VARIANTE: Record<VarianteBoton, string> = {
   primario:
     "bg-emerald-600 text-white hover:bg-emerald-700 focus-visible:ring-emerald-500",
   secundario:
-    "border border-zinc-300 bg-white text-zinc-900 hover:bg-zinc-100 focus-visible:ring-zinc-400",
+    "border border-white/10 bg-white/[0.03] text-zinc-200 hover:bg-white/[0.08] focus-visible:ring-elinain-gold",
   peligro: "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500",
 };
 

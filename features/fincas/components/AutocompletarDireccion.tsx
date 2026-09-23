@@ -165,7 +165,7 @@ export function AutocompletarDireccion({
       />
 
       {panelVisible ? (
-        <div className="absolute z-[1100] mt-1 w-full overflow-hidden rounded-md border border-zinc-300 bg-white shadow-lg">
+        <div className="absolute z-[1100] mt-1 w-full overflow-hidden rounded-md border border-white/10 bg-elinain-surface shadow-2xl">
           {mostrarCargando ? (
             <p role="status" className="px-3 py-2 text-sm text-zinc-500">
               Buscando sugerencias…
@@ -173,7 +173,7 @@ export function AutocompletarDireccion({
           ) : null}
 
           {errorConsulta ? (
-            <p role="alert" className="px-3 py-2 text-sm text-red-600">
+            <p role="alert" className="px-3 py-2 text-sm text-red-400">
               {mensajeErrorGeocodificacion(errorConsulta.status)}
             </p>
           ) : null}
@@ -197,8 +197,8 @@ export function AutocompletarDireccion({
                   role="option"
                   aria-selected={indice === indiceValido}
                   className={cn(
-                    "cursor-pointer px-3 py-2 text-sm text-zinc-700",
-                    indice === indiceValido && "bg-emerald-50 text-emerald-900",
+                    "cursor-pointer px-3 py-2 text-sm text-zinc-200",
+                    indice === indiceValido && "bg-elinain-gold/15 text-white",
                   )}
                   onMouseDown={(evento) => evento.preventDefault()}
                   onClick={() => seleccionar(indice)}

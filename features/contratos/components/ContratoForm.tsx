@@ -387,14 +387,14 @@ export function ContratoForm({
       />
 
       {modo === "editar" && contrato ? (
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-zinc-400">
           Participación: {formatearParticipacion(contrato)}. Los porcentajes, el
           socio, la finca y la fecha de apertura no se pueden modificar.
         </p>
       ) : null}
 
       {mensajeError ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {mensajeError}
         </p>
       ) : null}

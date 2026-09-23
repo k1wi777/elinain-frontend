@@ -22,7 +22,7 @@ function Dato({ etiqueta, valor }: DatoProps) {
   return (
     <div className="flex flex-col">
       <dt className="text-zinc-500">{etiqueta}</dt>
-      <dd className="font-medium text-zinc-900 tabular-nums">{valor}</dd>
+      <dd className="font-medium text-white tabular-nums">{valor}</dd>
     </div>
   );
 }
@@ -50,7 +50,7 @@ export function ResultadoVentaModal({ abierto, venta, onCerrar }: Props) {
       {venta ? (
         <div className="flex flex-col gap-6 text-sm">
           <section className="flex flex-col gap-3">
-            <h3 className="font-semibold text-zinc-900">Datos de la venta</h3>
+            <h3 className="font-semibold text-white">Datos de la venta</h3>
             <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Dato
                 etiqueta="Fecha"
@@ -72,7 +72,7 @@ export function ResultadoVentaModal({ abierto, venta, onCerrar }: Props) {
           </section>
 
           <section className="flex flex-col gap-3">
-            <h3 className="font-semibold text-zinc-900">Desglose financiero</h3>
+            <h3 className="font-semibold text-white">Desglose financiero</h3>
             <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Dato
                 etiqueta="Valor bruto"

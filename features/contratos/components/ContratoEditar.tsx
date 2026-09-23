@@ -79,7 +79,7 @@ export function ContratoEditar({ id, terceros, fincas }: Props) {
 
   if (contrato.error) {
     return (
-      <p role="alert" className="mx-auto w-full max-w-2xl text-sm text-red-600">
+      <p role="alert" className="mx-auto w-full max-w-2xl text-sm text-red-400">
         {mensajeErrorDetalleContrato(contrato.error.status)}
       </p>
     );
@@ -87,10 +87,10 @@ export function ContratoEditar({ id, terceros, fincas }: Props) {
 
   return (
     <section className="mx-auto w-full max-w-2xl">
-      <h1 className="mb-2 text-2xl font-semibold text-zinc-900">
+      <h1 className="mb-2 text-2xl font-semibold text-white">
         Editar contrato
       </h1>
-      <p className="mb-6 text-sm text-zinc-600">
+      <p className="mb-6 text-sm text-zinc-400">
         Actualiza los campos mutables del contrato. El socio, la finca, la fecha
         de apertura y los porcentajes no se pueden modificar.
       </p>
