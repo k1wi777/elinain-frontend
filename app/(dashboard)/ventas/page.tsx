@@ -12,8 +12,7 @@ export const metadata: Metadata = { title: "Ventas | Elinain" };
  */
 export default function VentasPage() {
   return (
-    <section className="mx-auto w-full max-w-4xl">
-      <h1 className="mb-6 text-2xl font-semibold text-zinc-900">Ventas</h1>
+    <section className="mx-auto w-full max-w-7xl">
       <ListadoConContratos />
     </section>
   );

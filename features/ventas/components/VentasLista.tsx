@@ -61,8 +61,8 @@ export function VentasLista({
     return (
       <div aria-busy="true" className="flex flex-col gap-4">
         <span className="sr-only">Cargando ventas…</span>
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-40 w-full" />
+        <Skeleton className={cn("h-40 w-full", esOscuro && "bg-white/10")} />
+        <Skeleton className={cn("h-40 w-full", esOscuro && "bg-white/10")} />
       </div>
     );
   }

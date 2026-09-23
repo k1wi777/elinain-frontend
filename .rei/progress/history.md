@@ -1010,3 +1010,43 @@
   protegida) queda a cargo del usuario con los pasos documentados en `impl.md`; no se marca
   como superada.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_17-53__rediseno-visual-listado-ventas`
+
+- **Work Item:** `2026-09-23_17-53__rediseno-visual-listado-ventas` — Rediseño visual del
+  listado de ventas (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se rediseñó visualmente `/ventas` (listado global, no la sección
+  embebida del detalle de contrato) al tema oscuro premium del shell, conservando
+  comportamiento, rutas, filtro por contrato, paginación de servidor, modales, toasts y
+  mensajes. (1) `page.tsx` queda como contenedor delgado `mx-auto w-full max-w-7xl`;
+  `VentasListado` compone el encabezado (eyebrow dorado, `h1` con `aria-labelledby`,
+  descripción y CTA `Registrar venta` en dorado con su `onClick` intacto). (2) Lógica pura
+  nueva `features/ventas/resumen.ts` (`calcularResumenVentas`) que suma `valor_bruto`,
+  `utilidad_total`, `valor_comerciante`, `valor_tercero` y `costo_estimado_compra` de los
+  registros de la página, ignorando nulos, con rentabilidad `utilidad_total /
+  costo_estimado_compra` y `null` si el costo no es positivo. (3) Cinco tarjetas
+  `glass-panel` con `—` en carga/error, `aria-live="polite"` y la nota de que los agregados
+  corresponden a las ventas de esta página. (4) `Select` de filtro restilizado en oscuro sin
+  tocar `shared/ui`, `VentasLista` con `tema="oscuro"` (solo esqueletos de carga) y
+  `listado-con-contratos.tsx` con carga/error en estética oscura. (5) `loading.tsx` oscuro
+  con el mismo `max-w-7xl`. Sin buscador, rango temporal, PDF, auditoría, firma,
+  notificaciones ni acciones nuevas; sin datos inventados.
+- **Archivos modificados:** `app/(dashboard)/ventas/page.tsx`,
+  `app/(dashboard)/ventas/_components/listado-con-contratos.tsx`,
+  `features/ventas/components/VentasListado.tsx` y
+  `features/ventas/components/VentasLista.tsx`; creados
+  `app/(dashboard)/ventas/loading.tsx`, `features/ventas/resumen.ts` y
+  `features/ventas/__tests__/resumen.test.ts`. Sin cambios en hooks, `api/`, tipos, queries,
+  mutaciones, paginación, rutas, permisos, modales, toasts, mensajes, `VentasSeccion`,
+  `VentaCard`, `features/ventas/index.ts`, `shared/ui` ni `package.json`; sin dependencias
+  nuevas.
+- **Resultado de la verificación:** V1 (`format:check`), V2 (`lint`), V3 (`typecheck`) y V4
+  (`test`, 49 suites / 391 tests, incluidos los 4 nuevos de `resumen.test.ts`) en verde,
+  ejecutados por el Reviewer; `bash .rei/init.sh` finaliza con código de salida `0`. V5
+  (validación manual sobre `/ventas`, ruta protegida) queda a cargo del usuario con los
+  pasos documentados en `impl.md`; no se marca como superada.
+- **Estado final:** `done`.

@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-23_17-53__rediseno-visual-listado-ventas",
+  "title": "Rediseño visual del listado de ventas",
+  "description": "Refactor visual de la página /ventas (listado global de ventas, no la sección embebida del detalle de contrato) tomando como referencia la captura aportada por el usuario y la estética oscura premium ya aplicada en el dashboard, socios, fincas, contratos y detalle de contrato. Alcance acordado: encabezado oscuro con eyebrow, título y descripción; cinco tarjetas de resumen construidas solo con campos reales de VentaRespuestaDto de los registros que muestra la página (valor bruto, utilidad total liquidada, a favor del comerciante, a favor del tercero y rentabilidad/margen derivada de utilidad sobre costo), con una nota honesta de que corresponden a los registros listados; conservación del filtro por contrato y del CTA Registrar venta reestilizados; y uso de la VentaCard/VentasLista en tema oscuro ya existente para el listado. Se conservan intactos hooks, api/, tipos, queries, mutaciones, paginación, rutas, modales, toasts y mensajes. No se añade buscador, rango temporal, descarga de PDF, auditoría blockchain, firma criptográfica, ni acciones o mutaciones nuevas. No se inventan merma, GPD, curva de engorde, próximo lote, garantías, tasas ni estados ausentes del DTO. La lógica pura nueva (agregados del resumen) se cubre con tests. No se agregan dependencias.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-23T17:53:56-05:00"
+}
