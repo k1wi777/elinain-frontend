@@ -23,20 +23,34 @@ export function ResumenDashboard() {
       <section
         aria-busy="true"
         aria-label="Resumen de reportes"
-        className="flex flex-col gap-6"
+        className="flex flex-col gap-8"
       >
         <span className="sr-only">Cargando el resumen…</span>
-        <Skeleton className="h-32 w-full" />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
+        <div>
+          <div className="mb-4 flex items-center gap-3">
+            <Skeleton className="h-3 w-40 bg-elinain-surface" />
+            <span aria-hidden className="h-px flex-1 bg-white/8" />
+          </div>
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.85fr)]">
+            <Skeleton className="h-40 w-full rounded-2xl bg-elinain-surface sm:h-44" />
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              <Skeleton className="h-28 w-full rounded-xl bg-elinain-surface" />
+              <Skeleton className="h-28 w-full rounded-xl bg-elinain-surface" />
+            </div>
+          </div>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-24 w-full" />
+        <div>
+          <div className="mb-4 flex items-center gap-3">
+            <Skeleton className="h-3 w-32 bg-elinain-surface" />
+            <span aria-hidden className="h-px flex-1 bg-white/8" />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <Skeleton className="h-28 w-full rounded-xl bg-elinain-surface" />
+            <Skeleton className="h-28 w-full rounded-xl bg-elinain-surface" />
+            <Skeleton className="h-28 w-full rounded-xl bg-elinain-surface" />
+            <Skeleton className="h-28 w-full rounded-xl bg-elinain-surface" />
+            <Skeleton className="h-28 w-full rounded-xl bg-elinain-surface sm:col-span-2 lg:col-span-2" />
+          </div>
         </div>
       </section>
     );
@@ -44,62 +58,98 @@ export function ResumenDashboard() {
 
   if (consulta.error) {
     return (
-      <p role="alert" className="text-sm text-red-600">
-        {mensajeErrorDashboard(consulta.error.status)}
-      </p>
+      <div
+        role="alert"
+        className="flex max-w-2xl items-start gap-3 rounded-xl border border-elinain-gold/20 bg-elinain-surface p-5 text-sm text-white shadow-lg shadow-black/15"
+      >
+        <span
+          aria-hidden
+          className="flex size-6 shrink-0 items-center justify-center rounded-full bg-elinain-gold-muted font-semibold text-elinain-gold"
+        >
+          !
+        </span>
+        <p className="leading-6">
+          {mensajeErrorDashboard(consulta.error.status)}
+        </p>
+      </div>
     );
   }
 
   const { resumen } = consulta.data;
 
   return (
-    <section aria-label="Resumen de reportes" className="flex flex-col gap-6">
-      <TarjetaResumen
-        nivel="protagonista"
-        titulo="Utilidad real acumulada"
-        valor={formatearMoneda(resumen.utilidad_real_comerciante_acumulada)}
-      />
+    <section aria-label="Resumen de reportes" className="flex flex-col gap-10">
+      <section aria-labelledby="resultado-financiero">
+        <div className="mb-4 flex items-center gap-3">
+          <h2
+            id="resultado-financiero"
+            className="text-xs font-semibold tracking-[0.18em] text-elinain-muted uppercase"
+          >
+            Resultado financiero
+          </h2>
+          <span aria-hidden className="h-px flex-1 bg-white/8" />
+        </div>
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.85fr)]">
+          <TarjetaResumen
+            nivel="protagonista"
+            titulo="Utilidad real acumulada"
+            valor={formatearMoneda(resumen.utilidad_real_comerciante_acumulada)}
+          />
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <TarjetaResumen
-          nivel="secundario"
-          titulo="Utilidad bruta acumulada"
-          valor={formatearMoneda(resumen.utilidad_total_acumulada)}
-        />
-        <TarjetaResumen
-          nivel="secundario"
-          titulo="Utilidad de terceros acumulada"
-          valor={formatearMoneda(resumen.utilidad_terceros_acumulada)}
-        />
-      </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            <TarjetaResumen
+              nivel="secundario"
+              titulo="Utilidad bruta acumulada"
+              valor={formatearMoneda(resumen.utilidad_total_acumulada)}
+            />
+            <TarjetaResumen
+              nivel="secundario"
+              titulo="Utilidad de terceros acumulada"
+              valor={formatearMoneda(resumen.utilidad_terceros_acumulada)}
+            />
+          </div>
+        </div>
+      </section>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <TarjetaResumen
-          nivel="menor"
-          titulo="Contratos activos"
-          valor={formatearConteo(resumen.contratos_activos)}
-        />
-        <TarjetaResumen
-          nivel="menor"
-          titulo="Contratos cerrados"
-          valor={formatearConteo(resumen.contratos_cerrados)}
-        />
-        <TarjetaResumen
-          nivel="menor"
-          titulo="Animales en inventario"
-          valor={formatearConteo(resumen.total_animales_actual)}
-        />
-        <TarjetaResumen
-          nivel="menor"
-          titulo="Ventas registradas"
-          valor={formatearConteo(resumen.total_ventas_registradas)}
-        />
-        <TarjetaResumen
-          nivel="menor"
-          titulo="Costos informativos acumulados"
-          valor={formatearMoneda(resumen.total_costos_informativos)}
-        />
-      </div>
+      <section aria-labelledby="resumen-operativo">
+        <div className="mb-4 flex items-center gap-3">
+          <h2
+            id="resumen-operativo"
+            className="text-xs font-semibold tracking-[0.18em] text-elinain-muted uppercase"
+          >
+            Resumen operativo
+          </h2>
+          <span aria-hidden className="h-px flex-1 bg-white/8" />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <TarjetaResumen
+            nivel="menor"
+            titulo="Contratos activos"
+            valor={formatearConteo(resumen.contratos_activos)}
+          />
+          <TarjetaResumen
+            nivel="menor"
+            titulo="Contratos cerrados"
+            valor={formatearConteo(resumen.contratos_cerrados)}
+          />
+          <TarjetaResumen
+            nivel="menor"
+            titulo="Animales en inventario"
+            valor={formatearConteo(resumen.total_animales_actual)}
+          />
+          <TarjetaResumen
+            nivel="menor"
+            titulo="Ventas registradas"
+            valor={formatearConteo(resumen.total_ventas_registradas)}
+          />
+          <TarjetaResumen
+            nivel="menor"
+            titulo="Costos informativos acumulados"
+            valor={formatearMoneda(resumen.total_costos_informativos)}
+            className="sm:col-span-2 lg:col-span-2"
+          />
+        </div>
+      </section>
     </section>
   );
 }

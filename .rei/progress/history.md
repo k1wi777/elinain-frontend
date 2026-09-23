@@ -31,6 +31,12 @@
 
 ---
 
+---
+
+---
+
+---
+
 ## 2026-09-22 — `2026-09-22_01-38__cliente-http-base`
 
 - **Work Item:** `2026-09-22_01-38__cliente-http-base` — Cliente HTTP base en
@@ -809,4 +815,37 @@
   `bash .rei/init.sh` finaliza con código de salida `0`. `V5` ejecutada parcialmente con Chrome
   headless (login 1440x900 idéntico por `md5sum`; registro 1440x900 y 390x844 correctos); la
   confirmación explícita del usuario y los estados interactivos quedan pendientes.
+- **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_10-56__rediseno-visual-dashboard`
+
+- **Work Item:** `2026-09-23_10-56__rediseno-visual-dashboard` — Rediseño visual del dashboard (`type: feature`).
+- **Agente:** `reviewer`.
+- **Trabajo realizado:** revisión final del rediseño visual del área protegida. Se confirmó la corrección arquitectónica que elimina los imports directos del dashboard hacia `features/auth/auth-styles.ts`, conservando la utilidad de foco en `app/(dashboard)/dashboard-styles.ts`. Se verificó que la composición, navegación, consulta, formateadores, estados, rutas y cierre de sesión cumplen la planificación.
+- **Archivos modificados:** `app/(dashboard)/layout.tsx`, `app/(dashboard)/dashboard/page.tsx`, `app/(dashboard)/dashboard-styles.ts`, `app/(dashboard)/loading.tsx`, componentes de `features/dashboard`, y documentación del Work Item.
+- **Resultado de la verificación:** `V1` formato, `V2` lint y `V3` tipos pasan. `V4` aceptada con la evidencia del usuario: `npm test -- --runInBand`, 44 suites y 366 tests pasando. La ejecución local reproduce el error de `next/jest` antes de ejecutar tests. `V5` queda pendiente de validación visual manual del usuario.
+- **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_12-24__ajustes-sutiles-dashboard-referencia-visual`
+
+- **Work Item:** `2026-09-23_12-24__ajustes-sutiles-dashboard-referencia-visual` — Ajustes
+  sutiles del dashboard según referencia visual (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se refinó exclusivamente la composición visual del dashboard:
+  jerarquía financiera, rejilla operativa, navegación, loading, error, foco visible,
+  responsive y superficies sólidas carbón para las tarjetas. Se conservaron las ocho
+  métricas, las rutas existentes y toda la lógica de datos.
+- **Archivos modificados:** `app/(dashboard)/dashboard/page.tsx`,
+  `app/(dashboard)/layout.tsx`, `app/(dashboard)/loading.tsx`,
+  `app/(dashboard)/dashboard-styles.ts`,
+  `features/dashboard/components/ResumenDashboard.tsx` y
+  `features/dashboard/components/TarjetaResumen.tsx`.
+- **Resultado de la verificación:** V1, V2 y V3 pasan. V4 se acepta con la evidencia
+  explícita del usuario de 44 suites y 366 tests exitosos. V5 queda pendiente de
+  validación manual en móvil y escritorio.
 - **Estado final:** `done`.

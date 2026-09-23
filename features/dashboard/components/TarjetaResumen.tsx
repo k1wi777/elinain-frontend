@@ -1,3 +1,5 @@
+import { cn } from "@/shared/lib/cn";
+
 /** Nivel tipográfico de la tarjeta dentro de la jerarquía del dashboard. */
 export type NivelTarjeta = "protagonista" | "secundario" | "menor";
 
@@ -9,24 +11,33 @@ type Props = {
   valor: string;
   /** Nivel tipográfico; determina tamaño, peso y realce cromático. */
   nivel: NivelTarjeta;
+  /** Clases opcionales para adaptar la tarjeta a la rejilla del resumen. */
+  className?: string;
 };
 
 const CLASES_TARJETA: Record<NivelTarjeta, string> = {
-  protagonista: "rounded-xl border border-emerald-200 bg-emerald-50 p-6",
-  secundario: "rounded-lg border border-zinc-200 bg-white p-4",
-  menor: "rounded-lg border border-zinc-200 bg-white p-4",
+  protagonista:
+    "rounded-2xl border border-elinain-gold/20 bg-elinain-surface p-6 shadow-[0_20px_45px_rgb(0_0_0_/_0.24)] sm:p-8",
+  secundario:
+    "rounded-xl border border-white/8 bg-elinain-surface-elevated p-5 shadow-lg shadow-black/15",
+  menor:
+    "rounded-xl border border-white/6 bg-elinain-surface-elevated p-4 shadow-lg shadow-black/15 sm:p-5",
 };
 
 const CLASES_ETIQUETA: Record<NivelTarjeta, string> = {
-  protagonista: "text-sm font-medium tracking-wide text-emerald-800 uppercase",
-  secundario: "text-sm font-medium text-zinc-600",
-  menor: "text-sm text-zinc-500",
+  protagonista:
+    "text-[0.68rem] font-semibold tracking-[0.18em] text-elinain-gold uppercase",
+  secundario: "text-sm font-medium text-elinain-muted",
+  menor: "text-xs font-medium tracking-wide text-elinain-muted uppercase",
 };
 
 const CLASES_VALOR: Record<NivelTarjeta, string> = {
-  protagonista: "mt-2 text-4xl font-bold tabular-nums text-emerald-700",
-  secundario: "mt-1 text-3xl font-semibold tabular-nums text-zinc-900",
-  menor: "mt-1 text-2xl font-medium tabular-nums text-zinc-600",
+  protagonista:
+    "mt-3 break-words font-display text-4xl leading-none font-semibold tracking-tight text-elinain-gold tabular-nums sm:text-5xl",
+  secundario:
+    "mt-2 break-words font-display text-2xl leading-tight font-semibold tracking-tight text-white tabular-nums sm:text-3xl",
+  menor:
+    "mt-2 break-words font-display text-2xl leading-tight font-semibold text-white tabular-nums",
 };
 
 /**
@@ -36,9 +47,9 @@ const CLASES_VALOR: Record<NivelTarjeta, string> = {
  * tipográfico que define su jerarquía visual. Mantiene siempre su etiqueta textual, de
  * modo que la jerarquía no depende solo del color.
  */
-export function TarjetaResumen({ titulo, valor, nivel }: Props) {
+export function TarjetaResumen({ titulo, valor, nivel, className }: Props) {
   return (
-    <article className={CLASES_TARJETA[nivel]}>
+    <article className={cn(CLASES_TARJETA[nivel], "min-w-0", className)}>
       <p className={CLASES_ETIQUETA[nivel]}>{titulo}</p>
       <p className={CLASES_VALOR[nivel]}>{valor}</p>
     </article>
