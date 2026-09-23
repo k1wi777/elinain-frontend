@@ -3,7 +3,10 @@ import Link from "next/link";
 
 import { LogoutButton } from "@/features/auth";
 
-import { ESTILOS_ENLACE_FOCUS_DASHBOARD } from "./dashboard-styles";
+import {
+  ESTILOS_ENLACE_FOCUS_DASHBOARD,
+  ESTILOS_ENLACE_NAVEGACION,
+} from "./dashboard-styles";
 
 /** Props del layout del área protegida. */
 type Props = { children: ReactNode };
@@ -33,25 +36,25 @@ export default function DashboardLayout({ children }: Props) {
           >
             <Link
               href="/terceros"
-              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
+              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} ${ESTILOS_ENLACE_NAVEGACION}`}
             >
               Socios de participación
             </Link>
             <Link
               href="/fincas"
-              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
+              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} ${ESTILOS_ENLACE_NAVEGACION}`}
             >
               Fincas
             </Link>
             <Link
               href="/contratos"
-              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
+              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} ${ESTILOS_ENLACE_NAVEGACION}`}
             >
               Contratos
             </Link>
             <Link
               href="/ventas"
-              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
+              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} ${ESTILOS_ENLACE_NAVEGACION}`}
             >
               Ventas
             </Link>
