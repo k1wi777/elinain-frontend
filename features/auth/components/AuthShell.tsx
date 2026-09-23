@@ -15,6 +15,8 @@ type Props = {
   etiquetaLateral: string;
   /** Panel inferior del aside (contenido ilustrativo de cada pantalla). */
   panelLateral: ReactNode;
+  /** Cuando es `true`, el formulario va a la derecha y la imagen a la izquierda. */
+  invertido?: boolean;
   /** Formulario de acceso. */
   children: ReactNode;
 };
@@ -24,7 +26,8 @@ type Props = {
  *
  * Pinta su propio fondo oscuro a pantalla completa y compone la columna del
  * formulario con el aside de imagen. `LoginShell` y `RegistroShell` aportan su
- * copy y el contenido del panel lateral.
+ * copy y el contenido del panel lateral; `invertido` permite espejar el orden
+ * para distinguir visualmente cada pantalla.
  */
 export function AuthShell({
   insignia,
@@ -32,10 +35,17 @@ export function AuthShell({
   descripcion,
   etiquetaLateral,
   panelLateral,
+  invertido = false,
   children,
 }: Props) {
   return (
-    <div className="relative flex min-h-dvh w-full flex-1 flex-col bg-elinain-bg bg-[radial-gradient(circle_at_8%_0%,rgb(232_185_35_/_0.1),transparent_34%)] text-white lg:flex-row">
+    <div
+      className={`relative flex min-h-dvh w-full flex-1 flex-col bg-elinain-bg text-white ${
+        invertido
+          ? "bg-[radial-gradient(circle_at_92%_0%,rgb(232_185_35_/_0.1),transparent_34%)] lg:flex-row-reverse"
+          : "bg-[radial-gradient(circle_at_8%_0%,rgb(232_185_35_/_0.1),transparent_34%)] lg:flex-row"
+      }`}
+    >
       <div className="relative flex w-full flex-1 flex-col justify-center px-5 py-12 sm:px-10 lg:w-[min(100%,34rem)] lg:flex-none lg:px-14 xl:w-[38rem]">
         <div className="mx-auto flex w-full max-w-md flex-col">
           <Link
@@ -82,10 +92,18 @@ export function AuthShell({
           priority
         />
         <div className="absolute inset-0 bg-elinain-bg/60" />
-        <div className="absolute inset-0 bg-linear-to-r from-elinain-bg via-elinain-bg/25 to-transparent" />
+        <div
+          className={`absolute inset-0 ${
+            invertido ? "bg-linear-to-l" : "bg-linear-to-r"
+          } from-elinain-bg via-elinain-bg/25 to-transparent`}
+        />
         <div className="absolute inset-0 bg-linear-to-t from-elinain-bg via-elinain-bg/15 to-elinain-bg/40" />
 
-        <p className="absolute top-8 right-8 z-10 rounded-full border border-white/10 bg-elinain-bg/55 px-3.5 py-1.5 text-[0.65rem] font-semibold tracking-[0.18em] text-elinain-muted uppercase backdrop-blur-sm xl:top-10 xl:right-12">
+        <p
+          className={`absolute top-8 z-10 rounded-full border border-white/10 bg-elinain-bg/55 px-3.5 py-1.5 text-[0.65rem] font-semibold tracking-[0.18em] text-elinain-muted uppercase backdrop-blur-sm xl:top-10 ${
+            invertido ? "left-8 xl:left-12" : "right-8 xl:right-12"
+          }`}
+        >
           {etiquetaLateral}
         </p>
 

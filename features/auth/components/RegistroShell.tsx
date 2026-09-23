@@ -6,7 +6,7 @@ const INDICADORES_EJEMPLO = [
   { etiqueta: "Animales en inventario", valor: "312", unidad: "cabezas" },
   { etiqueta: "Contratos activos", valor: "8", unidad: "contratos" },
   { etiqueta: "Ganancia de peso prom.", valor: "+1,2", unidad: "kg/día" },
-  { etiqueta: "Utilidad del ciclo", valor: "—", unidad: "por contrato" },
+  { etiqueta: "Utilidad del ciclo", valor: "$ 12,4 M", unidad: "por contrato" },
 ] as const;
 
 const CAPACIDADES = [
@@ -88,6 +88,7 @@ export function RegistroShell() {
       descripcion="Registra tu operación y empieza a gestionar contratos de engorde, costos y participación con terceros desde un solo lugar."
       etiquetaLateral="Gestión integral del engorde"
       panelLateral={<PanelRegistro />}
+      invertido
     >
       <RegistroForm />
     </AuthShell>

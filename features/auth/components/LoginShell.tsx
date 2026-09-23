@@ -8,12 +8,12 @@ const CONCEPTOS_PLATAFORMA = [
   "Fincas propias o de terceros en un solo lugar",
 ] as const;
 
-/** Indicadores ilustrativos: sin cifras reales, solo las métricas que el producto consolida. */
+/** Indicadores de ejemplo: cifras mock, no datos reales del negocio. */
 const INDICADORES_EJEMPLO = [
-  { etiqueta: "Animales en inventario", unidad: "cabezas" },
-  { etiqueta: "Contratos activos", unidad: "contratos" },
-  { etiqueta: "Ganancia de peso prom.", unidad: "kg/día" },
-  { etiqueta: "Utilidad del ciclo", unidad: "por contrato" },
+  { etiqueta: "Animales en inventario", valor: "312", unidad: "cabezas" },
+  { etiqueta: "Contratos activos", valor: "8", unidad: "contratos" },
+  { etiqueta: "Ganancia de peso prom.", valor: "+1,2", unidad: "kg/día" },
+  { etiqueta: "Utilidad del ciclo", valor: "$ 12,4 M", unidad: "por contrato" },
 ] as const;
 
 /** Panel ilustrativo del login, marcado como ejemplo y sin cifras reales. */
@@ -35,7 +35,7 @@ function PanelLogin() {
       </p>
 
       <div className="mt-4 grid grid-cols-2 gap-3">
-        {INDICADORES_EJEMPLO.map(({ etiqueta, unidad }) => (
+        {INDICADORES_EJEMPLO.map(({ etiqueta, valor, unidad }) => (
           <div
             key={etiqueta}
             className="rounded-xl bg-elinain-surface-elevated/80 p-3"
@@ -44,7 +44,7 @@ function PanelLogin() {
               {etiqueta}
             </p>
             <p className="mt-1.5 font-display text-xl font-semibold text-elinain-gold tabular-nums">
-              —
+              {valor}
               <span className="ml-1 text-xs font-normal text-elinain-muted">
                 {unidad}
               </span>
