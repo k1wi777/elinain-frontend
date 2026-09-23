@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-23_18-25__rediseno-visual-reportes",
+  "title": "Rediseño visual de reportes: contratos activos e historial de ventas",
+  "description": "Refactor visual de las dos pantallas de reportes (/reportes/contratos-activos y /reportes/historial-ventas) al tema oscuro premium ya aplicado en el resto de la app, tomando como referencia las dos capturas aportadas por el usuario. Alcance acordado: encabezado oscuro con eyebrow, título y descripción en cada página; navegación superior entre ambos reportes solo con enlaces (sin nuevas pestañas funcionales); tarjetas de resumen construidas únicamente con campos reales de ContratoActivoDetalleDto (contratos en curso, ganado en pastoreo, total de compras y utilidad neta generada, con lógica pura nueva y tests) y de ResumenHistorialVentasDto (los indicadores ya existentes más la participación derivada del comerciante sobre la utilidad total); tablas en tema oscuro reutilizando el componente Table, enriquecidas solo con campos reales (tercero, finca, cantidad y peso promedio, compras, ventas, utilidad y participación); y textos explicativos breves (por ejemplo, la fórmula utilidad = valor bruto − costo estimado). Se conservan intactos hooks, api/, tipos, queries, ordenación, el control Ver todo/Ver menos, mensajes y rutas. No se añade buscador, filtros, rango temporal, descargas, auditoría, certificados ni acciones o mutaciones nuevas. No se inventan hectáreas, potreros, aforos, GPD, inspecciones sanitarias, estados ni datos ausentes de los DTO. No se agregan dependencias.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-23T18:25:09-05:00"
+}

@@ -1085,3 +1085,45 @@
   finaliza con código de salida `0`. V5 (validación manual sobre `/dashboard`, ruta protegida)
   queda a cargo del usuario con los pasos documentados en `impl.md`; no se marca como superada.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_18-25__rediseno-visual-reportes`
+
+- **Work Item:** `2026-09-23_18-25__rediseno-visual-reportes` — Rediseño visual de reportes:
+  contratos activos e historial de ventas (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se rediseñaron visualmente `/reportes/contratos-activos` y
+  `/reportes/historial-ventas` al tema oscuro premium del shell, conservando comportamiento,
+  rutas, queries, ordenación, mensajes y el control "Ver todo" / "Ver menos". (1) `page.tsx` de
+  ambas rutas queda como contenedor delgado `mx-auto w-full max-w-7xl` con `metadata` intacta;
+  el encabezado (eyebrow dorado, `h1` con `aria-labelledby` y descripción) pasa al feature.
+  (2) `NavegacionReportes` (client, `usePathname`) con dos `next/link` a las rutas existentes y
+  `aria-current="page"` en el activo, sin pestañas ni rutas nuevas. (3) Contratos activos: lógica
+  pura `resumen-contratos.ts` (`calcularResumenContratos`: contratos en curso, ganado en
+  pastoreo, total de compras y utilidad neta generada) con 4 tests, cuatro tarjetas `glass-panel`
+  con `—` en carga/error, tabla `tema="oscuro"` enriquecida solo en presentación (iniciales del
+  tercero, finca, peso promedio, compras, ventas, utilidad y reparto formateado) y pie de conteo
+  real. (4) Historial de ventas: lógica pura `participacion.ts`
+  (`calcularParticipacionComerciante`, `null` sin total), 3 tests, panel destacado de utilidad del
+  comerciante con la participación derivada, seis `TarjetaIndicador tema="oscuro"`, tabla oscura
+  y la fórmula "Utilidad = Valor bruto − Costo estimado". (5) `TarjetaIndicador` gana la prop
+  visual opcional `tema` con `"claro"` por defecto idéntico. Se usaron solo campos reales de
+  `ContratoActivoDetalleDto`, `ResumenHistorialVentasDto` y `VentaHistorialItemDto`; sin buscador,
+  filtros, rango temporal, descargas, auditoría, certificados, mutaciones ni acciones nuevas.
+- **Archivos modificados:** `app/(dashboard)/reportes/contratos-activos/page.tsx`,
+  `app/(dashboard)/reportes/historial-ventas/page.tsx`,
+  `features/reportes/components/ContratosActivosReporte.tsx`,
+  `features/reportes/components/HistorialVentasReporte.tsx`,
+  `features/reportes/components/TarjetaIndicador.tsx`; creados
+  `features/reportes/components/NavegacionReportes.tsx`, `features/reportes/resumen-contratos.ts`,
+  `features/reportes/participacion.ts` y sus tests en `features/reportes/__tests__/`. Sin cambios
+  en hooks, `api/`, `types.ts`, `orden.ts`, `query-keys.ts`, `formatos.ts`, `mensajes-error.ts`,
+  `index.ts`, `shared/ui/*`, `app/api/*` ni otras pantallas; sin dependencias nuevas.
+- **Resultado de la verificación:** V1 (`format:check`), V2 (`lint`), V3 (`typecheck`) y V4
+  (`test`, 52 suites / 404 tests, incluidos los 7 nuevos: 4 + 3) en verde, ejecutados por el
+  Reviewer; `bash .rei/init.sh` finaliza con código de salida `0`. V5 (validación manual sobre
+  ambas rutas protegidas) queda a cargo del usuario con los pasos documentados en `impl.md`; no se
+  marca como superada.
+- **Estado final:** `done`.

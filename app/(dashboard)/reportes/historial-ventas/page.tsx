@@ -7,15 +7,12 @@ export const metadata: Metadata = { title: "Historial de ventas | Elinain" };
 /**
  * Página del historial de ventas.
  *
- * Server Component delgado: compone la vista del feature `reportes`. La obtención de
- * datos y los estados de carga y error viven dentro del feature.
+ * Server Component delgado: compone la vista del feature `reportes`, que incluye el
+ * encabezado, los estados de carga, error y vacío y la obtención de datos.
  */
 export default function HistorialVentasPage() {
   return (
-    <section className="mx-auto w-full max-w-6xl">
-      <h1 className="mb-6 text-2xl font-semibold text-zinc-900">
-        Historial de ventas
-      </h1>
+    <section className="mx-auto w-full max-w-7xl">
       <HistorialVentasReporte />
     </section>
   );
