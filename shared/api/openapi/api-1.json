@@ -2690,6 +2690,1156 @@
         ]
       }
     },
+    "/api/v1/ciclos": {
+      "post": {
+        "description": "Registra un evento de control satélite informativo en el contrato (fecha obligatoria, peso observado y notas opcionales).",
+        "operationId": "CiclosController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearCicloDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ciclo registrado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaCicloDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos (peso <= 0, fecha ausente) o contrato cerrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la solicitud: La fecha es obligatoria",
+                  "codigoEstado": 400,
+                  "errores": [
+                    "La fecha es obligatoria"
+                  ],
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "El contrato especificado no existe o pertenece a otro comerciante",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "El contrato especificado no existe o no pertenece al comerciante",
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registra un checkpoint de ciclo en un contrato activo",
+        "tags": [
+          "ciclos"
+        ]
+      },
+      "get": {
+        "description": "Retorna el listado paginado de checkpoints de ciclos del comerciante autenticado, permitiendo filtrar por contrato.",
+        "operationId": "CiclosController_listar",
+        "parameters": [
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Cantidad máxima de elementos a retornar (entre 1 y 100)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Número de elementos a omitir desde el inicio (mínimo 0)",
+            "schema": {
+              "minimum": 0,
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "contrato_id",
+            "required": false,
+            "in": "query",
+            "description": "Filtrar checkpoints de ciclos por ID de contrato",
+            "schema": {
+              "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listado de ciclos obtenido exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaPaginaCiclosDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lista los ciclos pertenecientes al comerciante con paginación opcional",
+        "tags": [
+          "ciclos"
+        ]
+      }
+    },
+    "/api/v1/ciclos/{id}": {
+      "get": {
+        "description": "Consulta un ciclo específico asegurando aislamiento por tenant.",
+        "operationId": "CiclosController_buscarPorId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ciclo encontrado y retornado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaCicloDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Identificador UUID con formato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ciclo no encontrado en la cuenta del comerciante autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ciclo no encontrado",
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/ciclos/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtiene el detalle de un ciclo por su ID",
+        "tags": [
+          "ciclos"
+        ]
+      },
+      "patch": {
+        "description": "Permite modificar libremente fecha, peso observado o notas de un ciclo mientras el contrato permanezca activo.",
+        "operationId": "CiclosController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarCicloDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ciclo actualizado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaCicloDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos de actualización inválidos o contrato cerrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ciclo no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Actualiza un ciclo en un contrato activo",
+        "tags": [
+          "ciclos"
+        ]
+      },
+      "delete": {
+        "description": "Permite eliminar libremente un ciclo informativo mientras el contrato esté activo, incluso con ventas existentes.",
+        "operationId": "CiclosController_eliminar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ciclo eliminado exitosamente"
+          },
+          "400": {
+            "description": "Identificador UUID con formato inválido o contrato cerrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ciclo no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/ciclos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Elimina un ciclo en un contrato activo",
+        "tags": [
+          "ciclos"
+        ]
+      }
+    },
+    "/api/v1/costos": {
+      "post": {
+        "description": "Registra un costo operativo asociado al contrato (flete, alimentación, etc.). Es puramente informativo y no descuenta ni altera la utilidad real.",
+        "operationId": "CostosController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearCostoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Costo registrado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaCostoDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos (monto <= 0, campos obligatorios faltantes) o contrato cerrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la solicitud: El monto debe ser mayor que cero",
+                  "codigoEstado": 400,
+                  "errores": [
+                    "El monto debe ser mayor que cero"
+                  ],
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "El contrato especificado no existe o no pertenece al comerciante",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "El contrato especificado no existe o no pertenece al comerciante",
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registra un costo operativo informativo en un contrato activo",
+        "tags": [
+          "costos"
+        ]
+      },
+      "get": {
+        "description": "Retorna el listado paginado de costos del comerciante autenticado, permitiendo filtrar opcionalmente por contrato.",
+        "operationId": "CostosController_listar",
+        "parameters": [
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Cantidad máxima de elementos a retornar (entre 1 y 100)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Número de elementos a omitir desde el inicio (mínimo 0)",
+            "schema": {
+              "minimum": 0,
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "contrato_id",
+            "required": false,
+            "in": "query",
+            "description": "Filtrar costos por ID de contrato",
+            "schema": {
+              "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listado de costos obtenido exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaPaginaCostosDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lista los costos informativos pertenecientes al comerciante con paginación opcional",
+        "tags": [
+          "costos"
+        ]
+      }
+    },
+    "/api/v1/costos/{id}": {
+      "get": {
+        "description": "Consulta un costo específico asegurando aislamiento multi-tenant.",
+        "operationId": "CostosController_buscarPorId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Costo encontrado y retornado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaCostoDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Identificador UUID con formato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Costo no encontrado en la cuenta del comerciante autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Costo no encontrado",
+                  "codigoEstado": 404,
+                  "ruta": "/api/v1/costos/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtiene el detalle de un costo por su ID",
+        "tags": [
+          "costos"
+        ]
+      },
+      "patch": {
+        "description": "Permite modificar los datos de un costo informativo mientras el contrato permanezca activo.",
+        "operationId": "CostosController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarCostoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Costo actualizado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaCostoDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos de actualización inválidos o contrato cerrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Costo no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Actualiza un costo en un contrato activo",
+        "tags": [
+          "costos"
+        ]
+      },
+      "delete": {
+        "description": "Permite eliminar libremente un costo informativo mientras el contrato esté activo, incluso con ventas existentes.",
+        "operationId": "CostosController_eliminar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Costo eliminado exitosamente"
+          },
+          "400": {
+            "description": "Identificador UUID con formato inválido o contrato cerrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Costo no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoEncontradoDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/costos",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Elimina un costo en un contrato activo",
+        "tags": [
+          "costos"
+        ]
+      }
+    },
+    "/api/v1/reportes/dashboard": {
+      "get": {
+        "description": "Retorna indicadores agregados sobre contratos activos y cerrados, animales en inventario, utilidades acumuladas y costos informativos basándose en datos ya persistidos.",
+        "operationId": "ReportesController_obtenerDashboard",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Resumen consolidado del dashboard obtenido exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaDashboardDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/reportes/dashboard",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/reportes/dashboard",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtiene el resumen consolidado del dashboard",
+        "tags": [
+          "reportes"
+        ]
+      }
+    },
+    "/api/v1/reportes/contratos-activos": {
+      "get": {
+        "description": "Retorna la lista de contratos activos con sus agregaciones de compras, ventas y utilidad generada acumulada por el comerciante.",
+        "operationId": "ReportesController_obtenerContratosActivos",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Reporte de contratos activos obtenido exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaContratosActivosReporteDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/reportes/dashboard",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/reportes/dashboard",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtiene el reporte detallado de contratos actualmente activos",
+        "tags": [
+          "reportes"
+        ]
+      }
+    },
+    "/api/v1/reportes/historial-ventas": {
+      "get": {
+        "description": "Retorna el historial completo de ventas con ingresos brutos, costos estimados, utilidades totales y repartos a la fecha de cada venta.",
+        "operationId": "ReportesController_obtenerHistorialVentas",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Reporte histórico de ventas obtenido exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaHistorialVentasReporteDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado: token JWT ausente o inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "No autorizado: token JWT ausente o inválido",
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/reportes/dashboard",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno no controlado del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Ha ocurrido un error interno en el servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/reportes/dashboard",
+                  "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obtiene el reporte histórico de ventas con totales agregados",
+        "tags": [
+          "reportes"
+        ]
+      }
+    },
     "/api/v1/health": {
       "get": {
         "operationId": "HealthController_verificar",
@@ -4135,6 +5285,753 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/PaginaVentasDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "exito",
+          "datos"
+        ]
+      },
+      "CrearCicloDto": {
+        "type": "object",
+        "properties": {
+          "contrato_id": {
+            "type": "string",
+            "description": "Identificador UUID del contrato al que se asocia el checkpoint de ciclo",
+            "example": "c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33"
+          },
+          "fecha": {
+            "type": "string",
+            "description": "Fecha del evento o control en formato ISO 8601",
+            "example": "2026-09-22T10:00:00.000Z"
+          },
+          "peso_observado": {
+            "type": "number",
+            "description": "Peso observado opcional de los animales en el checkpoint en kilogramos",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "example": 380.5
+          },
+          "notas": {
+            "type": "string",
+            "description": "Notas o comentarios cualitativos opcionales sobre el lote o pasturas",
+            "example": "Buen rebrote de pasturas, sin signos de enfermedad",
+            "nullable": true
+          }
+        },
+        "required": [
+          "contrato_id",
+          "fecha"
+        ]
+      },
+      "CicloRespuestaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único del ciclo (UUID)",
+            "example": "a0b1c2d3-e4f5-4a5b-8c9d-0e1f2a3b4c5d"
+          },
+          "contrato_id": {
+            "type": "string",
+            "description": "Identificador del contrato vinculado",
+            "example": "c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33"
+          },
+          "fecha": {
+            "type": "string",
+            "description": "Fecha del checkpoint en formato ISO 8601",
+            "example": "2026-09-22T10:00:00.000Z"
+          },
+          "peso_observado": {
+            "type": "number",
+            "description": "Peso observado en kilogramos o null si no fue medido",
+            "example": 380.5
+          },
+          "notas": {
+            "type": "string",
+            "description": "Notas u observaciones registradas",
+            "example": "Buen rebrote de pasturas, sin signos de enfermedad"
+          }
+        },
+        "required": [
+          "id",
+          "contrato_id",
+          "fecha"
+        ]
+      },
+      "RespuestaCicloDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "datos": {
+            "description": "Datos de la respuesta",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CicloRespuestaDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "exito",
+          "datos"
+        ]
+      },
+      "PaginaCiclosDto": {
+        "type": "object",
+        "properties": {
+          "elementos": {
+            "description": "Listado de elementos paginados",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CicloRespuestaDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Cantidad total de registros encontrados para el tenant",
+            "example": 45
+          },
+          "limite": {
+            "type": "number",
+            "description": "Límite de registros solicitado o aplicado por página",
+            "example": 20
+          },
+          "offset": {
+            "type": "number",
+            "description": "Cantidad de registros omitidos desde el inicio",
+            "example": 0
+          }
+        },
+        "required": [
+          "elementos",
+          "total",
+          "limite",
+          "offset"
+        ]
+      },
+      "RespuestaPaginaCiclosDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "datos": {
+            "description": "Datos de la respuesta",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PaginaCiclosDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "exito",
+          "datos"
+        ]
+      },
+      "ActualizarCicloDto": {
+        "type": "object",
+        "properties": {
+          "fecha": {
+            "type": "string",
+            "description": "Fecha del evento o control en formato ISO 8601",
+            "example": "2026-09-22T10:00:00.000Z"
+          },
+          "peso_observado": {
+            "type": "number",
+            "description": "Peso observado opcional de los animales en el checkpoint en kilogramos",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "example": 385
+          },
+          "notas": {
+            "type": "string",
+            "description": "Notas o comentarios cualitativos opcionales sobre el lote o pasturas",
+            "example": "Ajuste en pesaje tras desparasitación",
+            "nullable": true
+          }
+        }
+      },
+      "CrearCostoDto": {
+        "type": "object",
+        "properties": {
+          "contrato_id": {
+            "type": "string",
+            "description": "Identificador UUID del contrato al que se asocia el costo informativo",
+            "example": "c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Tipo o categoría libre del costo (ej. flete, alimentación, medicina, veterinaria)",
+            "example": "flete"
+          },
+          "monto": {
+            "type": "number",
+            "description": "Monto del costo estrictamente mayor que cero (informativo)",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "example": 450000
+          },
+          "fecha": {
+            "type": "string",
+            "description": "Fecha en que se incurrió el costo en formato ISO 8601",
+            "example": "2026-09-22T10:00:00.000Z"
+          },
+          "descripcion": {
+            "type": "string",
+            "description": "Descripción detallada del gasto u observación operativa",
+            "example": "Transporte de novillos en camión desde subasta hasta finca"
+          }
+        },
+        "required": [
+          "contrato_id",
+          "tipo",
+          "monto",
+          "fecha",
+          "descripcion"
+        ]
+      },
+      "CostoRespuestaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único del costo (UUID)",
+            "example": "a0b1c2d3-e4f5-4a5b-8c9d-0e1f2a3b4c5d"
+          },
+          "contrato_id": {
+            "type": "string",
+            "description": "Identificador del contrato vinculado",
+            "example": "c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Tipo o categoría libre del costo",
+            "example": "flete"
+          },
+          "monto": {
+            "type": "number",
+            "description": "Monto en moneda local",
+            "example": 450000
+          },
+          "fecha": {
+            "type": "string",
+            "description": "Fecha en formato ISO 8601",
+            "example": "2026-09-22T10:00:00.000Z"
+          },
+          "descripcion": {
+            "type": "string",
+            "description": "Descripción del gasto",
+            "example": "Transporte de novillos en camión desde subasta hasta finca"
+          }
+        },
+        "required": [
+          "id",
+          "contrato_id",
+          "tipo",
+          "monto",
+          "fecha",
+          "descripcion"
+        ]
+      },
+      "RespuestaCostoDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "datos": {
+            "description": "Datos de la respuesta",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CostoRespuestaDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "exito",
+          "datos"
+        ]
+      },
+      "PaginaCostosDto": {
+        "type": "object",
+        "properties": {
+          "elementos": {
+            "description": "Listado de elementos paginados",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CostoRespuestaDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Cantidad total de registros encontrados para el tenant",
+            "example": 45
+          },
+          "limite": {
+            "type": "number",
+            "description": "Límite de registros solicitado o aplicado por página",
+            "example": 20
+          },
+          "offset": {
+            "type": "number",
+            "description": "Cantidad de registros omitidos desde el inicio",
+            "example": 0
+          }
+        },
+        "required": [
+          "elementos",
+          "total",
+          "limite",
+          "offset"
+        ]
+      },
+      "RespuestaPaginaCostosDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "datos": {
+            "description": "Datos de la respuesta",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PaginaCostosDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "exito",
+          "datos"
+        ]
+      },
+      "ActualizarCostoDto": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "description": "Tipo o categoría libre del costo",
+            "example": "flete"
+          },
+          "monto": {
+            "type": "number",
+            "description": "Monto del costo estrictamente mayor que cero",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "example": 480000
+          },
+          "fecha": {
+            "type": "string",
+            "description": "Fecha en que se incurrió el costo en formato ISO 8601",
+            "example": "2026-09-22T10:00:00.000Z"
+          },
+          "descripcion": {
+            "type": "string",
+            "description": "Descripción detallada del gasto",
+            "example": "Transporte de novillos con peajes adicionales incluidos"
+          }
+        }
+      },
+      "ResumenDashboardDto": {
+        "type": "object",
+        "properties": {
+          "contratos_activos": {
+            "type": "number",
+            "description": "Número de contratos actualmente activos",
+            "example": 3
+          },
+          "contratos_cerrados": {
+            "type": "number",
+            "description": "Número de contratos cerrados",
+            "example": 2
+          },
+          "total_animales_actual": {
+            "type": "number",
+            "description": "Total acumulado de animales en inventario en contratos activos",
+            "example": 85
+          },
+          "utilidad_total_acumulada": {
+            "type": "number",
+            "description": "Utilidad total bruta acumulada de todas las ventas del comerciante",
+            "example": 12500000
+          },
+          "utilidad_real_comerciante_acumulada": {
+            "type": "number",
+            "description": "Utilidad real neta acumulada correspondiente al comerciante",
+            "example": 7500000
+          },
+          "utilidad_terceros_acumulada": {
+            "type": "number",
+            "description": "Utilidad total acumulada correspondiente a terceros socios",
+            "example": 5000000
+          },
+          "total_costos_informativos": {
+            "type": "number",
+            "description": "Total acumulado de costos operativos informativos registrados",
+            "example": 1200000
+          },
+          "total_ventas_registradas": {
+            "type": "number",
+            "description": "Cantidad total de transacciones de venta registradas",
+            "example": 4
+          }
+        },
+        "required": [
+          "contratos_activos",
+          "contratos_cerrados",
+          "total_animales_actual",
+          "utilidad_total_acumulada",
+          "utilidad_real_comerciante_acumulada",
+          "utilidad_terceros_acumulada",
+          "total_costos_informativos",
+          "total_ventas_registradas"
+        ]
+      },
+      "ReporteDashboardDto": {
+        "type": "object",
+        "properties": {
+          "resumen": {
+            "description": "Resumen consolidado de indicadores clave para el dashboard",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResumenDashboardDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "resumen"
+        ]
+      },
+      "RespuestaDashboardDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "datos": {
+            "description": "Datos de la respuesta",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReporteDashboardDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "exito",
+          "datos"
+        ]
+      },
+      "ContratoActivoDetalleDto": {
+        "type": "object",
+        "properties": {
+          "contrato_id": {
+            "type": "string",
+            "description": "Identificador único del contrato (UUID)",
+            "example": "c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33"
+          },
+          "tercero_id": {
+            "type": "string",
+            "description": "Identificador del tercero socio",
+            "example": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d"
+          },
+          "tercero_nombre": {
+            "type": "string",
+            "description": "Nombre del tercero socio dueño de la finca",
+            "example": "Juan Pérez Ganadero"
+          },
+          "finca_id": {
+            "type": "string",
+            "description": "Identificador de la finca geolocalizada",
+            "example": "f1f2f3f4-e5f6-7a8b-9c0d-1e2f3a4b5c6d"
+          },
+          "finca_nombre": {
+            "type": "string",
+            "description": "Nombre de la finca",
+            "example": "Finca La Esperanza"
+          },
+          "fecha_apertura": {
+            "type": "string",
+            "description": "Fecha de apertura del contrato en formato ISO 8601",
+            "example": "2026-09-21T10:00:00.000Z"
+          },
+          "porcentaje_comerciante": {
+            "type": "number",
+            "description": "Porcentaje de participación del comerciante",
+            "example": 60
+          },
+          "porcentaje_tercero": {
+            "type": "number",
+            "description": "Porcentaje de participación del tercero",
+            "example": 40
+          },
+          "cantidad_actual": {
+            "type": "number",
+            "description": "Cantidad actual de animales vivos en el lote",
+            "example": 35
+          },
+          "peso_promedio_actual": {
+            "type": "number",
+            "description": "Peso promedio actual del lote en kg",
+            "example": 385.5
+          },
+          "total_compras": {
+            "type": "number",
+            "description": "Cantidad total de compras o fusiones registradas en el contrato",
+            "example": 2
+          },
+          "total_ventas": {
+            "type": "number",
+            "description": "Cantidad total de ventas parciales registradas en el contrato",
+            "example": 1
+          },
+          "utilidad_generada_comerciante": {
+            "type": "number",
+            "description": "Utilidad real generada y acumulada por el comerciante en este contrato",
+            "example": 3450000
+          }
+        },
+        "required": [
+          "contrato_id",
+          "tercero_id",
+          "tercero_nombre",
+          "finca_id",
+          "finca_nombre",
+          "fecha_apertura",
+          "porcentaje_comerciante",
+          "porcentaje_tercero",
+          "cantidad_actual",
+          "total_compras",
+          "total_ventas",
+          "utilidad_generada_comerciante"
+        ]
+      },
+      "ReporteContratosActivosDto": {
+        "type": "object",
+        "properties": {
+          "contratos": {
+            "description": "Listado de contratos actualmente activos con sus métricas agregadas",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContratoActivoDetalleDto"
+            }
+          }
+        },
+        "required": [
+          "contratos"
+        ]
+      },
+      "RespuestaContratosActivosReporteDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "datos": {
+            "description": "Datos de la respuesta",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReporteContratosActivosDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "exito",
+          "datos"
+        ]
+      },
+      "ResumenHistorialVentasDto": {
+        "type": "object",
+        "properties": {
+          "total_ventas": {
+            "type": "number",
+            "description": "Total de transacciones de venta registradas",
+            "example": 5
+          },
+          "total_animales_vendidos": {
+            "type": "number",
+            "description": "Total de cabezas de ganado vendidas",
+            "example": 65
+          },
+          "valor_bruto_acumulado": {
+            "type": "number",
+            "description": "Ingreso bruto acumulado de todas las ventas",
+            "example": 185000000
+          },
+          "costo_estimado_acumulado": {
+            "type": "number",
+            "description": "Costo estimado acumulado de compra",
+            "example": 135000000
+          },
+          "utilidad_total_acumulada": {
+            "type": "number",
+            "description": "Utilidad total acumulada del negocio",
+            "example": 50000000
+          },
+          "utilidad_comerciante_acumulada": {
+            "type": "number",
+            "description": "Utilidad acumulada percibida por el comerciante",
+            "example": 30000000
+          },
+          "utilidad_terceros_acumulada": {
+            "type": "number",
+            "description": "Utilidad acumulada repartida a los terceros socios",
+            "example": 20000000
+          }
+        },
+        "required": [
+          "total_ventas",
+          "total_animales_vendidos",
+          "valor_bruto_acumulado",
+          "costo_estimado_acumulado",
+          "utilidad_total_acumulada",
+          "utilidad_comerciante_acumulada",
+          "utilidad_terceros_acumulada"
+        ]
+      },
+      "VentaHistorialItemDto": {
+        "type": "object",
+        "properties": {
+          "venta_id": {
+            "type": "string",
+            "description": "Identificador único de la venta (UUID)",
+            "example": "d0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a"
+          },
+          "contrato_id": {
+            "type": "string",
+            "description": "Identificador del contrato correspondiente",
+            "example": "c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33"
+          },
+          "fecha": {
+            "type": "string",
+            "description": "Fecha de la venta en formato ISO 8601",
+            "example": "2026-09-22T10:00:00.000Z"
+          },
+          "cantidad_vendida": {
+            "type": "number",
+            "description": "Cantidad de animales vendidos en la transacción",
+            "example": 10
+          },
+          "peso_promedio_venta": {
+            "type": "number",
+            "description": "Peso promedio de salida en kg",
+            "example": 410.5
+          },
+          "precio_kilo_venta": {
+            "type": "number",
+            "description": "Precio por kilo pactado en la venta",
+            "example": 9200
+          },
+          "valor_bruto": {
+            "type": "number",
+            "description": "Valor bruto obtenido en la venta",
+            "example": 37766000
+          },
+          "costo_estimado_compra": {
+            "type": "number",
+            "description": "Costo estimado de compra según promedio simple a la fecha",
+            "example": 25000000
+          },
+          "utilidad_total": {
+            "type": "number",
+            "description": "Utilidad total antes del reparto",
+            "example": 12766000
+          },
+          "valor_comerciante": {
+            "type": "number",
+            "description": "Parte de la ganancia correspondiente al comerciante (utilidad real)",
+            "example": 7659600
+          },
+          "valor_tercero": {
+            "type": "number",
+            "description": "Parte de la ganancia correspondiente al tercero socio",
+            "example": 5106400
+          },
+          "kilos_ganados_promedio": {
+            "type": "number",
+            "description": "Kilos promedio ganados por animal durante el ciclo",
+            "example": 95.5
+          },
+          "porcentaje_utilidad_total": {
+            "type": "number",
+            "description": "Rentabilidad porcentual obtenida en la venta",
+            "example": 51.06
+          }
+        },
+        "required": [
+          "venta_id",
+          "contrato_id",
+          "fecha",
+          "cantidad_vendida",
+          "peso_promedio_venta",
+          "precio_kilo_venta",
+          "valor_bruto",
+          "costo_estimado_compra",
+          "utilidad_total",
+          "valor_comerciante",
+          "valor_tercero",
+          "kilos_ganados_promedio",
+          "porcentaje_utilidad_total"
+        ]
+      },
+      "ReporteHistorialVentasDto": {
+        "type": "object",
+        "properties": {
+          "resumen": {
+            "description": "Resumen agregado de las ventas",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResumenHistorialVentasDto"
+              }
+            ]
+          },
+          "ventas": {
+            "description": "Detalle de cada venta con sus snapshots persistidos",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VentaHistorialItemDto"
+            }
+          }
+        },
+        "required": [
+          "resumen",
+          "ventas"
+        ]
+      },
+      "RespuestaHistorialVentasReporteDto": {
+        "type": "object",
+        "properties": {
+          "exito": {
+            "type": "boolean",
+            "description": "Indica si la operación fue exitosa",
+            "example": true
+          },
+          "datos": {
+            "description": "Datos de la respuesta",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReporteHistorialVentasDto"
               }
             ]
           }

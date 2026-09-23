@@ -268,6 +268,170 @@ export interface paths {
         patch: operations["VentasController_actualizarPatch"];
         trace?: never;
     };
+    "/api/v1/ciclos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lista los ciclos pertenecientes al comerciante con paginación opcional
+         * @description Retorna el listado paginado de checkpoints de ciclos del comerciante autenticado, permitiendo filtrar por contrato.
+         */
+        get: operations["CiclosController_listar"];
+        put?: never;
+        /**
+         * Registra un checkpoint de ciclo en un contrato activo
+         * @description Registra un evento de control satélite informativo en el contrato (fecha obligatoria, peso observado y notas opcionales).
+         */
+        post: operations["CiclosController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ciclos/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obtiene el detalle de un ciclo por su ID
+         * @description Consulta un ciclo específico asegurando aislamiento por tenant.
+         */
+        get: operations["CiclosController_buscarPorId"];
+        put?: never;
+        post?: never;
+        /**
+         * Elimina un ciclo en un contrato activo
+         * @description Permite eliminar libremente un ciclo informativo mientras el contrato esté activo, incluso con ventas existentes.
+         */
+        delete: operations["CiclosController_eliminar"];
+        options?: never;
+        head?: never;
+        /**
+         * Actualiza un ciclo en un contrato activo
+         * @description Permite modificar libremente fecha, peso observado o notas de un ciclo mientras el contrato permanezca activo.
+         */
+        patch: operations["CiclosController_actualizar"];
+        trace?: never;
+    };
+    "/api/v1/costos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lista los costos informativos pertenecientes al comerciante con paginación opcional
+         * @description Retorna el listado paginado de costos del comerciante autenticado, permitiendo filtrar opcionalmente por contrato.
+         */
+        get: operations["CostosController_listar"];
+        put?: never;
+        /**
+         * Registra un costo operativo informativo en un contrato activo
+         * @description Registra un costo operativo asociado al contrato (flete, alimentación, etc.). Es puramente informativo y no descuenta ni altera la utilidad real.
+         */
+        post: operations["CostosController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/costos/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obtiene el detalle de un costo por su ID
+         * @description Consulta un costo específico asegurando aislamiento multi-tenant.
+         */
+        get: operations["CostosController_buscarPorId"];
+        put?: never;
+        post?: never;
+        /**
+         * Elimina un costo en un contrato activo
+         * @description Permite eliminar libremente un costo informativo mientras el contrato esté activo, incluso con ventas existentes.
+         */
+        delete: operations["CostosController_eliminar"];
+        options?: never;
+        head?: never;
+        /**
+         * Actualiza un costo en un contrato activo
+         * @description Permite modificar los datos de un costo informativo mientras el contrato permanezca activo.
+         */
+        patch: operations["CostosController_actualizar"];
+        trace?: never;
+    };
+    "/api/v1/reportes/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obtiene el resumen consolidado del dashboard
+         * @description Retorna indicadores agregados sobre contratos activos y cerrados, animales en inventario, utilidades acumuladas y costos informativos basándose en datos ya persistidos.
+         */
+        get: operations["ReportesController_obtenerDashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reportes/contratos-activos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obtiene el reporte detallado de contratos actualmente activos
+         * @description Retorna la lista de contratos activos con sus agregaciones de compras, ventas y utilidad generada acumulada por el comerciante.
+         */
+        get: operations["ReportesController_obtenerContratosActivos"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reportes/historial-ventas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obtiene el reporte histórico de ventas con totales agregados
+         * @description Retorna el historial completo de ventas con ingresos brutos, costos estimados, utilidades totales y repartos a la fecha de cada venta.
+         */
+        get: operations["ReportesController_obtenerHistorialVentas"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/health": {
         parameters: {
             query?: never;
@@ -1203,6 +1367,481 @@ export interface components {
             exito: boolean;
             /** @description Datos de la respuesta */
             datos: components["schemas"]["PaginaVentasDto"];
+        };
+        CrearCicloDto: {
+            /**
+             * @description Identificador UUID del contrato al que se asocia el checkpoint de ciclo
+             * @example c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33
+             */
+            contrato_id: string;
+            /**
+             * @description Fecha del evento o control en formato ISO 8601
+             * @example 2026-09-22T10:00:00.000Z
+             */
+            fecha: string;
+            /**
+             * @description Peso observado opcional de los animales en el checkpoint en kilogramos
+             * @example 380.5
+             */
+            peso_observado?: number;
+            /**
+             * @description Notas o comentarios cualitativos opcionales sobre el lote o pasturas
+             * @example Buen rebrote de pasturas, sin signos de enfermedad
+             */
+            notas?: string | null;
+        };
+        CicloRespuestaDto: {
+            /**
+             * @description Identificador único del ciclo (UUID)
+             * @example a0b1c2d3-e4f5-4a5b-8c9d-0e1f2a3b4c5d
+             */
+            id: string;
+            /**
+             * @description Identificador del contrato vinculado
+             * @example c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33
+             */
+            contrato_id: string;
+            /**
+             * @description Fecha del checkpoint en formato ISO 8601
+             * @example 2026-09-22T10:00:00.000Z
+             */
+            fecha: string;
+            /**
+             * @description Peso observado en kilogramos o null si no fue medido
+             * @example 380.5
+             */
+            peso_observado?: number;
+            /**
+             * @description Notas u observaciones registradas
+             * @example Buen rebrote de pasturas, sin signos de enfermedad
+             */
+            notas?: string;
+        };
+        RespuestaCicloDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["CicloRespuestaDto"];
+        };
+        PaginaCiclosDto: {
+            /** @description Listado de elementos paginados */
+            elementos: components["schemas"]["CicloRespuestaDto"][];
+            /**
+             * @description Cantidad total de registros encontrados para el tenant
+             * @example 45
+             */
+            total: number;
+            /**
+             * @description Límite de registros solicitado o aplicado por página
+             * @example 20
+             */
+            limite: number;
+            /**
+             * @description Cantidad de registros omitidos desde el inicio
+             * @example 0
+             */
+            offset: number;
+        };
+        RespuestaPaginaCiclosDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["PaginaCiclosDto"];
+        };
+        ActualizarCicloDto: {
+            /**
+             * @description Fecha del evento o control en formato ISO 8601
+             * @example 2026-09-22T10:00:00.000Z
+             */
+            fecha?: string;
+            /**
+             * @description Peso observado opcional de los animales en el checkpoint en kilogramos
+             * @example 385
+             */
+            peso_observado?: number;
+            /**
+             * @description Notas o comentarios cualitativos opcionales sobre el lote o pasturas
+             * @example Ajuste en pesaje tras desparasitación
+             */
+            notas?: string | null;
+        };
+        CrearCostoDto: {
+            /**
+             * @description Identificador UUID del contrato al que se asocia el costo informativo
+             * @example c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33
+             */
+            contrato_id: string;
+            /**
+             * @description Tipo o categoría libre del costo (ej. flete, alimentación, medicina, veterinaria)
+             * @example flete
+             */
+            tipo: string;
+            /**
+             * @description Monto del costo estrictamente mayor que cero (informativo)
+             * @example 450000
+             */
+            monto: number;
+            /**
+             * @description Fecha en que se incurrió el costo en formato ISO 8601
+             * @example 2026-09-22T10:00:00.000Z
+             */
+            fecha: string;
+            /**
+             * @description Descripción detallada del gasto u observación operativa
+             * @example Transporte de novillos en camión desde subasta hasta finca
+             */
+            descripcion: string;
+        };
+        CostoRespuestaDto: {
+            /**
+             * @description Identificador único del costo (UUID)
+             * @example a0b1c2d3-e4f5-4a5b-8c9d-0e1f2a3b4c5d
+             */
+            id: string;
+            /**
+             * @description Identificador del contrato vinculado
+             * @example c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33
+             */
+            contrato_id: string;
+            /**
+             * @description Tipo o categoría libre del costo
+             * @example flete
+             */
+            tipo: string;
+            /**
+             * @description Monto en moneda local
+             * @example 450000
+             */
+            monto: number;
+            /**
+             * @description Fecha en formato ISO 8601
+             * @example 2026-09-22T10:00:00.000Z
+             */
+            fecha: string;
+            /**
+             * @description Descripción del gasto
+             * @example Transporte de novillos en camión desde subasta hasta finca
+             */
+            descripcion: string;
+        };
+        RespuestaCostoDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["CostoRespuestaDto"];
+        };
+        PaginaCostosDto: {
+            /** @description Listado de elementos paginados */
+            elementos: components["schemas"]["CostoRespuestaDto"][];
+            /**
+             * @description Cantidad total de registros encontrados para el tenant
+             * @example 45
+             */
+            total: number;
+            /**
+             * @description Límite de registros solicitado o aplicado por página
+             * @example 20
+             */
+            limite: number;
+            /**
+             * @description Cantidad de registros omitidos desde el inicio
+             * @example 0
+             */
+            offset: number;
+        };
+        RespuestaPaginaCostosDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["PaginaCostosDto"];
+        };
+        ActualizarCostoDto: {
+            /**
+             * @description Tipo o categoría libre del costo
+             * @example flete
+             */
+            tipo?: string;
+            /**
+             * @description Monto del costo estrictamente mayor que cero
+             * @example 480000
+             */
+            monto?: number;
+            /**
+             * @description Fecha en que se incurrió el costo en formato ISO 8601
+             * @example 2026-09-22T10:00:00.000Z
+             */
+            fecha?: string;
+            /**
+             * @description Descripción detallada del gasto
+             * @example Transporte de novillos con peajes adicionales incluidos
+             */
+            descripcion?: string;
+        };
+        ResumenDashboardDto: {
+            /**
+             * @description Número de contratos actualmente activos
+             * @example 3
+             */
+            contratos_activos: number;
+            /**
+             * @description Número de contratos cerrados
+             * @example 2
+             */
+            contratos_cerrados: number;
+            /**
+             * @description Total acumulado de animales en inventario en contratos activos
+             * @example 85
+             */
+            total_animales_actual: number;
+            /**
+             * @description Utilidad total bruta acumulada de todas las ventas del comerciante
+             * @example 12500000
+             */
+            utilidad_total_acumulada: number;
+            /**
+             * @description Utilidad real neta acumulada correspondiente al comerciante
+             * @example 7500000
+             */
+            utilidad_real_comerciante_acumulada: number;
+            /**
+             * @description Utilidad total acumulada correspondiente a terceros socios
+             * @example 5000000
+             */
+            utilidad_terceros_acumulada: number;
+            /**
+             * @description Total acumulado de costos operativos informativos registrados
+             * @example 1200000
+             */
+            total_costos_informativos: number;
+            /**
+             * @description Cantidad total de transacciones de venta registradas
+             * @example 4
+             */
+            total_ventas_registradas: number;
+        };
+        ReporteDashboardDto: {
+            /** @description Resumen consolidado de indicadores clave para el dashboard */
+            resumen: components["schemas"]["ResumenDashboardDto"];
+        };
+        RespuestaDashboardDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["ReporteDashboardDto"];
+        };
+        ContratoActivoDetalleDto: {
+            /**
+             * @description Identificador único del contrato (UUID)
+             * @example c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33
+             */
+            contrato_id: string;
+            /**
+             * @description Identificador del tercero socio
+             * @example a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d
+             */
+            tercero_id: string;
+            /**
+             * @description Nombre del tercero socio dueño de la finca
+             * @example Juan Pérez Ganadero
+             */
+            tercero_nombre: string;
+            /**
+             * @description Identificador de la finca geolocalizada
+             * @example f1f2f3f4-e5f6-7a8b-9c0d-1e2f3a4b5c6d
+             */
+            finca_id: string;
+            /**
+             * @description Nombre de la finca
+             * @example Finca La Esperanza
+             */
+            finca_nombre: string;
+            /**
+             * @description Fecha de apertura del contrato en formato ISO 8601
+             * @example 2026-09-21T10:00:00.000Z
+             */
+            fecha_apertura: string;
+            /**
+             * @description Porcentaje de participación del comerciante
+             * @example 60
+             */
+            porcentaje_comerciante: number;
+            /**
+             * @description Porcentaje de participación del tercero
+             * @example 40
+             */
+            porcentaje_tercero: number;
+            /**
+             * @description Cantidad actual de animales vivos en el lote
+             * @example 35
+             */
+            cantidad_actual: number;
+            /**
+             * @description Peso promedio actual del lote en kg
+             * @example 385.5
+             */
+            peso_promedio_actual?: number;
+            /**
+             * @description Cantidad total de compras o fusiones registradas en el contrato
+             * @example 2
+             */
+            total_compras: number;
+            /**
+             * @description Cantidad total de ventas parciales registradas en el contrato
+             * @example 1
+             */
+            total_ventas: number;
+            /**
+             * @description Utilidad real generada y acumulada por el comerciante en este contrato
+             * @example 3450000
+             */
+            utilidad_generada_comerciante: number;
+        };
+        ReporteContratosActivosDto: {
+            /** @description Listado de contratos actualmente activos con sus métricas agregadas */
+            contratos: components["schemas"]["ContratoActivoDetalleDto"][];
+        };
+        RespuestaContratosActivosReporteDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["ReporteContratosActivosDto"];
+        };
+        ResumenHistorialVentasDto: {
+            /**
+             * @description Total de transacciones de venta registradas
+             * @example 5
+             */
+            total_ventas: number;
+            /**
+             * @description Total de cabezas de ganado vendidas
+             * @example 65
+             */
+            total_animales_vendidos: number;
+            /**
+             * @description Ingreso bruto acumulado de todas las ventas
+             * @example 185000000
+             */
+            valor_bruto_acumulado: number;
+            /**
+             * @description Costo estimado acumulado de compra
+             * @example 135000000
+             */
+            costo_estimado_acumulado: number;
+            /**
+             * @description Utilidad total acumulada del negocio
+             * @example 50000000
+             */
+            utilidad_total_acumulada: number;
+            /**
+             * @description Utilidad acumulada percibida por el comerciante
+             * @example 30000000
+             */
+            utilidad_comerciante_acumulada: number;
+            /**
+             * @description Utilidad acumulada repartida a los terceros socios
+             * @example 20000000
+             */
+            utilidad_terceros_acumulada: number;
+        };
+        VentaHistorialItemDto: {
+            /**
+             * @description Identificador único de la venta (UUID)
+             * @example d0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a
+             */
+            venta_id: string;
+            /**
+             * @description Identificador del contrato correspondiente
+             * @example c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33
+             */
+            contrato_id: string;
+            /**
+             * @description Fecha de la venta en formato ISO 8601
+             * @example 2026-09-22T10:00:00.000Z
+             */
+            fecha: string;
+            /**
+             * @description Cantidad de animales vendidos en la transacción
+             * @example 10
+             */
+            cantidad_vendida: number;
+            /**
+             * @description Peso promedio de salida en kg
+             * @example 410.5
+             */
+            peso_promedio_venta: number;
+            /**
+             * @description Precio por kilo pactado en la venta
+             * @example 9200
+             */
+            precio_kilo_venta: number;
+            /**
+             * @description Valor bruto obtenido en la venta
+             * @example 37766000
+             */
+            valor_bruto: number;
+            /**
+             * @description Costo estimado de compra según promedio simple a la fecha
+             * @example 25000000
+             */
+            costo_estimado_compra: number;
+            /**
+             * @description Utilidad total antes del reparto
+             * @example 12766000
+             */
+            utilidad_total: number;
+            /**
+             * @description Parte de la ganancia correspondiente al comerciante (utilidad real)
+             * @example 7659600
+             */
+            valor_comerciante: number;
+            /**
+             * @description Parte de la ganancia correspondiente al tercero socio
+             * @example 5106400
+             */
+            valor_tercero: number;
+            /**
+             * @description Kilos promedio ganados por animal durante el ciclo
+             * @example 95.5
+             */
+            kilos_ganados_promedio: number;
+            /**
+             * @description Rentabilidad porcentual obtenida en la venta
+             * @example 51.06
+             */
+            porcentaje_utilidad_total: number;
+        };
+        ReporteHistorialVentasDto: {
+            /** @description Resumen agregado de las ventas */
+            resumen: components["schemas"]["ResumenHistorialVentasDto"];
+            /** @description Detalle de cada venta con sus snapshots persistidos */
+            ventas: components["schemas"]["VentaHistorialItemDto"][];
+        };
+        RespuestaHistorialVentasReporteDto: {
+            /**
+             * @description Indica si la operación fue exitosa
+             * @example true
+             */
+            exito: boolean;
+            /** @description Datos de la respuesta */
+            datos: components["schemas"]["ReporteHistorialVentasDto"];
         };
     };
     responses: never;
@@ -3589,6 +4228,976 @@ export interface operations {
                      *       "codigoEstado": 500,
                      *       "ruta": "/api/v1/ventas",
                      *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    CiclosController_listar: {
+        parameters: {
+            query?: {
+                /** @description Cantidad máxima de elementos a retornar (entre 1 y 100) */
+                limite?: number;
+                /** @description Número de elementos a omitir desde el inicio (mínimo 0) */
+                offset?: number;
+                /** @description Filtrar checkpoints de ciclos por ID de contrato */
+                contrato_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Listado de ciclos obtenido exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaPaginaCiclosDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    CiclosController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearCicloDto"];
+            };
+        };
+        responses: {
+            /** @description Ciclo registrado exitosamente */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaCicloDto"];
+                };
+            };
+            /** @description Datos inválidos (peso <= 0, fecha ausente) o contrato cerrado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Error de validación en la solicitud: La fecha es obligatoria",
+                     *       "codigoEstado": 400,
+                     *       "errores": [
+                     *         "La fecha es obligatoria"
+                     *       ],
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description El contrato especificado no existe o pertenece a otro comerciante */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "El contrato especificado no existe o no pertenece al comerciante",
+                     *       "codigoEstado": 404,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    CiclosController_buscarPorId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ciclo encontrado y retornado */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaCicloDto"];
+                };
+            };
+            /** @description Identificador UUID con formato inválido */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Ciclo no encontrado en la cuenta del comerciante autenticado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ciclo no encontrado",
+                     *       "codigoEstado": 404,
+                     *       "ruta": "/api/v1/ciclos/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    CiclosController_eliminar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ciclo eliminado exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Identificador UUID con formato inválido o contrato cerrado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Ciclo no encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    CiclosController_actualizar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualizarCicloDto"];
+            };
+        };
+        responses: {
+            /** @description Ciclo actualizado exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaCicloDto"];
+                };
+            };
+            /** @description Datos de actualización inválidos o contrato cerrado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Ciclo no encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/ciclos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    CostosController_listar: {
+        parameters: {
+            query?: {
+                /** @description Cantidad máxima de elementos a retornar (entre 1 y 100) */
+                limite?: number;
+                /** @description Número de elementos a omitir desde el inicio (mínimo 0) */
+                offset?: number;
+                /** @description Filtrar costos por ID de contrato */
+                contrato_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Listado de costos obtenido exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaPaginaCostosDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    CostosController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearCostoDto"];
+            };
+        };
+        responses: {
+            /** @description Costo registrado exitosamente */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaCostoDto"];
+                };
+            };
+            /** @description Datos inválidos (monto <= 0, campos obligatorios faltantes) o contrato cerrado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Error de validación en la solicitud: El monto debe ser mayor que cero",
+                     *       "codigoEstado": 400,
+                     *       "errores": [
+                     *         "El monto debe ser mayor que cero"
+                     *       ],
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description El contrato especificado no existe o no pertenece al comerciante */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "El contrato especificado no existe o no pertenece al comerciante",
+                     *       "codigoEstado": 404,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    CostosController_buscarPorId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Costo encontrado y retornado */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaCostoDto"];
+                };
+            };
+            /** @description Identificador UUID con formato inválido */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Costo no encontrado en la cuenta del comerciante autenticado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Costo no encontrado",
+                     *       "codigoEstado": 404,
+                     *       "ruta": "/api/v1/costos/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    CostosController_eliminar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Costo eliminado exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Identificador UUID con formato inválido o contrato cerrado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Costo no encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    CostosController_actualizar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualizarCostoDto"];
+            };
+        };
+        responses: {
+            /** @description Costo actualizado exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaCostoDto"];
+                };
+            };
+            /** @description Datos de actualización inválidos o contrato cerrado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Costo no encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorNoEncontradoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/costos",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    ReportesController_obtenerDashboard: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resumen consolidado del dashboard obtenido exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaDashboardDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/reportes/dashboard",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/reportes/dashboard",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    ReportesController_obtenerContratosActivos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reporte de contratos activos obtenido exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaContratosActivosReporteDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/reportes/dashboard",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/reportes/dashboard",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    ReportesController_obtenerHistorialVentas: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reporte histórico de ventas obtenido exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaHistorialVentasReporteDto"];
+                };
+            };
+            /** @description No autorizado: token JWT ausente o inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "No autorizado: token JWT ausente o inválido",
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/reportes/dashboard",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Error interno no controlado del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Ha ocurrido un error interno en el servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/reportes/dashboard",
+                     *       "marcaTiempo": "2026-09-22T10:00:00.000Z"
                      *     }
                      */
                     "application/json": components["schemas"]["RespuestaErrorServidorDto"];
