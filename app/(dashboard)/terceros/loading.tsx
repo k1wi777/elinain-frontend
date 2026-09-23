@@ -26,24 +26,26 @@ export default function TercerosLoading() {
           <Skeleton className="h-32 rounded-2xl bg-elinain-surface" />
           <Skeleton className="h-32 rounded-2xl bg-elinain-surface" />
         </div>
-        <div className="overflow-hidden rounded-2xl border border-white/6 bg-elinain-surface">
-          <div className="flex min-w-[720px] items-center gap-4 border-b border-white/6 bg-white/[0.03] px-5 py-4">
-            <Skeleton className="h-3 w-24 bg-white/10" />
-            <Skeleton className="h-3 w-32 bg-white/10" />
-            <Skeleton className="h-3 w-40 bg-white/10" />
-            <Skeleton className="ml-auto h-3 w-16 bg-white/10" />
-          </div>
-          {["w-40", "w-44", "w-36", "w-40"].map((ancho, indice) => (
-            <div
-              key={`${ancho}-${indice}`}
-              className="flex min-w-[720px] items-center gap-4 border-t border-white/6 px-5 py-5"
-            >
-              <Skeleton className={`h-4 ${ancho} bg-white/10`} />
-              <Skeleton className="h-4 w-28 bg-white/10" />
-              <Skeleton className="h-4 w-36 bg-white/10" />
-              <Skeleton className="ml-auto h-8 w-24 bg-white/10" />
+        <div className="overflow-x-auto">
+          <div className="flex min-w-[720px] flex-col gap-2">
+            <div className="flex items-center gap-4 px-5 pt-1 pb-3">
+              <Skeleton className="h-3 w-24 bg-white/10" />
+              <Skeleton className="h-3 w-32 bg-white/10" />
+              <Skeleton className="h-3 w-40 bg-white/10" />
+              <Skeleton className="ml-auto h-3 w-16 bg-white/10" />
             </div>
-          ))}
+            {["w-40", "w-44", "w-36", "w-40"].map((ancho, indice) => (
+              <div
+                key={`${ancho}-${indice}`}
+                className="flex items-center gap-4 rounded-2xl border border-white/6 bg-elinain-surface px-5 py-5"
+              >
+                <Skeleton className={`h-4 ${ancho} bg-white/10`} />
+                <Skeleton className="h-4 w-28 bg-white/10" />
+                <Skeleton className="h-4 w-36 bg-white/10" />
+                <Skeleton className="ml-auto h-8 w-24 bg-white/10" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

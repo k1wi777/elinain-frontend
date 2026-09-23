@@ -56,11 +56,31 @@ const ALINEACIONES: Record<AlineacionColumna, string> = {
 };
 
 /**
+ * Estilos de cada celda de datos. Cada fila se presenta como una tarjeta independiente con
+ * esquinas redondeadas: la primera y la última celda cierran el borde y las esquinas.
+ */
+const CELDA = {
+  oscuro:
+    "border-y border-white/6 bg-elinain-surface text-zinc-200 first:rounded-l-2xl first:border-l last:rounded-r-2xl last:border-r group-hover:bg-white/[0.05]",
+  claro:
+    "border-y border-zinc-200 bg-white text-zinc-800 first:rounded-l-2xl first:border-l last:rounded-r-2xl last:border-r group-hover:bg-zinc-50",
+} satisfies Record<TemaTabla, string>;
+
+/** Estilos de la celda que ocupa toda la fila en los estados de carga y vacío. */
+const CELDA_ANCHA = {
+  oscuro:
+    "rounded-2xl border border-white/6 bg-elinain-surface/70 text-zinc-500",
+  claro: "rounded-2xl border border-zinc-200 bg-white text-zinc-500",
+} satisfies Record<TemaTabla, string>;
+
+/**
  * Tabla genérica con encabezados, render de celdas, estados de carga/vacío y paginación
  * opcional.
  *
  * No conoce el dominio: el consumidor define las columnas y cómo se representa cada
- * celda. Cuando recibe `paginacion`, delega los controles en `TablePagination`.
+ * celda. Cada fila se muestra como una superficie tipo tarjeta, separada por un pequeño
+ * espacio, en lugar de las líneas de la tabla HTML por defecto. Cuando recibe `paginacion`,
+ * delega los controles en `TablePagination`.
  */
 export function Table<T>({
   columnas,
@@ -76,31 +96,22 @@ export function Table<T>({
   const esOscuro = tema === "oscuro";
 
   return (
-    <div
-      className={cn(
-        "overflow-hidden rounded-2xl",
-        esOscuro
-          ? "border border-white/6 bg-elinain-surface shadow-[0_22px_48px_rgb(0_0_0_/_0.2)]"
-          : "border border-zinc-200",
-      )}
-    >
+    <div className="w-full">
       <div className="overflow-x-auto">
         <table
           className={cn(
-            "w-full border-collapse text-sm",
+            "w-full border-separate border-spacing-y-2 text-sm",
             esOscuro && "min-w-[720px]",
           )}
         >
-          <thead className={esOscuro ? "bg-elinain-bg/70" : "bg-zinc-50"}>
+          <thead>
             <tr>
               {columnas.map((columna) => (
                 <th
                   key={columna.clave}
                   scope="col"
                   className={cn(
-                    esOscuro
-                      ? "px-5 py-4 text-[0.68rem] font-semibold tracking-[0.18em] text-zinc-500 uppercase"
-                      : "px-4 py-3 font-medium text-zinc-600",
+                    "px-5 pt-1 pb-2 text-[0.68rem] font-semibold tracking-[0.18em] text-zinc-500 uppercase",
                     ALINEACIONES[columna.alineacion ?? "izquierda"],
                     columna.className,
                   )}
@@ -115,7 +126,7 @@ export function Table<T>({
               <tr>
                 <td
                   colSpan={columnas.length}
-                  className="px-4 py-10 text-center text-zinc-500"
+                  className={cn("px-5 py-10 text-center", CELDA_ANCHA[tema])}
                 >
                   Cargando…
                 </td>
@@ -124,20 +135,14 @@ export function Table<T>({
               filas.map((fila) => (
                 <tr
                   key={obtenerClave(fila)}
-                  className={cn(
-                    "border-t",
-                    esOscuro
-                      ? "border-white/6 transition-colors hover:bg-white/[0.035]"
-                      : "border-zinc-200",
-                  )}
+                  className="group transition-colors"
                 >
                   {columnas.map((columna) => (
                     <td
                       key={columna.clave}
                       className={cn(
-                        esOscuro
-                          ? "px-5 py-[1.1rem] align-middle text-zinc-200"
-                          : "px-4 py-3 text-zinc-800",
+                        "px-5 py-4 align-middle",
+                        CELDA[tema],
                         paddingFilas,
                         ALINEACIONES[columna.alineacion ?? "izquierda"],
                         columna.className,
@@ -152,7 +157,7 @@ export function Table<T>({
               <tr>
                 <td
                   colSpan={columnas.length}
-                  className="px-4 py-10 text-center text-zinc-500"
+                  className={cn("px-5 py-10 text-center", CELDA_ANCHA[tema])}
                 >
                   {mensajeVacio}
                 </td>
