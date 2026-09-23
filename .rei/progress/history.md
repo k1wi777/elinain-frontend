@@ -723,3 +723,59 @@
   (revisión independiente); `V5` no aplica (sin comportamiento de UI ni flujos interactivos).
   `bash .rei/init.sh` finaliza con código de salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_02-45__rediseño-visual-pantalla-inicio-sesion`
+
+> Entrada reconstruida: el Work Item quedó en `done` pero su reviewer no lo registró en su
+> momento; se añade al detectarse durante el Work Item siguiente. No se modifica ninguna
+> entrada anterior.
+
+- **Work Item:** `2026-09-23_02-45__rediseño-visual-pantalla-inicio-sesion` — Rediseño visual
+  de la pantalla de inicio de sesión (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se refinó la presentación visual de `/login` con una composición de
+  dos columnas (formulario y aside con imagen), acento ámbar y estilos oscuros en el
+  formulario. Se crearon `features/auth/auth-styles.ts` y
+  `features/auth/components/AuthField.tsx`, y se añadió `LoginShell` al barrel del feature.
+- **Archivos modificados:** `app/(auth)/login/page.tsx`, `app/globals.css`,
+  `features/auth/components/LoginForm.tsx`, `features/auth/index.ts`, y creados
+  `features/auth/auth-styles.ts`, `features/auth/components/AuthField.tsx` y
+  `features/auth/components/LoginShell.tsx`.
+- **Resultado de la verificación:** `V1`–`V4` en verde; `V5` ejecutada parcialmente con Chrome
+  headless en desktop y móvil, sin certificar todos los estados interactivos.
+  `bash .rei/init.sh` finaliza con código de salida `0`.
+- **Estado final:** `done` (el resultado visual quedó incompleto; corregido en el Work Item
+  `2026-09-23_03-18__correccion-visual-pantalla-inicio-sesion`).
+
+---
+
+## 2026-09-23 — `2026-09-23_03-18__correccion-visual-pantalla-inicio-sesion`
+
+- **Work Item:** `2026-09-23_03-18__correccion-visual-pantalla-inicio-sesion` — Corrección
+  visual de la pantalla de inicio de sesión (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre). La delegación vía subagente no estuvo disponible por saldo insuficiente
+  del modelo del subagente; la ejecución se llevó a cabo en el agente principal manteniendo los
+  artefactos del arnés.
+- **Trabajo realizado:** se corrigió el resultado visual incompleto del rediseño de `/login`.
+  (1) Causa raíz: el layout `(auth)` imponía fondo claro y centrado (`bg-zinc-50 px-4 py-12`) y
+  `LoginShell` solo superponía un degradado transparente, dejando el texto blanco invisible
+  sobre el blanco del `body`. (2) `app/(auth)/layout.tsx` pasa a ser neutro (solo renderiza
+  `children`). (3) `app/(auth)/registro/page.tsx` asume el envoltorio claro y centrado para
+  conservar su apariencia idéntica. (4) `LoginShell` pinta fondo oscuro a pantalla completa
+  (`min-h-dvh bg-elinain-bg` + acento radial dorado), con badge real, contraste corregido y un
+  aside con `glass-panel` etiquetado "Vista de ejemplo" con indicadores en `—` (sin cifras) y
+  conceptos reales del producto. (5) Ajustes de contraste en `LoginForm` y `auth-styles`, sin
+  cambios funcionales.
+- **Archivos modificados:** `app/(auth)/layout.tsx`, `app/(auth)/registro/page.tsx`,
+  `features/auth/components/LoginShell.tsx`, `features/auth/components/LoginForm.tsx`,
+  `features/auth/auth-styles.ts`. Sin cambios en hooks, `api/`, esquemas, navegación ni flujo de
+  autenticación; sin dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests en verde;
+  `bash .rei/init.sh` finaliza con código de salida `0`. `V5` ejecutada parcialmente con Chrome
+  headless (login 1440x900 y 390x844, registro 1440x900) con resultados correctos; la
+  confirmación explícita del usuario y los estados interactivos quedan pendientes.
+- **Estado final:** `done`.

@@ -5,5 +5,6 @@
  * `schemas.ts` y `mensajes-error.ts` son internos.
  */
 export { LoginForm } from "@/features/auth/components/LoginForm";
+export { LoginShell } from "@/features/auth/components/LoginShell";
 export { LogoutButton } from "@/features/auth/components/LogoutButton";
 export { RegistroForm } from "@/features/auth/components/RegistroForm";

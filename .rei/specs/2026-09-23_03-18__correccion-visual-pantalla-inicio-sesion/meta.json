@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-23_03-18__correccion-visual-pantalla-inicio-sesion",
+  "title": "Corrección visual de la pantalla de inicio de sesión",
+  "description": "Corregir el resultado visual del rediseño de /login del Work Item 2026-09-23_02-45__rediseño-visual-pantalla-inicio-sesion, que quedó incompleto: el layout compartido (auth) mantiene fondo claro y centrado, el LoginShell no cubre la pantalla con fondo oscuro sólido y el texto blanco queda invisible sobre fondo blanco. El objetivo es que /login se vea oscuro, minimalista y premium (fondo casi negro, superficies carbón, acento dorado, tipografía jerárquica, espaciado generoso), inspirado en la referencia aportada por el usuario. Se permite añadir un bloque ilustrativo sutil en el lado de la imagen, marcado explícitamente como ejemplo, usando únicamente conceptos reales del producto (compras/ventas, costos del engorde, fincas, ciclos, participación con terceros) y sin inventar cifras ni métricas. Acordado con el usuario: /login pasa a ocupar la pantalla completa con su propio fondo oscuro, mientras /registro debe quedar visualmente idéntico a como está hoy. No se modifica ninguna funcionalidad: hooks, API, validación, esquemas, navegación, textos de negocio ni flujo de autenticación. Sin dependencias nuevas.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-23T03:18:40-05:00"
+}
