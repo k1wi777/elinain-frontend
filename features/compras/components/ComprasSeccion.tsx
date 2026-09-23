@@ -51,6 +51,11 @@ const FORMATO_NUMERO = new Intl.NumberFormat("es-CO");
 type Props = {
   /** Identificador del contrato cuyas compras se gestionan. */
   contratoId: string;
+  /**
+   * Notifica que una compra cambió (registrada, actualizada o eliminada) para que quien
+   * componga la sección refresque datos derivados, como los del contrato.
+   */
+  onCambio?: () => void;
 };
 
 /**
@@ -62,7 +67,7 @@ type Props = {
  * siempre visibles; el `409` de contrato con ventas registradas se traduce a un mensaje
  * específico sin cerrar el diálogo.
  */
-export function ComprasSeccion({ contratoId }: Props) {
+export function ComprasSeccion({ contratoId, onCambio }: Props) {
   const paginacion = usePagination({ total: TOTAL_PROVISIONAL });
   const { limite, offset } = paginacion;
 
@@ -153,6 +158,7 @@ export function ComprasSeccion({ contratoId }: Props) {
       }
 
       cerrarFormulario();
+      onCambio?.();
     } catch {
       // El error de la mutación se muestra dentro del formulario.
     }
@@ -179,6 +185,7 @@ export function ComprasSeccion({ contratoId }: Props) {
       await eliminar.mutateAsync(compraAEliminar.id);
       setMensajeExito("Compra eliminada.");
       cerrarEliminar();
+      onCambio?.();
 
       if (eraUnicaFilaDePagina) {
         paginacion.irAPaginaAnterior();

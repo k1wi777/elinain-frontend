@@ -29,9 +29,10 @@ export type PaginacionTabla = {
 };
 
 /**
- * Controles de navegación entre páginas de la `Table`.
+ * Controles de navegación entre páginas de un listado.
  *
- * Es interno de `shared/ui` y no se exporta en el barrel del sistema de diseño.
+ * Los usa internamente `Table` y también los listados paginados que no se presentan como
+ * tabla, como el de ventas en tarjetas.
  */
 export function TablePagination({
   paginaActual,

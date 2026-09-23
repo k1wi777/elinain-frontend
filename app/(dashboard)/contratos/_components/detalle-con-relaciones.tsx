@@ -1,13 +1,17 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 import { ComprasSeccion } from "@/features/compras";
 import {
+  clavesContratos,
   ContratoDetalle,
   type FincaContrato,
   type TerceroContrato,
 } from "@/features/contratos";
 import { useTodasLasFincas } from "@/features/fincas";
 import { useTodosLosTerceros } from "@/features/terceros";
+import { VentasSeccion } from "@/features/ventas";
 
 /** Props del componente `DetalleConRelaciones`. */
 type Props = {
@@ -16,14 +20,15 @@ type Props = {
 };
 
 /**
- * Composición del detalle de contrato con terceros, fincas y compras.
+ * Composición del detalle de contrato con terceros, fincas, compras y ventas.
  *
  * Carga los terceros y las fincas para resolver los nombres y los pasa por props a
- * `features/contratos`, sin que el feature importe de otros features. Las compras se
- * componen aquí, junto al detalle, sin que `features/compras` importe de `features/contratos`
- * ni al revés.
+ * `features/contratos`, sin que el feature importe de otros features. Las compras y las
+ * ventas se componen aquí, junto al detalle, sin que `features/compras` ni `features/ventas`
+ * importen de `features/contratos` ni al revés.
  */
 export function DetalleConRelaciones({ id }: Props) {
+  const queryClient = useQueryClient();
   const terceros = useTodosLosTerceros();
   const fincas = useTodasLasFincas();
 
@@ -55,7 +60,22 @@ export function DetalleConRelaciones({ id }: Props) {
         terceros={tercerosContrato}
         fincas={fincasContrato}
       />
-      <ComprasSeccion contratoId={id} />
+      <ComprasSeccion
+        contratoId={id}
+        onCambio={() => {
+          void queryClient.invalidateQueries({
+            queryKey: clavesContratos.todas,
+          });
+        }}
+      />
+      <VentasSeccion
+        contratoId={id}
+        onCambio={() => {
+          void queryClient.invalidateQueries({
+            queryKey: clavesContratos.todas,
+          });
+        }}
+      />
     </div>
   );
 }

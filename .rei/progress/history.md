@@ -489,3 +489,48 @@
   de accesibilidad) queda a cargo del usuario con los pasos documentados en `impl.md`.
   `bash .rei/init.sh` finaliza con código de salida `0`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_19-55__ventas-listado-global-y-registro-por-contrato`
+
+- **Work Item:** `2026-09-22_19-55__ventas-listado-global-y-registro-por-contrato` —
+  Ventas: listado global y por contrato, registro y desglose de solo lectura
+  (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó la gestión de ventas (R1–R29, T1–T11). (1) BFF de
+  ventas en `app/api/ventas/*`: `GET` paginado con `limite`/`offset` y `contrato_id`
+  opcional, `POST` con validación defensiva (`CrearVentaDto`) → `201`, mensajes en español y
+  propagación del código real (red → `502`); `[id]/route.ts` solo expone `GET`
+  (`params: Promise<...>`) y no exporta `PATCH`/`PUT`/`DELETE`. (2) Feature `features/ventas`
+  autocontenido: aliases del OpenAPI más `FiltrosVentas` y `ContratoVenta`, `api/ventas.ts`
+  (`listarVentas`, `crearVenta`, sin `obtenerVenta`), `clavesVentas`, `useVentas`
+  (`keepPreviousData`) y `useCrearVenta` (invalida `clavesVentas.listas()`), `esquemaVenta`
+  con `fechaLocalAIso`, `mensajes-error.ts`, `formatos.ts` (`Intl.NumberFormat('es-CO')`) y
+  componentes `VentaCard` (seis cifras destacadas + datos secundarios), `VentasLista`
+  (carga/vacío/error y `TablePagination`), `VentaForm`/`VentaFormModal`,
+  `ResultadoVentaModal` (desglose completo) y contenedores `VentasSeccion` (embebido) y
+  `VentasListado` (global, filtro que reinicia paginación). Sin edición/eliminación ni
+  manejo de `405`/`403`. (3) Cambios de soporte: `shared/ui` exporta `TablePagination` con
+  JSDoc actualizado; `features/contratos` exporta `useContratos` y `Contrato`; se elimina
+  `VentasProximamente` conservando `shared/ui/Proximamente`; `ContratoDetalle` pasa a
+  "Próximamente: ciclos y costos.". (4) Composición en `app/`: `detalle-con-relaciones.tsx`
+  añade `<VentasSeccion>` con `onCambio` que invalida `clavesContratos.todas`, y la ruta
+  `/ventas` compone `listado-con-contratos.tsx` con `useContratos` proyectado a
+  `ContratoVenta`. (5) Tests puros de `schemas`, `mensajes-error`, `query-keys` y `formatos`.
+- **Archivos modificados:** creados `app/api/ventas/{route.ts,[id]/route.ts}`,
+  `app/(dashboard)/ventas/_components/listado-con-contratos.tsx`, `features/ventas/**`
+  (tipos, `api/`, `query-keys.ts`, `hooks/`, `schemas.ts`, `mensajes-error.ts`, `formatos.ts`,
+  `components/`, `index.ts` y `__tests__/`); modificados `shared/ui/{index.ts,TablePagination.tsx}`,
+  `features/contratos/{index.ts,components/ContratoDetalle.tsx}`,
+  `app/(dashboard)/contratos/_components/detalle-con-relaciones.tsx`,
+  `app/(dashboard)/ventas/page.tsx` y `features/ventas/index.ts`; eliminado
+  `features/ventas/components/VentasProximamente.tsx`. Sin cambios en
+  `package.json`/`package-lock.json`, `shared/api/openapi/*`, ESLint, Prettier ni Jest; sin
+  dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (31 suites / 274 tests) en verde; `npx next typegen` correcto; `bash .rei/init.sh` finaliza
+  con código de salida `0`. `V5` (registro y desglose en ambas superficies) queda a cargo del
+  usuario con los pasos documentados en `impl.md`.
+- **Estado final:** `done`.

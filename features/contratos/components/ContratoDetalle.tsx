@@ -65,8 +65,8 @@ function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
  *
  * Muestra todos los datos del contrato resolviendo los nombres de tercero y finca con
  * las proyecciones que compone `app/`, indica con `—` los valores no informados, incluye
- * un placeholder de las secciones que llegarán con el backend (ventas, ciclos y costos) y
- * ofrece la acción de editar.
+ * un placeholder de las secciones que llegarán con el backend (ciclos y costos) y ofrece
+ * la acción de editar.
  */
 export function ContratoDetalle({ id, terceros, fincas }: Props) {
   const consulta = useContrato(id);
@@ -157,7 +157,7 @@ export function ContratoDetalle({ id, terceros, fincas }: Props) {
         aria-label="Secciones futuras del contrato"
         className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 text-sm text-zinc-500"
       >
-        Próximamente: ventas, ciclos y costos.
+        Próximamente: ciclos y costos.
       </section>
     </section>
   );

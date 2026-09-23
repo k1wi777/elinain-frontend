@@ -1,14 +1,20 @@
 import type { Metadata } from "next";
 
-import { VentasProximamente } from "@/features/ventas";
+import { ListadoConContratos } from "./_components/listado-con-contratos";
 
 export const metadata: Metadata = { title: "Ventas | Elinain" };
 
 /**
- * Página del módulo de ventas.
+ * Página del listado global de ventas.
  *
- * Módulo bloqueado por el backend: compone el marcador de posición del feature `ventas`.
+ * Server Component delgado: compone el listado del feature `ventas` con los contratos que
+ * resuelve `app/` para el filtro y el registro.
  */
 export default function VentasPage() {
-  return <VentasProximamente />;
+  return (
+    <section className="mx-auto w-full max-w-4xl">
+      <h1 className="mb-6 text-2xl font-semibold text-zinc-900">Ventas</h1>
+      <ListadoConContratos />
+    </section>
+  );
 }
