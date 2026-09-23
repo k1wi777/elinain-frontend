@@ -74,6 +74,17 @@ const CELDA_ANCHA = {
 } satisfies Record<TemaTabla, string>;
 
 /**
+ * Estilos del scroll horizontal, alineados con el tema para no mostrar la barra por
+ * defecto del navegador. Cubre Firefox (`scrollbar-*`) y los navegadores WebKit.
+ */
+const SCROLL = {
+  oscuro:
+    "[scrollbar-width:thin] [scrollbar-color:rgb(255_255_255_/_0.16)_transparent] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/15 hover:[&::-webkit-scrollbar-thumb]:bg-white/25",
+  claro:
+    "[scrollbar-width:thin] [scrollbar-color:rgb(0_0_0_/_0.18)_transparent] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/15 hover:[&::-webkit-scrollbar-thumb]:bg-black/25",
+} satisfies Record<TemaTabla, string>;
+
+/**
  * Tabla genérica con encabezados, render de celdas, estados de carga/vacío y paginación
  * opcional.
  *
@@ -97,7 +108,7 @@ export function Table<T>({
 
   return (
     <div className="w-full">
-      <div className="overflow-x-auto">
+      <div className={cn("overflow-x-auto", SCROLL[tema])}>
         <table
           className={cn(
             "w-full border-separate border-spacing-y-2 text-sm",
