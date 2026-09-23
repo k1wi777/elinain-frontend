@@ -21,5 +21,8 @@ CLAUDE.md
 # Estáticos
 public/
 
+# Documentación de contexto
+docs/
+
 # Entorno
 .env*

@@ -701,3 +701,25 @@
   es-CO, resumen completo, toggle, skeleton y error) queda a cargo del usuario con los pasos
   documentados en `impl.md`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_01-48__docs-contexto-y-public-assets`
+
+- **Work Item:** `2026-09-23_01-48__docs-contexto-y-public-assets` — Documentación de
+  contexto en `docs/` y carpeta `public/assets` para imágenes (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se dejó utilizable la documentación de contexto agregada en `docs/`
+  y se preparó la carpeta de estáticos de Next.js `public/assets/` para alojar imágenes. Se
+  añadió `docs/` a `.prettierignore` (sección «Documentación de contexto», tras el bloque
+  `# Estáticos`) para excluir la documentación del checkpoint `V1` sin reformatearla, y se
+  creó `public/assets/.gitkeep` (vacío) para versionar la carpeta (`public/` ya estaba
+  ignorado por Prettier). No se modificó código fuente, dependencias, OpenAPI local ni BFF.
+- **Archivos modificados:** modificado `.prettierignore`; creado `public/assets/.gitkeep`.
+  `docs/01-contextualizacion-elinain.md` conservado sin cambios (mtime anterior al Work Item).
+  Sin cambios en `.rei/init.sh` ni en las plantillas del arnés.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests en verde
+  (revisión independiente); `V5` no aplica (sin comportamiento de UI ni flujos interactivos).
+  `bash .rei/init.sh` finaliza con código de salida `0`.
+- **Estado final:** `done`.
