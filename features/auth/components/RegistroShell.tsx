@@ -1,23 +1,23 @@
 import { AuthShell } from "@/features/auth/components/AuthShell";
-import { LoginForm } from "@/features/auth/components/LoginForm";
+import { RegistroForm } from "@/features/auth/components/RegistroForm";
 
-const CONCEPTOS_PLATAFORMA = [
-  "Inventario, compras y ventas del engorde",
-  "Costos operativos y sanidad por contrato",
+/** Cifras de ejemplo (no son datos reales): solo ilustran lo que el producto consolida. */
+const INDICADORES_EJEMPLO = [
+  { etiqueta: "Animales en inventario", valor: "312", unidad: "cabezas" },
+  { etiqueta: "Contratos activos", valor: "8", unidad: "contratos" },
+  { etiqueta: "Ganancia de peso prom.", valor: "+1,2", unidad: "kg/día" },
+  { etiqueta: "Utilidad del ciclo", valor: "—", unidad: "por contrato" },
+] as const;
+
+const CAPACIDADES = [
+  "Inventario con trazabilidad por contrato y ciclo",
+  "Compras, ventas y costos del engorde",
   "Ganado en participación con reparto de utilidad auditable",
   "Fincas propias o de terceros en un solo lugar",
 ] as const;
 
-/** Indicadores ilustrativos: sin cifras reales, solo las métricas que el producto consolida. */
-const INDICADORES_EJEMPLO = [
-  { etiqueta: "Animales en inventario", unidad: "cabezas" },
-  { etiqueta: "Contratos activos", unidad: "contratos" },
-  { etiqueta: "Ganancia de peso prom.", unidad: "kg/día" },
-  { etiqueta: "Utilidad del ciclo", unidad: "por contrato" },
-] as const;
-
-/** Panel ilustrativo del login, marcado como ejemplo y sin cifras reales. */
-function PanelLogin() {
+/** Panel ilustrativo del registro, marcado como ejemplo. */
+function PanelRegistro() {
   return (
     <figure className="rounded-2xl p-5 glass-panel sm:p-6">
       <figcaption className="sr-only">
@@ -27,15 +27,15 @@ function PanelLogin() {
         Vista de ejemplo · panel de gestión
       </p>
       <p className="mt-3 font-display text-2xl leading-tight font-semibold text-white">
-        Compra, engorde y comercialización con datos confiables
+        Lo que tendrás desde el primer día
       </p>
       <p className="mt-2 text-sm leading-relaxed text-elinain-muted">
-        Elinain consolida la operación del negocio para que conozcas la
-        rentabilidad real de cada ciclo.
+        Centraliza la operación del negocio y conoce la rentabilidad real de
+        cada ciclo.
       </p>
 
       <div className="mt-4 grid grid-cols-2 gap-3">
-        {INDICADORES_EJEMPLO.map(({ etiqueta, unidad }) => (
+        {INDICADORES_EJEMPLO.map(({ etiqueta, valor, unidad }) => (
           <div
             key={etiqueta}
             className="rounded-xl bg-elinain-surface-elevated/80 p-3"
@@ -44,7 +44,7 @@ function PanelLogin() {
               {etiqueta}
             </p>
             <p className="mt-1.5 font-display text-xl font-semibold text-elinain-gold tabular-nums">
-              —
+              {valor}
               <span className="ml-1 text-xs font-normal text-elinain-muted">
                 {unidad}
               </span>
@@ -54,16 +54,16 @@ function PanelLogin() {
       </div>
 
       <ul className="mt-4 flex flex-col gap-1.5 border-t border-white/10 pt-4">
-        {CONCEPTOS_PLATAFORMA.map((concepto) => (
+        {CAPACIDADES.map((capacidad) => (
           <li
-            key={concepto}
+            key={capacidad}
             className="flex gap-2.5 text-xs leading-relaxed text-elinain-muted"
           >
             <span
               className="mt-1.5 size-1 shrink-0 rounded-full bg-elinain-gold"
               aria-hidden
             />
-            {concepto}
+            {capacidad}
           </li>
         ))}
       </ul>
@@ -76,20 +76,20 @@ function PanelLogin() {
 }
 
 /**
- * Pantalla de acceso.
+ * Pantalla de registro.
  *
- * Comparte el `AuthShell` con la pantalla de registro y añade su formulario.
+ * Comparte el `AuthShell` con la pantalla de acceso y añade su formulario.
  */
-export function LoginShell() {
+export function RegistroShell() {
   return (
     <AuthShell
-      insignia="Plataforma para comerciantes ganaderos"
-      titulo="Acceso a la plataforma"
-      descripcion="Inicia sesión para administrar contratos de engorde, participación con terceros y la operación de tu negocio desde un solo lugar."
-      etiquetaLateral="Trazabilidad por contrato y ciclo"
-      panelLateral={<PanelLogin />}
+      insignia="Crea tu cuenta de comerciante"
+      titulo="Crear cuenta"
+      descripcion="Registra tu operación y empieza a gestionar contratos de engorde, costos y participación con terceros desde un solo lugar."
+      etiquetaLateral="Gestión integral del engorde"
+      panelLateral={<PanelRegistro />}
     >
-      <LoginForm />
+      <RegistroForm />
     </AuthShell>
   );
 }

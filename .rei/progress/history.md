@@ -779,3 +779,34 @@
   headless (login 1440x900 y 390x844, registro 1440x900) con resultados correctos; la
   confirmación explícita del usuario y los estados interactivos quedan pendientes.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_10-13__rediseno-visual-pantalla-registro`
+
+- **Work Item:** `2026-09-23_10-13__rediseno-visual-pantalla-registro` — Rediseño visual de la
+  pantalla de registro (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre). La delegación vía subagente no estuvo disponible por saldo insuficiente
+  del modelo del subagente; la ejecución se llevó a cabo en el agente principal manteniendo los
+  artefactos del arnés.
+- **Trabajo realizado:** se aplicó a `/registro` el lenguaje visual oscuro de `/login` sin tocar
+  su funcionalidad. (1) Se extrajeron los iconos compartidos a `AuthIcons.tsx`
+  (`IconoCorreo`, `IconoCandado`, `IconoUsuario`, `BotonVisibilidad`). (2) Se creó
+  `AuthShell.tsx`, shell compartido con fondo oscuro a pantalla completa, columna izquierda
+  (marca, insignia, título, descripción y formulario) y aside de imagen con pill y panel lateral.
+  (3) `LoginShell` pasó a usar `AuthShell` sin cambios visuales (captura idéntica por `md5sum`).
+  (4) Se creó `RegistroShell` con copy de registro y un panel rotulado "Vista de ejemplo" con
+  cifras de ejemplo y conceptos reales del producto. (5) `RegistroForm` se reestilizó en oscuro
+  con `AuthField`, CTA y error del tema, conservando los tres campos y su validación. (6) La
+  página de registro y el barrel `@/features/auth` se actualizaron.
+- **Archivos modificados:** creados `features/auth/components/{AuthShell,AuthIcons,RegistroShell}.tsx`;
+  modificados `features/auth/components/{LoginShell,LoginForm,RegistroForm}.tsx`,
+  `app/(auth)/registro/page.tsx` y `features/auth/index.ts`. Sin cambios en hooks, `api/`,
+  esquemas, navegación, `middleware.ts`, `app/(auth)/layout.tsx` ni `app/globals.css`; sin
+  dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests en verde;
+  `bash .rei/init.sh` finaliza con código de salida `0`. `V5` ejecutada parcialmente con Chrome
+  headless (login 1440x900 idéntico por `md5sum`; registro 1440x900 y 390x844 correctos); la
+  confirmación explícita del usuario y los estados interactivos quedan pendientes.
+- **Estado final:** `done`.

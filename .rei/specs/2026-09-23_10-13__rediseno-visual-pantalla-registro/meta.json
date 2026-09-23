@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-23_10-13__rediseno-visual-pantalla-registro",
+  "title": "Rediseño visual de la pantalla de registro",
+  "description": "Aplicar a /registro el mismo lenguaje visual oscuro, minimalista y premium de /login, inspirado en la referencia aportada por el usuario. Se acordó extraer un AuthShell compartido (sin dependencias nuevas) que usan LoginShell y RegistroShell, de modo que /login debe quedar visualmente idéntico; se verificará con captura. RegistroShell compone el RegistroForm existente y un panel lateral con conceptos reales del producto (inventario con trazabilidad por contrato y ciclo, compras/ventas y costos del engorde, ganado en participación con reparto de utilidad auditable, fincas y métricas de rentabilidad) más cifras de ejemplo claramente rotuladas como 'Vista de ejemplo'. No se modifica la funcionalidad: los campos y la validación actuales de registro (nombre, correo y contraseña), los hooks, la API, los esquemas, la navegación y el flujo de autenticación quedan intactos. Sin inventar funcionalidades, datos operativos ni promesas; sin dependencias nuevas.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-23T10:13:22-05:00"
+}
