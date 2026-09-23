@@ -970,3 +970,43 @@
   (validación manual sobre `/contratos`, ruta protegida) queda a cargo del usuario con los
   pasos documentados en `impl.md`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_17-28__rediseno-visual-detalle-contrato`
+
+- **Work Item:** `2026-09-23_17-28__rediseno-visual-detalle-contrato` — Rediseño visual del
+  detalle de contrato (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se rediseñó visualmente `/contratos/[id]` al tema oscuro del shell
+  conservando comportamiento, rutas, queries, mutaciones, paginación, permisos, modales,
+  toasts y mensajes. (1) `ContratoDetalle` con enlace "Volver a Contratos", encabezado oscuro
+  (título, código truncado, badges de reparto y estado, subtítulo con finca/raza/vigencia),
+  ficha `glass-panel` "Ficha técnica & balance de custodia" con campos reales de
+  `ContratoRespuestaDto` y barra de reparto, y única acción "Editar contrato". (2) Las cuatro
+  secciones (compras, ciclos, costos y ventas) se convirtieron en pestañas accesibles
+  (`tablist`/`tab`/`tabpanel`, siempre montadas y las inactivas `hidden`) con contador
+  alimentado por la prop opcional `onTotal` (callback estable del contenedor). (3) Cada
+  pestaña rediseñada con `Table tema="oscuro"`: compras con totales de volumen e inversión
+  (`calcularTotalesCompras`), ciclos con evolución frente al pesaje previo y aviso del último
+  delta (`calcularEvolucionPesajes`), costos con nota fiduciaria oscura y ventas con tarjeta
+  de liquidación (`calcularDistribucionLiquidacion`) más la prop visual `tema` en
+  `VentaCard`/`VentasLista` con `"claro"` por defecto. Se conservan "Registrar compra/ciclo",
+  "Agregar costo" y "Registrar venta" con sus modales; no se añadieron acciones nuevas.
+- **Archivos modificados:** `app/(dashboard)/contratos/_components/detalle-con-relaciones.tsx`,
+  `features/contratos/components/ContratoDetalle.tsx`,
+  `features/compras/components/ComprasSeccion.tsx`,
+  `features/ciclos/components/CiclosSeccion.tsx`,
+  `features/costos/components/CostosSeccion.tsx`,
+  `features/ventas/components/{VentasSeccion,VentasLista,VentaCard}.tsx`; creados
+  `features/{compras/totales,ciclos/evolucion,ventas/liquidacion}.ts` y sus
+  `__tests__/*.test.ts`. Sin cambios en hooks, `api/`, tipos, queries, mutaciones, paginación,
+  rutas, permisos, modales, toasts, mensajes, `shared/ui`, `ContratosListado` ni el listado
+  global de ventas; sin dependencias nuevas.
+- **Resultado de la verificación:** V1 (`format:check`), V2 (`lint`), V3 (`typecheck`) y V4
+  (`test`, 48 suites / 387 tests) en verde, ejecutados por el Reviewer; `bash .rei/init.sh`
+  finaliza con código de salida `0`. V5 (validación manual sobre `/contratos/[id]`, ruta
+  protegida) queda a cargo del usuario con los pasos documentados en `impl.md`; no se marca
+  como superada.
+- **Estado final:** `done`.

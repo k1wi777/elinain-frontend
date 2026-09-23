@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   calcularPagina,
@@ -32,6 +32,10 @@ import type { CrearVenta, Venta } from "@/features/ventas/types";
  */
 const TOTAL_PROVISIONAL = Number.MAX_SAFE_INTEGER;
 
+/** Estilos del CTA de registro, alineados con el resto del tema oscuro. */
+const ESTILOS_CTA =
+  "rounded-xl bg-elinain-gold px-5 py-2.5 text-sm font-semibold text-elinain-bg shadow-[0_10px_24px_rgb(232_185_35_/_0.16)] hover:bg-elinain-gold-hover focus-visible:ring-elinain-gold";
+
 /** Props del componente `VentasSeccion`. */
 type Props = {
   /** Identificador del contrato cuyas ventas se gestionan. */
@@ -41,6 +45,11 @@ type Props = {
    * derivados, como los agregados del contrato.
    */
   onCambio?: () => void;
+  /**
+   * Notifica el total de ventas registradas para alimentar el contador de la pestaña.
+   * Es una notificación al contenedor; no obtiene datos ni deriva estado en render.
+   */
+  onTotal?: (total: number) => void;
 };
 
 /**
@@ -49,15 +58,20 @@ type Props = {
  * Compone el listado paginado y filtrado por contrato y el registro con el contrato fijo.
  * Al registrar una venta se abre el modal con el desglose completo que devuelve el backend
  * y se notifica `onCambio` para refrescar los agregados del contrato. Las ventas son de
- * solo lectura: no se ofrecen acciones de edición ni de eliminación.
+ * solo lectura: no se ofrecen acciones de edición ni de eliminación. El listado se presenta
+ * en la variante oscura del detalle.
  */
-export function VentasSeccion({ contratoId, onCambio }: Props) {
+export function VentasSeccion({ contratoId, onCambio, onTotal }: Props) {
   const paginacion = usePagination({ total: TOTAL_PROVISIONAL });
   const { limite, offset } = paginacion;
 
   const consulta = useVentas({ limite, offset, contrato_id: contratoId });
   const filas = consulta.data?.elementos ?? [];
   const total = consulta.data?.total ?? 0;
+
+  useEffect(() => {
+    onTotal?.(total);
+  }, [onTotal, total]);
 
   const totalPaginas = calcularTotalPaginas(total, limite);
   const paginaActual = normalizarPagina(
@@ -114,8 +128,10 @@ export function VentasSeccion({ contratoId, onCambio }: Props) {
   return (
     <section aria-label="Ventas del contrato" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold text-zinc-900">Ventas</h2>
-        <Button onClick={abrirFormulario}>Registrar venta</Button>
+        <h2 className="text-lg font-semibold text-white">Ventas</h2>
+        <Button onClick={abrirFormulario} className={ESTILOS_CTA}>
+          Registrar venta
+        </Button>
       </div>
 
       <VentasLista
@@ -128,6 +144,7 @@ export function VentasSeccion({ contratoId, onCambio }: Props) {
         }
         mensajeVacio="Aún no hay ventas registradas en este contrato"
         paginacion={paginacionTarjetas}
+        tema="oscuro"
       />
 
       <VentaFormModal

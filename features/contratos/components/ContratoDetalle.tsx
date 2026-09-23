@@ -23,9 +23,25 @@ const ETIQUETAS_ESTADO: Record<EstadoContrato, string> = {
   cerrado: "Cerrado",
 };
 
-/** Estilos de un enlace que se comporta visualmente como botón secundario. */
-const ESTILOS_ENLACE_SECUNDARIO =
-  "inline-flex items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:outline-none";
+/** Formato numérico local para cantidades y pesos del backend. */
+const FORMATO_NUMERO = new Intl.NumberFormat("es-CO", {
+  maximumFractionDigits: 1,
+});
+
+/** Formato de moneda local para el valor base de referencia. */
+const FORMATO_MONEDA = new Intl.NumberFormat("es-CO", {
+  style: "currency",
+  currency: "COP",
+  maximumFractionDigits: 0,
+});
+
+/** Estilos del enlace de retorno al listado. */
+const ESTILOS_VOLVER =
+  "inline-flex w-fit items-center gap-2 text-sm font-medium text-zinc-400 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-elinain-gold focus-visible:ring-offset-2 focus-visible:outline-none";
+
+/** Estilos de la única acción del detalle: editar el contrato. */
+const ESTILOS_EDITAR =
+  "inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-elinain-gold/40 bg-elinain-gold/15 px-5 py-3 text-sm font-semibold text-elinain-gold transition-colors hover:bg-elinain-gold/25 focus-visible:ring-2 focus-visible:ring-elinain-gold focus-visible:ring-offset-2 focus-visible:outline-none sm:w-auto";
 
 /** Props del componente `ContratoDetalle`. */
 type Props = {
@@ -50,12 +66,33 @@ function textoODefecto(valor: string | number | null | undefined): string {
   return String(valor);
 }
 
-/** Fila de dato del detalle. */
+/** Presenta el valor base por kilo o `—` cuando no está informado. */
+function formatearValorKilo(valor: number | null | undefined): string {
+  return valor === null || valor === undefined
+    ? "—"
+    : `${FORMATO_MONEDA.format(valor)} / kg`;
+}
+
+/** Presenta un peso en kilos o `—` cuando no está informado. */
+function formatearKilos(valor: number | null | undefined): string {
+  return valor === null || valor === undefined
+    ? "—"
+    : `${FORMATO_NUMERO.format(valor)} kg`;
+}
+
+/** Presenta una cantidad de cabezas o `—` cuando no está informada. */
+function formatearCabezas(valor: number | null | undefined): string {
+  return valor === null || valor === undefined ? "—" : `${valor} cabezas`;
+}
+
+/** Dato de la ficha técnica del contrato. */
 function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
   return (
     <div>
-      <dt className="font-medium text-zinc-600">{etiqueta}</dt>
-      <dd className="text-zinc-900">{valor}</dd>
+      <dt className="text-xs font-semibold tracking-[0.18em] text-zinc-500 uppercase">
+        {etiqueta}
+      </dt>
+      <dd className="mt-1 text-sm text-zinc-200">{valor}</dd>
     </div>
   );
 }
@@ -63,24 +100,24 @@ function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
 /**
  * Vista de detalle de un contrato.
  *
- * Muestra todos los datos del contrato resolviendo los nombres de tercero y finca con
- * las proyecciones que compone `app/`, indica con `—` los valores no informados y ofrece
- * la acción de editar.
+ * Presenta el encabezado oscuro con el código, la participación y el estado, y una ficha
+ * técnica con los campos reales de `ContratoRespuestaDto` más los nombres de tercero y
+ * finca resueltos con las proyecciones que compone `app/`. Indica con `—` los valores no
+ * informados y ofrece la única acción de editar.
  */
 export function ContratoDetalle({ id, terceros, fincas }: Props) {
   const consulta = useContrato(id);
 
   if (consulta.isPending) {
-    return (
-      <p className="mx-auto w-full max-w-2xl text-sm text-zinc-500">
-        Cargando contrato…
-      </p>
-    );
+    return <p className="w-full text-sm text-zinc-400">Cargando contrato…</p>;
   }
 
   if (consulta.error) {
     return (
-      <p role="alert" className="mx-auto w-full max-w-2xl text-sm text-red-600">
+      <p
+        role="alert"
+        className="w-full rounded-xl border border-red-400/20 bg-red-400/8 px-4 py-3 text-sm text-red-200"
+      >
         {mensajeErrorDetalleContrato(consulta.error.status)}
       </p>
     );
@@ -89,68 +126,117 @@ export function ContratoDetalle({ id, terceros, fincas }: Props) {
   const contrato = consulta.data;
   const tercerosPorId = indexarNombres(terceros);
   const fincasPorId = indexarNombres(fincas);
+  const nombreTercero = nombreDeTercero(tercerosPorId, contrato.tercero_id);
+  const nombreFinca = nombreDeFinca(fincasPorId, contrato.finca_id);
+  const apertura = formatearFechaHora(contrato.fecha_apertura) || "—";
+  const cierre = contrato.fecha_cierre
+    ? formatearFechaHora(contrato.fecha_cierre) || "—"
+    : "—";
+  const vigencia = contrato.fecha_cierre ? `${apertura} – ${cierre}` : apertura;
+  const partesSubtitulo = [
+    nombreFinca,
+    contrato.raza && contrato.raza.trim() !== "" ? contrato.raza : null,
+    vigencia,
+  ].filter((parte): parte is string => parte !== null);
 
   return (
-    <section className="mx-auto flex w-full max-w-2xl flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-zinc-900">
-            Detalle del contrato
-          </h1>
-          <p className="text-sm text-zinc-600">
-            Participación {formatearParticipacion(contrato)} ·{" "}
-            {ETIQUETAS_ESTADO[contrato.estado]}
+    <section className="flex w-full flex-col gap-8">
+      <Link href="/contratos" className={ESTILOS_VOLVER}>
+        <span aria-hidden>←</span>
+        <span>Volver a Contratos</span>
+      </Link>
+
+      <header className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+        <div className="max-w-3xl">
+          <p className="mb-3 text-xs font-semibold tracking-[0.24em] text-elinain-gold uppercase">
+            Participación y engorde
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+              Detalle del contrato
+            </h1>
+            <span className="max-w-[12rem] truncate rounded-full border border-white/8 bg-white/[0.04] px-3 py-1 font-mono text-xs text-zinc-400">
+              {contrato.id}
+            </span>
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center rounded-full border border-elinain-gold/30 bg-elinain-gold/10 px-3 py-1 text-xs font-medium text-elinain-gold">
+              Reparto {formatearParticipacion(contrato)}
+            </span>
+            <span
+              className={
+                contrato.estado === "activo"
+                  ? "inline-flex items-center rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300"
+                  : "inline-flex items-center rounded-full bg-white/[0.06] px-3 py-1 text-xs font-medium text-zinc-400"
+              }
+            >
+              {ETIQUETAS_ESTADO[contrato.estado]}
+            </span>
+          </div>
+
+          <p className="mt-4 text-sm leading-7 text-zinc-400 sm:text-base">
+            {partesSubtitulo.join(" · ")}
           </p>
         </div>
+
         <Link
           href={`/contratos/${contrato.id}/editar`}
-          className={ESTILOS_ENLACE_SECUNDARIO}
+          className={ESTILOS_EDITAR}
         >
-          Editar
+          Editar contrato
         </Link>
-      </div>
+      </header>
 
-      <dl className="flex flex-col gap-3 rounded-lg border border-zinc-200 bg-white p-6 text-sm">
-        <Dato
-          etiqueta="Socio de participación"
-          valor={nombreDeTercero(tercerosPorId, contrato.tercero_id)}
-        />
-        <Dato
-          etiqueta="Finca"
-          valor={nombreDeFinca(fincasPorId, contrato.finca_id)}
-        />
-        <Dato
-          etiqueta="Fecha de apertura"
-          valor={textoODefecto(formatearFechaHora(contrato.fecha_apertura))}
-        />
-        <Dato etiqueta="Estado" valor={ETIQUETAS_ESTADO[contrato.estado]} />
-        <Dato
-          etiqueta="Fecha de cierre"
-          valor={textoODefecto(formatearFechaHora(contrato.fecha_cierre ?? ""))}
-        />
-        <Dato
-          etiqueta="Participación (comerciante / tercero)"
-          valor={formatearParticipacion(contrato)}
-        />
-        <Dato etiqueta="Raza" valor={textoODefecto(contrato.raza)} />
-        <Dato
-          etiqueta="Peso promedio actual"
-          valor={
-            contrato.peso_promedio_actual === null ||
-            contrato.peso_promedio_actual === undefined
-              ? "—"
-              : `${contrato.peso_promedio_actual} kg`
-          }
-        />
-        <Dato
-          etiqueta="Cantidad actual"
-          valor={textoODefecto(contrato.cantidad_actual)}
-        />
-        <Dato
-          etiqueta="Valor por kilo de referencia"
-          valor={textoODefecto(contrato.valor_kilo_referencia)}
-        />
-      </dl>
+      <div className="rounded-2xl px-5 py-6 glass-panel sm:px-8 sm:py-7">
+        <h2 className="text-xs font-semibold tracking-[0.24em] text-elinain-gold uppercase">
+          Ficha técnica &amp; balance de custodia
+        </h2>
+
+        <dl className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Dato etiqueta="Socio de participación" valor={nombreTercero} />
+          <Dato etiqueta="Finca / Predio" valor={nombreFinca} />
+          <Dato etiqueta="Raza" valor={textoODefecto(contrato.raza)} />
+          <Dato etiqueta="Fecha de apertura" valor={apertura} />
+          <Dato etiqueta="Fecha de cierre" valor={cierre} />
+          <Dato
+            etiqueta="Valor base de referencia"
+            valor={formatearValorKilo(contrato.valor_kilo_referencia)}
+          />
+          <Dato
+            etiqueta="Inventario actual"
+            valor={formatearCabezas(contrato.cantidad_actual)}
+          />
+          <Dato
+            etiqueta="Biomasa promedio actual"
+            valor={formatearKilos(contrato.peso_promedio_actual)}
+          />
+
+          <div>
+            <dt className="text-xs font-semibold tracking-[0.18em] text-zinc-500 uppercase">
+              Régimen de reparto
+            </dt>
+            <dd className="mt-1 flex flex-col gap-2">
+              <span className="text-sm text-zinc-200">
+                {formatearParticipacion(contrato)}
+              </span>
+              <span
+                aria-hidden
+                className="flex h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]"
+              >
+                <span
+                  className="bg-elinain-gold"
+                  style={{ width: `${contrato.porcentaje_comerciante}%` }}
+                />
+                <span
+                  className="bg-white/20"
+                  style={{ width: `${contrato.porcentaje_tercero}%` }}
+                />
+              </span>
+            </dd>
+          </div>
+        </dl>
+      </div>
     </section>
   );
 }

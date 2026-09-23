@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   calcularPagina,
@@ -55,6 +55,17 @@ const FORMATO_MONEDA = new Intl.NumberFormat("es-CO", {
 /** Texto con el que se presenta un valor no informado. */
 const SIN_INFORMAR = "—";
 
+/** Estilos del CTA de registro, alineados con el resto del tema oscuro. */
+const ESTILOS_CTA =
+  "rounded-xl bg-elinain-gold px-5 py-2.5 text-sm font-semibold text-elinain-bg shadow-[0_10px_24px_rgb(232_185_35_/_0.16)] hover:bg-elinain-gold-hover focus-visible:ring-elinain-gold";
+
+/** Estilos de las acciones de fila, alineados con los listados oscuros. */
+const ESTILOS_ACCION_SECUNDARIA =
+  "border-white/8 bg-white/[0.03] px-3 text-xs text-zinc-300 hover:bg-white/[0.08] hover:text-white focus-visible:ring-elinain-gold";
+
+const ESTILOS_ACCION_PELIGRO =
+  "bg-red-400/10 px-3 text-xs text-red-200 hover:bg-red-400/20 focus-visible:ring-red-300";
+
 /** Props del componente `CostosSeccion`. */
 type Props = {
   /** Identificador del contrato cuyos costos se gestionan. */
@@ -69,6 +80,11 @@ type Props = {
    * componga la sección refresque datos derivados, como los del contrato.
    */
   onCambio?: () => void;
+  /**
+   * Notifica el total de costos registrados para alimentar el contador de la pestaña.
+   * Es una notificación al contenedor; no obtiene datos ni deriva estado en render.
+   */
+  onTotal?: (total: number) => void;
 };
 
 /**
@@ -80,13 +96,22 @@ type Props = {
  * activo; editar y eliminar están siempre disponibles y sus errores se traducen a mensajes
  * en español sin cerrar el diálogo.
  */
-export function CostosSeccion({ contratoId, contratoEstado, onCambio }: Props) {
+export function CostosSeccion({
+  contratoId,
+  contratoEstado,
+  onCambio,
+  onTotal,
+}: Props) {
   const paginacion = usePagination({ total: TOTAL_PROVISIONAL });
   const { limite, offset } = paginacion;
 
   const consulta = useCostos({ limite, offset, contrato_id: contratoId });
   const filas = consulta.data?.elementos ?? [];
   const total = consulta.data?.total ?? 0;
+
+  useEffect(() => {
+    onTotal?.(total);
+  }, [onTotal, total]);
 
   const totalPaginas = calcularTotalPaginas(total, limite);
   const paginaActual = normalizarPagina(
@@ -221,19 +246,23 @@ export function CostosSeccion({ contratoId, contratoEstado, onCambio }: Props) {
     },
     {
       clave: "tipo",
-      encabezado: "Tipo",
+      encabezado: "Concepto / rubro",
       render: (costo) => (costo.tipo.trim() !== "" ? costo.tipo : SIN_INFORMAR),
-    },
-    {
-      clave: "monto",
-      encabezado: "Monto",
-      render: (costo) => FORMATO_MONEDA.format(costo.monto),
     },
     {
       clave: "descripcion",
       encabezado: "Descripción",
       render: (costo) =>
         costo.descripcion.trim() !== "" ? costo.descripcion : SIN_INFORMAR,
+    },
+    {
+      clave: "monto",
+      encabezado: "Monto registrado",
+      render: (costo) => (
+        <span className="font-medium text-white tabular-nums">
+          {FORMATO_MONEDA.format(costo.monto)}
+        </span>
+      ),
     },
     {
       clave: "acciones",
@@ -244,6 +273,7 @@ export function CostosSeccion({ contratoId, contratoEstado, onCambio }: Props) {
           <Button
             variante="secundario"
             onClick={() => abrirEditar(costo)}
+            className={ESTILOS_ACCION_SECUNDARIA}
             aria-label={`Editar el costo «${costo.tipo}» del ${formatearFechaDia(costo.fecha) || "fecha no informada"}`}
           >
             Editar
@@ -251,6 +281,7 @@ export function CostosSeccion({ contratoId, contratoEstado, onCambio }: Props) {
           <Button
             variante="peligro"
             onClick={() => abrirEliminar(costo)}
+            className={ESTILOS_ACCION_PELIGRO}
             aria-label={`Eliminar el costo «${costo.tipo}» del ${formatearFechaDia(costo.fecha) || "fecha no informada"}`}
           >
             Eliminar
@@ -263,24 +294,31 @@ export function CostosSeccion({ contratoId, contratoEstado, onCambio }: Props) {
   return (
     <section aria-label="Costos del contrato" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold text-zinc-900">Costos</h2>
-        <Button onClick={abrirCrear} disabled={registroDeshabilitado}>
+        <h2 className="text-lg font-semibold text-white">Costos</h2>
+        <Button
+          onClick={abrirCrear}
+          disabled={registroDeshabilitado}
+          className={ESTILOS_CTA}
+        >
           Agregar costo
         </Button>
       </div>
 
-      <p className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+      <p className="rounded-xl border border-amber-300/20 bg-amber-300/8 px-4 py-3 text-sm text-amber-200">
         Los costos son informativos y no afectan el cálculo de la utilidad real.
       </p>
 
       {registroDeshabilitado ? (
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-zinc-400">
           El contrato está cerrado: no se pueden registrar costos nuevos.
         </p>
       ) : null}
 
       {consulta.error ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p
+          role="alert"
+          className="rounded-xl border border-red-400/20 bg-red-400/8 px-4 py-3 text-sm text-red-200"
+        >
           {mensajeErrorListarCostos(consulta.error.status)}
         </p>
       ) : null}
@@ -292,6 +330,7 @@ export function CostosSeccion({ contratoId, contratoEstado, onCambio }: Props) {
         cargando={consulta.isPending}
         mensajeVacio="Aún no hay costos registrados en este contrato"
         paginacion={paginacionTabla}
+        tema="oscuro"
       />
 
       <CostoFormModal
