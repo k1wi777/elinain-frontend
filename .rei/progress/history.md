@@ -622,3 +622,40 @@
   `V5` (listado, registro con contrato activo/cerrado, edición, eliminación, aviso
   informativo y errores) queda a cargo del usuario con los pasos documentados en `impl.md`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_22-45__dashboard-reportes-vista-principal`
+
+- **Work Item:** `2026-09-22_22-45__dashboard-reportes-vista-principal` — Dashboard: vista
+  principal de reportes con tarjetas resumen (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó la vista principal de `/dashboard` como un feature
+  `dashboard` autocontenido (R1–R13, T1–T13) que consume `GET /api/v1/reportes/dashboard` a
+  través de un Route Handler BFF y muestra las ocho cifras del `ResumenDashboardDto` en
+  tarjetas con la jerarquía tipográfica de `design.md`. (1) Fundaciones del feature:
+  `types.ts` (alias `ResumenDashboard`/`ReporteDashboard` derivados del OpenAPI),
+  `query-keys.ts`, `formato.ts` (`Intl.NumberFormat` es-CO: COP sin decimales y conteo con
+  separador de miles), `mensajes-error.ts`, `api/dashboard.ts` sobre `createBffClient` y
+  `hooks/useReporteDashboard.ts` (`useQuery`). (2) BFF `app/api/reportes/dashboard/route.ts`
+  con `createServerClient`, `NextResponse.json(reporte)` y propagación del código HTTP real
+  vía `respuestaError`. (3) UI: `TarjetaResumen` presentacional (`titulo`, `valor`, `nivel`)
+  y `ResumenDashboard` cliente con `Skeleton` en `isPending`, `<p role="alert">` en error y
+  las ocho tarjetas en éxito; la cifra protagonista es la utilidad real del comerciante
+  (verde, `text-4xl font-bold`), secundarias la utilidad bruta y de terceros (`text-3xl`),
+  y menores los cuatro conteos y los costos informativos (`text-2xl`). (4) Integración en
+  `app/(dashboard)/dashboard/page.tsx` dentro de `mx-auto w-full max-w-4xl`, conservando
+  `metadata` y un `<h1>Panel</h1>`. (5) Tests puros de `formato`, `mensajes-error` y
+  `query-keys`. Sin recálculo en el cliente, sin dependencias nuevas ni cambios en el
+  OpenAPI local.
+- **Archivos modificados:** creados `features/dashboard/**` (tipos, `query-keys.ts`,
+  `formato.ts`, `mensajes-error.ts`, `api/`, `hooks/`, `components/`, `index.ts` y
+  `__tests__/`) y `app/api/reportes/dashboard/route.ts`; modificado
+  `app/(dashboard)/dashboard/page.tsx`. Sin cambios en `package.json`/`package-lock.json`,
+  `shared/api/openapi/*`, `shared/ui`, ESLint, Prettier ni Jest; sin dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (40 suites / 340 tests) en verde; `bash .rei/init.sh` finaliza con código de salida `0`.
+  `V5` (ocho cifras, jerarquía visual, formato es-CO, skeleton y mensaje de error) queda a
+  cargo del usuario con los pasos documentados en `impl.md`.
+- **Estado final:** `done`.
