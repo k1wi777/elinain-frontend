@@ -534,3 +534,46 @@
   con código de salida `0`. `V5` (registro y desglose en ambas superficies) queda a cargo del
   usuario con los pasos documentados en `impl.md`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_21-20__ciclos-listado-registro-edicion-y-eliminacion-en-contrato`
+
+- **Work Item:** `2026-09-22_21-20__ciclos-listado-registro-edicion-y-eliminacion-en-contrato`
+  — Ciclos: listado, registro, edición y eliminación embebidos en el detalle del contrato
+  (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó el CRUD de ciclos (checkpoints de engorde) dentro del
+  detalle del contrato, replicando los patrones de `compras` (R1–R26, T1–T18). (1) Helpers
+  solo-día en `shared/lib/fechas.ts` (`fechaDiaAIso`, `isoAFechaDia`, `formatearFechaDia`) en
+  zona del negocio (Colombia, UTC−5). (2) Feature `ciclos` autocontenido: alias de DTOs del
+  OpenAPI, `clavesCiclos`, `api/ciclos.ts` sobre `createBffClient`, hooks de consulta
+  (`useCiclos` con `keepPreviousData`) y mutaciones que invalidan `clavesCiclos.listas()`,
+  `esquemaCiclo` zod, `mensajes-error` por estado HTTP y componentes `CiclosSeccion`,
+  `CicloForm`, `CicloFormModal` y `EliminarCicloModal` (confirmación con `Modal`, sin
+  `window.confirm`). (3) BFF `app/api/ciclos/{route.ts,[id]/route.ts}` para listar, crear,
+  consultar, actualizar y eliminar, con validación defensiva, código HTTP real (red → `502`)
+  y mensajes en español sin exponer el cuerpo crudo. (4) `useContrato` exportado desde
+  `features/contratos` y `CiclosSeccion` compuesta en `detalle-con-relaciones.tsx`, pasando
+  `contratoId`, `contratoEstado` y `onCambio` (invalida `clavesContratos.todas`); el registro
+  se deshabilita con el contrato cerrado y editar/eliminar permanecen disponibles. (5)
+  Retirada de la ruta global `/ciclos`, su enlace de menú y el placeholder
+  `CiclosProximamente` (R26). (6) Tests puros de `schemas`, `mensajes-error`, `query-keys` y
+  fechas. (7) Corrección posterior a la primera revisión: se eliminó la configuración residual
+  de `/ciclos` en `middleware.ts` (`RUTAS_PROTEGIDAS` y `config.matcher`), conservando
+  `/ventas` y `/costos`.
+- **Archivos modificados:** creados `features/ciclos/**` (tipos, `api/`, `query-keys.ts`,
+  `hooks/`, `schemas.ts`, `mensajes-error.ts`, `components/`, `index.ts` y `__tests__/`) y
+  `app/api/ciclos/{route.ts,[id]/route.ts}`; modificados `shared/lib/fechas.ts` y su test,
+  `features/ciclos/index.ts`, `features/contratos/index.ts`,
+  `app/(dashboard)/contratos/_components/detalle-con-relaciones.tsx`,
+  `app/(dashboard)/layout.tsx` y `middleware.ts`; eliminados `app/(dashboard)/ciclos/page.tsx`
+  y `features/ciclos/components/CiclosProximamente.tsx`. Sin cambios en
+  `package.json`/`package-lock.json`, `shared/api/openapi/*`, `shared/ui`, ESLint, Prettier
+  ni Jest; sin dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (34 suites / 304 tests) en verde; `bash .rei/init.sh` finaliza con código de salida `0`.
+  `V5` (listado, registro con contrato activo/cerrado, edición, eliminación y errores) queda
+  a cargo del usuario con los pasos documentados en `impl.md`.
+- **Estado final:** `done`.

@@ -2,10 +2,12 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 
+import { CiclosSeccion } from "@/features/ciclos";
 import { ComprasSeccion } from "@/features/compras";
 import {
   clavesContratos,
   ContratoDetalle,
+  useContrato,
   type FincaContrato,
   type TerceroContrato,
 } from "@/features/contratos";
@@ -20,17 +22,20 @@ type Props = {
 };
 
 /**
- * Composición del detalle de contrato con terceros, fincas, compras y ventas.
+ * Composición del detalle de contrato con terceros, fincas, compras, ciclos y ventas.
  *
  * Carga los terceros y las fincas para resolver los nombres y los pasa por props a
- * `features/contratos`, sin que el feature importe de otros features. Las compras y las
- * ventas se componen aquí, junto al detalle, sin que `features/compras` ni `features/ventas`
- * importen de `features/contratos` ni al revés.
+ * `features/contratos`, sin que el feature importe de otros features. Las compras, los
+ * ciclos y las ventas se componen aquí, junto al detalle, sin que sus features importen de
+ * `features/contratos` ni al revés. El estado del contrato se obtiene con `useContrato`
+ * —que TanStack Query deduplica con la consulta de `ContratoDetalle`— y se pasa a
+ * `CiclosSeccion` para deshabilitar el registro cuando el contrato está cerrado.
  */
 export function DetalleConRelaciones({ id }: Props) {
   const queryClient = useQueryClient();
   const terceros = useTodosLosTerceros();
   const fincas = useTodasLasFincas();
+  const contrato = useContrato(id);
 
   if (terceros.isPending || fincas.isPending) {
     return <p className="text-sm text-zinc-500">Cargando…</p>;
@@ -62,6 +67,15 @@ export function DetalleConRelaciones({ id }: Props) {
       />
       <ComprasSeccion
         contratoId={id}
+        onCambio={() => {
+          void queryClient.invalidateQueries({
+            queryKey: clavesContratos.todas,
+          });
+        }}
+      />
+      <CiclosSeccion
+        contratoId={id}
+        contratoEstado={contrato.data?.estado}
         onCambio={() => {
           void queryClient.invalidateQueries({
             queryKey: clavesContratos.todas,

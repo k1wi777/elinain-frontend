@@ -10,7 +10,6 @@ const RUTAS_PROTEGIDAS = [
   "/fincas",
   "/contratos",
   "/ventas",
-  "/ciclos",
   "/costos",
 ];
 
@@ -60,8 +59,6 @@ export const config = {
     "/contratos/:path*",
     "/ventas",
     "/ventas/:path*",
-    "/ciclos",
-    "/ciclos/:path*",
     "/costos",
     "/costos/:path*",
     "/login",

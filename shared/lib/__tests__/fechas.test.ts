@@ -1,6 +1,9 @@
 import {
+  fechaDiaAIso,
   fechaLocalAIso,
+  formatearFechaDia,
   formatearFechaHora,
+  isoAFechaDia,
   isoAFechaLocal,
 } from "@/shared/lib/fechas";
 
@@ -60,5 +63,57 @@ describe("formatearFechaHora", () => {
   it("devuelve cadena vacía cuando la fecha no es válida", () => {
     expect(formatearFechaHora("")).toBe("");
     expect(formatearFechaHora("no-es-fecha")).toBe("");
+  });
+});
+
+describe("fechaDiaAIso", () => {
+  it("interpreta el día como inicio del día en Colombia (UTC−5)", () => {
+    expect(fechaDiaAIso("2026-09-21")).toBe("2026-09-21T05:00:00.000Z");
+  });
+
+  it("devuelve la misma fecha tras ida y vuelta", () => {
+    expect(isoAFechaDia(fechaDiaAIso("2026-09-21"))).toBe("2026-09-21");
+  });
+
+  it("devuelve cadena vacía para una entrada vacía", () => {
+    expect(fechaDiaAIso("")).toBe("");
+    expect(fechaDiaAIso("   ")).toBe("");
+  });
+
+  it("devuelve cadena vacía cuando el formato no es el esperado", () => {
+    expect(fechaDiaAIso("21/09/2026")).toBe("");
+    expect(fechaDiaAIso("2026-09-21T10:00")).toBe("");
+    expect(fechaDiaAIso("no-es-fecha")).toBe("");
+  });
+
+  it("devuelve cadena vacía cuando el día no existe", () => {
+    expect(fechaDiaAIso("2026-13-01")).toBe("");
+    expect(fechaDiaAIso("2026-02-30")).toBe("");
+  });
+});
+
+describe("isoAFechaDia", () => {
+  it("convierte un instante UTC al día local de Colombia", () => {
+    expect(isoAFechaDia("2026-09-21T15:00:00.000Z")).toBe("2026-09-21");
+  });
+
+  it("cruza el límite del día hacia atrás", () => {
+    expect(isoAFechaDia("2026-09-22T02:00:00.000Z")).toBe("2026-09-21");
+  });
+
+  it("devuelve cadena vacía cuando la cadena no es una fecha válida", () => {
+    expect(isoAFechaDia("")).toBe("");
+    expect(isoAFechaDia("no-es-fecha")).toBe("");
+  });
+});
+
+describe("formatearFechaDia", () => {
+  it("presenta la fecha en español y en la zona del negocio, sin hora", () => {
+    expect(formatearFechaDia("2026-09-21T15:00:00.000Z")).toBe("21/09/2026");
+  });
+
+  it("devuelve cadena vacía cuando la fecha no es válida", () => {
+    expect(formatearFechaDia("")).toBe("");
+    expect(formatearFechaDia("no-es-fecha")).toBe("");
   });
 });

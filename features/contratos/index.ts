@@ -10,6 +10,7 @@ export { ContratoCrear } from "@/features/contratos/components/ContratoCrear";
 export { ContratoDetalle } from "@/features/contratos/components/ContratoDetalle";
 export { ContratoEditar } from "@/features/contratos/components/ContratoEditar";
 export { ContratosListado } from "@/features/contratos/components/ContratosListado";
+export { useContrato } from "@/features/contratos/hooks/useContrato";
 export { useContratos } from "@/features/contratos/hooks/useContratos";
 export { clavesContratos } from "@/features/contratos/query-keys";
 export type {

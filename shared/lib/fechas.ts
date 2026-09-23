@@ -15,6 +15,9 @@ const OFFSET_COLOMBIA_MINUTOS = -5 * 60;
 
 const MILISEGUNDOS_POR_MINUTO = 60 * 1000;
 
+/** Formato que produce un control `date` (`YYYY-MM-DD`). */
+const PATRON_FECHA_DIA = /^\d{4}-\d{2}-\d{2}$/;
+
 /** Formato que produce un control `datetime-local` (`YYYY-MM-DDTHH:mm`). */
 const PATRON_FECHA_LOCAL = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
 
@@ -108,4 +111,80 @@ export function formatearFechaHora(iso: string): string {
   )}/${local.getUTCFullYear()} ${conDosDigitos(
     local.getUTCHours(),
   )}:${conDosDigitos(local.getUTCMinutes())}`;
+}
+
+/**
+ * Convierte el valor de un control `date` a ISO 8601 en UTC.
+ *
+ * Interpreta el día en la zona de Colombia (UTC−5) y devuelve el inicio de ese día en ISO
+ * 8601, que es el instante que espera el backend. Devuelve `""` cuando el valor no tiene el
+ * formato `YYYY-MM-DD` o no es una fecha real (por ejemplo `2026-02-30`).
+ *
+ * @param valor Día local (`YYYY-MM-DD`).
+ */
+export function fechaDiaAIso(valor: string): string {
+  const recortado = valor.trim();
+
+  if (!PATRON_FECHA_DIA.test(recortado)) {
+    return "";
+  }
+
+  const fecha = new Date(`${recortado}T00:00:00${OFFSET_COLOMBIA}`);
+
+  if (Number.isNaN(fecha.getTime())) {
+    return "";
+  }
+
+  const iso = fecha.toISOString();
+
+  // El motor normaliza fechas como 2026-02-30; la vuelta detecta esa corrección.
+  if (isoAFechaDia(iso) !== recortado) {
+    return "";
+  }
+
+  return iso;
+}
+
+/**
+ * Convierte una cadena ISO 8601 a un valor de control `date`.
+ *
+ * Devuelve el día en la zona de Colombia (`YYYY-MM-DD`) o `""` si la cadena no representa
+ * una fecha válida. Se usa para precargar los controles al editar.
+ *
+ * @param iso Fecha en ISO 8601.
+ */
+export function isoAFechaDia(iso: string): string {
+  const fecha = new Date(iso);
+
+  if (Number.isNaN(fecha.getTime())) {
+    return "";
+  }
+
+  const local = aHoraColombia(fecha);
+
+  return `${local.getUTCFullYear()}-${conDosDigitos(
+    local.getUTCMonth() + 1,
+  )}-${conDosDigitos(local.getUTCDate())}`;
+}
+
+/**
+ * Formatea una fecha ISO 8601 para mostrarla en español (`DD/MM/AAAA`), sin hora.
+ *
+ * La fecha se presenta en la zona de Colombia. Devuelve `""` cuando la cadena no es una
+ * fecha válida, para que la interfaz decida cómo indicar un valor no informado.
+ *
+ * @param iso Fecha en ISO 8601.
+ */
+export function formatearFechaDia(iso: string): string {
+  const fecha = new Date(iso);
+
+  if (Number.isNaN(fecha.getTime())) {
+    return "";
+  }
+
+  const local = aHoraColombia(fecha);
+
+  return `${conDosDigitos(local.getUTCDate())}/${conDosDigitos(
+    local.getUTCMonth() + 1,
+  )}/${local.getUTCFullYear()}`;
 }
