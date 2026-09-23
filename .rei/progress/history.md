@@ -659,3 +659,45 @@
   `V5` (ocho cifras, jerarquía visual, formato es-CO, skeleton y mensaje de error) queda a
   cargo del usuario con los pasos documentados en `impl.md`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_23-02__reportes-contratos-activos-e-historial-ventas`
+
+- **Work Item:** `2026-09-22_23-02__reportes-contratos-activos-e-historial-ventas` —
+  Reportes: contratos activos con métricas e historial de ventas (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó el feature nuevo `features/reportes` con las dos
+  vistas de reportes del comerciante (R1–R19, T1–T20). (1) Fundaciones del feature:
+  `types.ts` (alias `ReporteContratosActivos`, `ContratoActivoDetalle`, `ReporteHistorialVentas`,
+  `ResumenHistorialVentas`, `VentaHistorialItem` desde `ApiSchemas`), `query-keys.ts`
+  (`clavesReportes`), `formatos.ts` (`Intl.NumberFormat` es-CO: moneda COP, conteo, número y
+  porcentaje), `mensajes-error.ts` (conexión `0` y genérico en español), `orden.ts`
+  (`LIMITE_VENTAS_VISIBLES = 50`, `ordenarContratosPorUtilidadDescendente`,
+  `ordenarVentasPorFechaDescendente` y `recortarVentas`), `api/reportes.ts` sobre
+  `createBffClient` y los dos hooks `useQuery`. (2) BFF `app/api/reportes/{contratos-activos,
+  historial-ventas}/route.ts` con `createServerClient`, `NextResponse.json(reporte)` y
+  propagación del código HTTP real vía `respuestaError`. (3) UI: `TarjetaIndicador`
+  presentacional, `ContratosActivosReporte` (tabla ordenada por utilidad descendente) e
+  `HistorialVentasReporte` (resumen de siete campos, detalle venta por venta y toggle
+  "Ver todo"/"Ver menos" con estado local), con `Skeleton` en carga y `<p role="alert">` en
+  error. (4) Páginas dedicadas en `app/(dashboard)/reportes/{contratos-activos,historial-ventas}/page.tsx`,
+  enlaces desde la página del dashboard sin tocar `ResumenDashboard`, y `/reportes` añadido a
+  `RUTAS_PROTEGIDAS` y al `config.matcher` de `middleware.ts`. (5) Sin entradas en el menú
+  lateral (decisión explícita del usuario). (6) Tests puros de `formatos`, `mensajes-error`,
+  `query-keys` y `orden`. Sin recálculo en el cliente, sin dependencias nuevas ni cambios en el
+  OpenAPI local.
+- **Archivos modificados:** creados `features/reportes/**` (tipos, `query-keys.ts`,
+  `formatos.ts`, `mensajes-error.ts`, `orden.ts`, `api/`, `hooks/`, `components/`, `index.ts` y
+  `__tests__/`), `app/api/reportes/{contratos-activos,historial-ventas}/route.ts`,
+  `app/(dashboard)/reportes/{contratos-activos,historial-ventas}/page.tsx`; modificados
+  `middleware.ts` y `app/(dashboard)/dashboard/page.tsx`. Sin cambios en
+  `package.json`/`package-lock.json`, `shared/api/openapi/*`, `shared/ui`, ESLint, Prettier,
+  Jest ni `app/(dashboard)/layout.tsx`; sin dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (44 suites / 366 tests; 4 suites / 26 tests nuevos de `reportes`) en verde; `bash .rei/init.sh`
+  finaliza con código de salida `0`. `V5` (enlaces del dashboard, orden descendente, formato
+  es-CO, resumen completo, toggle, skeleton y error) queda a cargo del usuario con los pasos
+  documentados en `impl.md`.
+- **Estado final:** `done`.
