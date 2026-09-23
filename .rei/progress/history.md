@@ -1050,3 +1050,38 @@
   (validación manual sobre `/ventas`, ruta protegida) queda a cargo del usuario con los
   pasos documentados en `impl.md`; no se marca como superada.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_18-07__mejora-dashboard-texto-narrativa-accesos`
+
+- **Work Item:** `2026-09-23_18-07__mejora-dashboard-texto-narrativa-accesos` — Mejora del
+  dashboard: texto explicativo, resumen narrativo y accesos rápidos (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se mejoró `/dashboard` para explicar las cifras y orientar al
+  comerciante de baja adopción tecnológica, con tres mejoras acordadas y sin ampliar el alcance.
+  (1) Texto: párrafo introductorio ampliado en el encabezado y un párrafo de apoyo bajo
+  «Resultado financiero» (aclara utilidad bruta, utilidad real del comerciante y utilidad de
+  terceros) y bajo «Resumen operativo». (2) Resumen narrativo dinámico: lógica pura
+  `construirNarrativa` en `features/dashboard/narrativa.ts` que deriva de 1 a 3 frases de
+  `ResumenDashboard` con normalización segura de ceros/ausentes y `porcentajeSeguro` (sin
+  divisiones por cero ni porcentajes fuera de 0–100), más el panel presentacional
+  `ResumenNarrativo` («Tu operación en resumen», con `aria-labelledby`) y su `Skeleton` de carga.
+  (3) Accesos rápidos: sección `aria-labelledby="accesos-rapidos"` con cuatro tarjetas `next/link`
+  (Fincas, Contratos, Ventas y Socios de participación) reutilizando el estilo y el foco de los
+  enlaces a reportes. Se conservaron intactos el encabezado, los dos enlaces a reportes, las ocho
+  tarjetas, el hook `useReporteDashboard`, `api/`, tipos, query keys, formato y mensajes. Sin
+  ratios derivados, sección de contratos activos, consultas, endpoints, dependencias ni datos
+  inventados.
+- **Archivos modificados:** modificados `app/(dashboard)/dashboard/page.tsx` y
+  `features/dashboard/components/ResumenDashboard.tsx`; creados
+  `features/dashboard/narrativa.ts`, `features/dashboard/components/ResumenNarrativo.tsx` y
+  `features/dashboard/__tests__/narrativa.test.ts`. Sin cambios en `useReporteDashboard`, `api/`,
+  `types.ts`, `query-keys.ts`, `index.ts`, `formato.ts`, `mensajes-error.ts`, las ocho tarjetas ni
+  los dos enlaces a reportes; sin dependencias nuevas.
+- **Resultado de la verificación:** V1 (`format:check`), V2 (`lint`), V3 (`typecheck`) y V4
+  (`test`, 50 suites / 397 tests) en verde, ejecutados por el Reviewer; `bash .rei/init.sh`
+  finaliza con código de salida `0`. V5 (validación manual sobre `/dashboard`, ruta protegida)
+  queda a cargo del usuario con los pasos documentados en `impl.md`; no se marca como superada.
+- **Estado final:** `done`.
