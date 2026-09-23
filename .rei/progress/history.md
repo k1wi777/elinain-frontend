@@ -577,3 +577,48 @@
   `V5` (listado, registro con contrato activo/cerrado, edición, eliminación y errores) queda
   a cargo del usuario con los pasos documentados en `impl.md`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-22 — `2026-09-22_22-16__costos-listado-registro-edicion-y-eliminacion-en-contrato`
+
+- **Work Item:** `2026-09-22_22-16__costos-listado-registro-edicion-y-eliminacion-en-contrato`
+  — Costos: listado, registro, edición y eliminación embebidos en el detalle del contrato
+  (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se implementó el CRUD de costos informativos dentro del detalle del
+  contrato, replicando los patrones de `compras` y `ciclos` (R1–R20, T1–T21). (1) Feature
+  `costos` autocontenido: alias de DTOs del OpenAPI (`Costo`, `PaginaCostos`, `CrearCosto`,
+  `ActualizarCosto`) más `FiltrosCostos`, `clavesCostos`, `api/costos.ts` sobre
+  `createBffClient`, hooks de consulta (`useCostos` con `keepPreviousData`) y mutaciones que
+  invalidan `clavesCostos.listas()`, `esquemaCosto` zod (cuatro campos requeridos, monto > 0,
+  fecha solo-día con `fechaDiaAIso`), `mensajes-error` por estado HTTP (400/404/0/resto) y
+  componentes `CostosSeccion`, `CostoForm` (con `datalist` de sugerencias y aviso
+  informativo), `CostoFormModal` y `EliminarCostoModal` (confirmación con `Modal`, sin
+  `window.confirm`). (2) BFF `app/api/costos/{route.ts,[id]/route.ts}` para listar, crear,
+  consultar, actualizar y eliminar, con validación defensiva, código HTTP real (red → `502`)
+  y mensajes en español sin exponer el cuerpo crudo. (3) `CostosSeccion` compuesta en
+  `detalle-con-relaciones.tsx` con `contratoId`, `contratoEstado` (desde `useContrato`) y
+  `onCambio` (invalida `clavesContratos.todas`); el registro se deshabilita con el contrato
+  cerrado y editar/eliminar permanecen disponibles. (4) La sección y el formulario muestran
+  de forma visible que los costos son informativos y no afectan el cálculo de la utilidad
+  real; el monto se presenta como moneda es-CO. (5) Retirada la ruta global `/costos`, su
+  enlace de menú, su protección de middleware y el placeholder `CostosProximamente`; se
+  eliminó también `shared/ui/Proximamente.tsx` (sin consumidores) y la sección
+  "Próximamente: ciclos y costos" de `ContratoDetalle`. (6) Tests puros de `schemas`,
+  `mensajes-error` y `query-keys`.
+- **Archivos modificados:** creados `features/costos/**` (tipos, `query-keys.ts`,
+  `schemas.ts`, `mensajes-error.ts`, `api/`, `hooks/`, `components/`, `index.ts` y
+  `__tests__/`) y `app/api/costos/{route.ts,[id]/route.ts}`; modificados
+  `features/costos/index.ts`, `features/contratos/components/ContratoDetalle.tsx`,
+  `app/(dashboard)/contratos/_components/detalle-con-relaciones.tsx`,
+  `app/(dashboard)/layout.tsx`, `middleware.ts` y `shared/ui/index.ts`; eliminados
+  `features/costos/components/CostosProximamente.tsx`, `app/(dashboard)/costos/page.tsx` y
+  `shared/ui/Proximamente.tsx`. Sin cambios en `package.json`/`package-lock.json`,
+  `shared/api/openapi/*`, ESLint, Prettier ni Jest; sin dependencias nuevas.
+- **Resultado de la verificación:** `V1` formato, `V2` lint, `V3` tipos y `V4` tests
+  (37 suites / 330 tests) en verde; `bash .rei/init.sh` finaliza con código de salida `0`.
+  `V5` (listado, registro con contrato activo/cerrado, edición, eliminación, aviso
+  informativo y errores) queda a cargo del usuario con los pasos documentados en `impl.md`.
+- **Estado final:** `done`.

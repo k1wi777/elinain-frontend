@@ -11,6 +11,7 @@ import {
   type FincaContrato,
   type TerceroContrato,
 } from "@/features/contratos";
+import { CostosSeccion } from "@/features/costos";
 import { useTodasLasFincas } from "@/features/fincas";
 import { useTodosLosTerceros } from "@/features/terceros";
 import { VentasSeccion } from "@/features/ventas";
@@ -22,14 +23,16 @@ type Props = {
 };
 
 /**
- * Composición del detalle de contrato con terceros, fincas, compras, ciclos y ventas.
+ * Composición del detalle de contrato con terceros, fincas, compras, ciclos, costos y
+ * ventas.
  *
  * Carga los terceros y las fincas para resolver los nombres y los pasa por props a
  * `features/contratos`, sin que el feature importe de otros features. Las compras, los
- * ciclos y las ventas se componen aquí, junto al detalle, sin que sus features importen de
- * `features/contratos` ni al revés. El estado del contrato se obtiene con `useContrato`
- * —que TanStack Query deduplica con la consulta de `ContratoDetalle`— y se pasa a
- * `CiclosSeccion` para deshabilitar el registro cuando el contrato está cerrado.
+ * ciclos, los costos y las ventas se componen aquí, junto al detalle, sin que sus features
+ * importen de `features/contratos` ni al revés. El estado del contrato se obtiene con
+ * `useContrato` —que TanStack Query deduplica con la consulta de `ContratoDetalle`— y se
+ * pasa a `CiclosSeccion` y `CostosSeccion` para deshabilitar el registro cuando el contrato
+ * está cerrado.
  */
 export function DetalleConRelaciones({ id }: Props) {
   const queryClient = useQueryClient();
@@ -74,6 +77,15 @@ export function DetalleConRelaciones({ id }: Props) {
         }}
       />
       <CiclosSeccion
+        contratoId={id}
+        contratoEstado={contrato.data?.estado}
+        onCambio={() => {
+          void queryClient.invalidateQueries({
+            queryKey: clavesContratos.todas,
+          });
+        }}
+      />
+      <CostosSeccion
         contratoId={id}
         contratoEstado={contrato.data?.estado}
         onCambio={() => {

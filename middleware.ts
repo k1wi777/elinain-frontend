@@ -10,7 +10,6 @@ const RUTAS_PROTEGIDAS = [
   "/fincas",
   "/contratos",
   "/ventas",
-  "/costos",
 ];
 
 /** Rutas de acceso que no deben verse con una sesión vigente. */
@@ -59,8 +58,6 @@ export const config = {
     "/contratos/:path*",
     "/ventas",
     "/ventas/:path*",
-    "/costos",
-    "/costos/:path*",
     "/login",
     "/registro",
   ],

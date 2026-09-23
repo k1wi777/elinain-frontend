@@ -43,12 +43,6 @@ export default function DashboardLayout({ children }: Props) {
             >
               Ventas
             </Link>
-            <Link
-              href="/costos"
-              className="text-sm text-zinc-600 hover:text-zinc-900"
-            >
-              Costos
-            </Link>
           </nav>
         </div>
         <LogoutButton />

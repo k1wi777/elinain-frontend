@@ -7,7 +7,6 @@
 export { Button } from "@/shared/ui/Button";
 export { Input } from "@/shared/ui/Input";
 export { Modal } from "@/shared/ui/Modal";
-export { Proximamente } from "@/shared/ui/Proximamente";
 export { Select } from "@/shared/ui/Select";
 export { Skeleton } from "@/shared/ui/Skeleton";
 export { Table, type ColumnaTabla } from "@/shared/ui/Table";

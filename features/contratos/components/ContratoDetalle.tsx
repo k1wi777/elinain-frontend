@@ -64,8 +64,7 @@ function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
  * Vista de detalle de un contrato.
  *
  * Muestra todos los datos del contrato resolviendo los nombres de tercero y finca con
- * las proyecciones que compone `app/`, indica con `—` los valores no informados, incluye
- * un placeholder de las secciones que llegarán con el backend (ciclos y costos) y ofrece
+ * las proyecciones que compone `app/`, indica con `—` los valores no informados y ofrece
  * la acción de editar.
  */
 export function ContratoDetalle({ id, terceros, fincas }: Props) {
@@ -152,13 +151,6 @@ export function ContratoDetalle({ id, terceros, fincas }: Props) {
           valor={textoODefecto(contrato.valor_kilo_referencia)}
         />
       </dl>
-
-      <section
-        aria-label="Secciones futuras del contrato"
-        className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 text-sm text-zinc-500"
-      >
-        Próximamente: ciclos y costos.
-      </section>
     </section>
   );
 }
