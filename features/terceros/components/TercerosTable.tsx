@@ -228,7 +228,7 @@ export function TercerosTable() {
     <section aria-labelledby="terceros-title" className="flex flex-col gap-8">
       <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div className="max-w-3xl">
-          <p className="mb-3 text-xs font-semibold tracking-[0.24em] text-elinain-gold-muted uppercase">
+          <p className="mb-3 text-xs font-semibold tracking-[0.24em] text-elinain-gold uppercase">
             Directorio de participación
           </p>
           <h1
