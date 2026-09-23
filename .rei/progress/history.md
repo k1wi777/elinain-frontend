@@ -849,3 +849,22 @@
   explícita del usuario de 44 suites y 366 tests exitosos. V5 queda pendiente de
   validación manual en móvil y escritorio.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_14-29__rediseno-visual-socios-participacion`
+
+- **Work Item:** `2026-09-23_14-29__rediseno-visual-socios-participacion` — Rediseño
+  visual de socios de participación (`type: task`).
+- **Agente:** `reviewer`.
+- **Trabajo realizado:** se revisó el rediseño visual de `/terceros`, confirmando que el
+  resumen usa únicamente `total` y `filas.length`, con superficies oscuras sólidas,
+  estados de carga/vacío/error y una variante visual opcional para la tabla y paginación.
+- **Archivos revisados:** `app/(dashboard)/terceros/page.tsx`,
+  `app/(dashboard)/terceros/loading.tsx`, `features/terceros/components/TercerosTable.tsx`,
+  `shared/ui/Table.tsx` y `shared/ui/TablePagination.tsx`.
+- **Resultado de la verificación:** V1, V2 y V3 pasan. V4 se acepta con la evidencia
+  explícita del usuario de 44 suites y 366 tests exitosos; la ejecución local reproduce
+  el error previo de `next/jest` antes de iniciar Jest. V5 queda pendiente de validación
+  manual del usuario en `/terceros`.
+- **Estado final:** `done`.

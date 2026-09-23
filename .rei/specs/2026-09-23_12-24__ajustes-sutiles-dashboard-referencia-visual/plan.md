@@ -31,8 +31,8 @@ Restricciones
 
 Pasos
 
-1. [x] Ajustar la composición de `page.tsx` y el shell del dashboard para acercar jerarquía, densidad, navegación y responsive a la referencia sin cambiar enlaces ni contenido funcional.
-2. [x] Reorganizar visualmente `ResumenDashboard` y `TarjetaResumen`, priorizando el bloque financiero y refinando la rejilla operativa con superficies sólidas.
-3. [x] Sincronizar `loading.tsx`, estados de error y utilidades de foco/estilo con la composición final.
-4. [x] Verificar que no haya degradados en fondos de tarjetas, que los ocho valores sigan usando sus formateadores actuales y que la navegación y los breakpoints conserven su comportamiento.
-5. [x] Ejecutar formato, lint, typecheck y la suite de tests; realizar validación visual manual del dashboard en móvil y escritorio.
+1. Ajustar la composición de `page.tsx` y el shell del dashboard para acercar jerarquía, densidad, navegación y responsive a la referencia sin cambiar enlaces ni contenido funcional.
+2. Reorganizar visualmente `ResumenDashboard` y `TarjetaResumen`, priorizando el bloque financiero y refinando la rejilla operativa con superficies sólidas.
+3. Sincronizar `loading.tsx`, estados de error y utilidades de foco/estilo con la composición final.
+4. Verificar que no haya degradados en fondos de tarjetas, que los ocho valores sigan usando sus formateadores actuales y que la navegación y los breakpoints conserven su comportamiento.
+5. Ejecutar formato, lint, typecheck y la suite de tests; realizar validación visual manual del dashboard en móvil y escritorio.

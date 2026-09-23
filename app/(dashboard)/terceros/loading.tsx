@@ -8,44 +8,42 @@ import { Skeleton } from "@/shared/ui";
  */
 export default function TercerosLoading() {
   return (
-    <section aria-busy="true" className="mx-auto w-full max-w-4xl">
+    <section
+      aria-busy="true"
+      className="mx-auto flex w-full max-w-7xl flex-col gap-8"
+    >
       <span className="sr-only">Cargando…</span>
-      <Skeleton className="mb-6 h-8 w-64" />
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-end">
-          <Skeleton className="h-10 w-56" />
+      <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="max-w-3xl">
+          <Skeleton className="mb-4 h-3 w-48 bg-white/10" />
+          <Skeleton className="h-12 w-80 bg-white/10" />
+          <Skeleton className="mt-4 h-5 w-full max-w-2xl bg-white/10" />
         </div>
-        <div className="overflow-hidden rounded-lg border border-zinc-200">
-          <div className="flex items-center gap-4 border-b border-zinc-200 bg-zinc-50 px-4 py-3">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-40" />
-            <Skeleton className="ml-auto h-4 w-16" />
+        <Skeleton className="h-10 w-full bg-white/10 sm:w-56" />
+      </header>
+      <div className="flex flex-col gap-6">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Skeleton className="h-32 rounded-2xl bg-elinain-surface" />
+          <Skeleton className="h-32 rounded-2xl bg-elinain-surface" />
+        </div>
+        <div className="overflow-hidden rounded-2xl border border-white/6 bg-elinain-surface">
+          <div className="flex min-w-[720px] items-center gap-4 border-b border-white/6 bg-white/[0.03] px-5 py-4">
+            <Skeleton className="h-3 w-24 bg-white/10" />
+            <Skeleton className="h-3 w-32 bg-white/10" />
+            <Skeleton className="h-3 w-40 bg-white/10" />
+            <Skeleton className="ml-auto h-3 w-16 bg-white/10" />
           </div>
-          <div className="flex items-center gap-4 border-t border-zinc-200 px-4 py-3">
-            <Skeleton className="h-4 w-40" />
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="h-4 w-36" />
-            <Skeleton className="ml-auto h-8 w-24" />
-          </div>
-          <div className="flex items-center gap-4 border-t border-zinc-200 px-4 py-3">
-            <Skeleton className="h-4 w-44" />
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="ml-auto h-8 w-24" />
-          </div>
-          <div className="flex items-center gap-4 border-t border-zinc-200 px-4 py-3">
-            <Skeleton className="h-4 w-36" />
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="h-4 w-40" />
-            <Skeleton className="ml-auto h-8 w-24" />
-          </div>
-          <div className="flex items-center gap-4 border-t border-zinc-200 px-4 py-3">
-            <Skeleton className="h-4 w-40" />
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-36" />
-            <Skeleton className="ml-auto h-8 w-24" />
-          </div>
+          {["w-40", "w-44", "w-36", "w-40"].map((ancho, indice) => (
+            <div
+              key={`${ancho}-${indice}`}
+              className="flex min-w-[720px] items-center gap-4 border-t border-white/6 px-5 py-5"
+            >
+              <Skeleton className={`h-4 ${ancho} bg-white/10`} />
+              <Skeleton className="h-4 w-28 bg-white/10" />
+              <Skeleton className="h-4 w-36 bg-white/10" />
+              <Skeleton className="ml-auto h-8 w-24 bg-white/10" />
+            </div>
+          ))}
         </div>
       </div>
     </section>

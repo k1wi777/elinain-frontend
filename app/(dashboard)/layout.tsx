@@ -33,25 +33,25 @@ export default function DashboardLayout({ children }: Props) {
           >
             <Link
               href="/terceros"
-              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium  transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
+              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
             >
               Socios de participación
             </Link>
             <Link
               href="/fincas"
-              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium  transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
+              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
             >
               Fincas
             </Link>
             <Link
               href="/contratos"
-              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium  transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
+              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
             >
               Contratos
             </Link>
             <Link
               href="/ventas"
-              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium  transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
+              className={`${ESTILOS_ENLACE_FOCUS_DASHBOARD} shrink-0 px-2.5 py-1.5 text-xs font-medium transition-colors hover:bg-white/5 hover:text-white sm:text-sm`}
             >
               Ventas
             </Link>

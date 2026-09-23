@@ -14,10 +14,7 @@ export const metadata: Metadata = {
  */
 export default function TercerosPage() {
   return (
-    <section className="mx-auto w-full max-w-4xl">
-      <h1 className="mb-6 text-2xl font-semibold text-zinc-900">
-        Socios de participación
-      </h1>
+    <section className="mx-auto w-full max-w-7xl">
       <TercerosTable />
     </section>
   );

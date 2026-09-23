@@ -41,6 +41,16 @@ import type { Tercero } from "@/features/terceros/types";
  */
 const TOTAL_PROVISIONAL = Number.MAX_SAFE_INTEGER;
 
+function obtenerIniciales(nombre: string): string {
+  return nombre
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((parte) => parte[0] ?? "")
+    .join("")
+    .toUpperCase();
+}
+
 /**
  * Listado de socios de participación con alta, edición y borrado.
  *
@@ -162,9 +172,31 @@ export function TercerosTable() {
   };
 
   const columnas: ColumnaTabla<Tercero>[] = [
-    { clave: "nombre", encabezado: "Nombre", render: (t) => t.nombre },
-    { clave: "documento", encabezado: "Documento", render: (t) => t.documento },
-    { clave: "contacto", encabezado: "Contacto", render: (t) => t.contacto },
+    {
+      clave: "nombre",
+      encabezado: "Nombre",
+      render: (t) => (
+        <div className="flex items-center gap-3">
+          <span
+            aria-hidden
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/[0.08] text-xs font-semibold text-elinain-gold"
+          >
+            {obtenerIniciales(t.nombre)}
+          </span>
+          <span className="font-medium text-white">{t.nombre}</span>
+        </div>
+      ),
+    },
+    {
+      clave: "documento",
+      encabezado: "Documento",
+      render: (t) => <span className="text-zinc-400">{t.documento}</span>,
+    },
+    {
+      clave: "contacto",
+      encabezado: "Contacto",
+      render: (t) => <span className="text-zinc-300">{t.contacto}</span>,
+    },
     {
       clave: "acciones",
       encabezado: "Acciones",
@@ -175,6 +207,7 @@ export function TercerosTable() {
             variante="secundario"
             onClick={() => abrirEditar(tercero)}
             aria-label={`Editar ${tercero.nombre}`}
+            className="border-white/8 bg-white/[0.03] px-3 text-xs text-zinc-300 hover:bg-white/[0.08] hover:text-white focus-visible:ring-elinain-gold"
           >
             Editar
           </Button>
@@ -182,6 +215,7 @@ export function TercerosTable() {
             variante="peligro"
             onClick={() => abrirEliminar(tercero)}
             aria-label={`Eliminar ${tercero.nombre}`}
+            className="bg-red-400/10 px-3 text-xs text-red-200 hover:bg-red-400/20 focus-visible:ring-red-300"
           >
             Eliminar
           </Button>
@@ -191,13 +225,66 @@ export function TercerosTable() {
   ];
 
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex justify-end">
-        <Button onClick={abrirCrear}>Nuevo socio de participación</Button>
+    <section aria-labelledby="terceros-title" className="flex flex-col gap-8">
+      <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="max-w-3xl">
+          <p className="mb-3 text-xs font-semibold tracking-[0.24em] text-elinain-gold-muted uppercase">
+            Directorio de participación
+          </p>
+          <h1
+            id="terceros-title"
+            className="text-4xl font-semibold tracking-tight text-white sm:text-5xl"
+          >
+            Socios de participación
+          </h1>
+          <p className="mt-4 text-sm leading-7 text-zinc-400 sm:text-base">
+            Administra los terceros propietarios y depositarios que participan
+            en las operaciones de engorde y comercialización de ganado.
+          </p>
+        </div>
+        <Button
+          onClick={abrirCrear}
+          className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-elinain-gold px-5 py-3.5 text-sm font-semibold text-elinain-bg shadow-[0_10px_24px_rgb(232_185_35_/_0.16)] hover:bg-elinain-gold-hover focus-visible:ring-elinain-gold sm:w-auto"
+        >
+          <span aria-hidden className="text-lg leading-none font-normal">
+            +
+          </span>
+          <span>Nuevo socio de participación</span>
+        </Button>
+      </header>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <article className="rounded-2xl border border-white/6 bg-elinain-glass-panel px-5 py-5 shadow-[0_18px_36px_rgb(0_0_0_/_0.14)] sm:px-6">
+          <p className="text-xs font-semibold tracking-[0.18em] text-zinc-500 uppercase">
+            Total de socios
+          </p>
+          <p
+            className="mt-3 font-display text-4xl tracking-tight text-elinain-gold"
+            aria-live="polite"
+          >
+            {consulta.isPending || consulta.error ? "—" : total}
+          </p>
+          <p className="mt-1 text-sm text-zinc-500">Registros disponibles</p>
+        </article>
+        <article className="rounded-2xl border border-white/6 bg-elinain-glass-panel px-5 py-5 shadow-[0_18px_36px_rgb(0_0_0_/_0.14)] sm:px-6">
+          <p className="text-xs font-semibold tracking-[0.18em] text-zinc-500 uppercase">
+            En esta página
+          </p>
+          <p
+            className="mt-3 font-display text-4xl tracking-tight text-white"
+            aria-live="polite"
+          >
+            {consulta.isPending || consulta.error ? "—" : filas.length}
+          </p>
+          <p className="mt-1 text-sm text-zinc-500">Filas visibles ahora</p>
+        </article>
       </div>
 
       {consulta.error ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p
+          role="alert"
+          className="rounded-xl border border-red-400/20 bg-red-400/8 px-4 py-3 text-sm text-red-200"
+        >
           {mensajeErrorListarTerceros(consulta.error.status)}
         </p>
       ) : null}
@@ -209,6 +296,7 @@ export function TercerosTable() {
         cargando={consulta.isPending}
         mensajeVacio="Aún no tienes socios de participación registrados"
         paginacion={paginacionTabla}
+        tema="oscuro"
       />
 
       {formularioAbierto ? (

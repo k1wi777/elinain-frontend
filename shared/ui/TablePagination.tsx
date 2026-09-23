@@ -1,3 +1,4 @@
+import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/Button";
 
 /**
@@ -28,6 +29,9 @@ export type PaginacionTabla = {
   irAPagina?: (pagina: number) => void;
 };
 
+/** Tema visual opcional para reutilizar la paginación en superficies oscuras. */
+export type TemaTabla = "claro" | "oscuro";
+
 /**
  * Controles de navegación entre páginas de un listado.
  *
@@ -41,26 +45,45 @@ export function TablePagination({
   hayPaginaSiguiente,
   irAPaginaAnterior,
   irAPaginaSiguiente,
-}: PaginacionTabla) {
+  tema = "claro",
+}: PaginacionTabla & { tema?: TemaTabla }) {
+  const esOscuro = tema === "oscuro";
+
   return (
     <nav
       aria-label="Paginación"
-      className="flex items-center justify-between gap-4 border-t border-zinc-200 px-4 py-3"
+      className={cn(
+        "flex flex-col items-center justify-between gap-3 border-t px-4 py-4 sm:flex-row",
+        esOscuro ? "border-white/6" : "border-zinc-200",
+      )}
     >
       <Button
         variante="secundario"
         onClick={irAPaginaAnterior}
         disabled={!hayPaginaAnterior}
+        className={
+          esOscuro
+            ? "border-white/8 bg-white/[0.03] text-zinc-300 hover:bg-white/[0.07] hover:text-white focus-visible:ring-elinain-gold"
+            : undefined
+        }
       >
         Anterior
       </Button>
-      <span className="text-sm text-zinc-600" aria-live="polite">
+      <span
+        className={cn("text-sm", esOscuro ? "text-zinc-500" : "text-zinc-600")}
+        aria-live="polite"
+      >
         Página {paginaActual} de {totalPaginas}
       </span>
       <Button
         variante="secundario"
         onClick={irAPaginaSiguiente}
         disabled={!hayPaginaSiguiente}
+        className={
+          esOscuro
+            ? "border-white/8 bg-white/[0.03] text-zinc-300 hover:bg-white/[0.07] hover:text-white focus-visible:ring-elinain-gold"
+            : undefined
+        }
       >
         Siguiente
       </Button>

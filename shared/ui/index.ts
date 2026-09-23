@@ -13,5 +13,6 @@ export { Table, type ColumnaTabla } from "@/shared/ui/Table";
 export {
   TablePagination,
   type PaginacionTabla,
+  type TemaTabla,
 } from "@/shared/ui/TablePagination";
 export { Toast } from "@/shared/ui/Toast";
