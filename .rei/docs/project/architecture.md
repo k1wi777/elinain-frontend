@@ -11,7 +11,7 @@
 
 Este documento describe cómo está organizado **Elinain Frontend** y las reglas arquitectónicas que deben mantenerse durante su evolución.
 
-Elinain Frontend es la interfaz de gestión agropecuaria del sistema Elinain. Hoy cubre terceros, fincas y contratos; a futuro incorporará ventas, ciclos y costos (bloqueados por el backend).
+Elinain Frontend es la interfaz de gestión agropecuaria del sistema Elinain. Hoy cubre terceros, fincas, contratos, compras, ventas, ciclos y costos de cada contrato, el resumen del dashboard y los reportes de contratos activos e historial de ventas.
 
 El proyecto usa **Next.js 16 (App Router) con React 19 y TypeScript**, y sigue una **arquitectura feature-first** adaptada a Next: cada porción de negocio es autocontenida y la capa transversal no conoce los features.
 
@@ -39,48 +39,39 @@ El proyecto se organiza en tres capas con raíz en el directorio del repositorio
 ```text
 app/                          ← Next.js App Router — SOLO rutas, delgadas
 ├── (auth)/
-│   └── login/page.tsx
+│   ├── login/page.tsx
+│   └── registro/page.tsx
 ├── (dashboard)/
+│   ├── dashboard/page.tsx
 │   ├── terceros/page.tsx
-│   ├── fincas/page.tsx
-│   ├── contratos/page.tsx
-│   └── contratos/[id]/page.tsx
+│   ├── fincas/               → listado, nueva y [id]/editar
+│   ├── contratos/            → listado, nuevo, [id] y [id]/editar
+│   ├── ventas/page.tsx
+│   └── reportes/             → contratos-activos y historial-ventas
 ├── api/                      ← BFF: Route Handlers de operaciones autenticadas
-│   └── auth/…
+│   ├── auth/…
+│   ├── terceros/ fincas/ contratos/ compras/ ventas/
+│   ├── ciclos/ costos/ geocodificacion/
+│   └── reportes/…
 ├── layout.tsx
 └── globals.css
 
 features/                     ← cada carpeta = una porción de negocio autocontenida
-├── auth/
-│   ├── components/            → LoginForm
-│   ├── api/                   → login(), logout()
-│   ├── hooks/                 → useAuth()
-│   ├── types.ts
-│   └── index.ts               ← único punto de entrada público
-├── terceros/
-│   ├── components/            → TercerosTable, TerceroForm
-│   ├── api/
-│   ├── hooks/
-│   ├── types.ts
-│   └── index.ts
-├── fincas/
-│   ├── components/            → FincasMap, FincaForm
-│   ├── api/
-│   ├── hooks/
-│   ├── types.ts
-│   └── index.ts
-├── contratos/
-│   ├── components/            → ContratoForm, ContratosTable, ContratoDetail (interno)
-│   ├── api/
-│   ├── hooks/
-│   ├── types.ts
-│   └── index.ts
-└── ventas/ ciclos/ costos/     ← placeholders vacíos, bloqueados por backend
+├── auth/                      → login, registro y logout
+├── terceros/                  → listado, crear/editar y eliminar
+├── fincas/                    → listado con mapa, CRUD y geocodificación
+├── contratos/                 → listado, filtro, detalle y edición
+├── compras/                   → compras de un contrato (sección embebida)
+├── ventas/                    → listado global y registro/ventas por contrato
+├── ciclos/                    → checkpoints de engorde de un contrato (embebido)
+├── costos/                    → costos informativos de un contrato (embebido)
+├── dashboard/                 → resumen de reportes del comerciante
+└── reportes/                  → contratos activos e historial de ventas
 
 shared/                       ← transversal, sin lógica de negocio
-├── api/                       → cliente HTTP base, tipos del OpenAPI, hook genérico de paginación
-├── ui/                        → Button, Input, Select, Table, Modal, Toast
-├── lib/                       → utils y hooks genéricos
+├── api/                       → clientes HTTP (base, BFF y servidor), tipos del OpenAPI, paginación
+├── ui/                        → Button, Input, Select, Table, TablePagination, Modal, Toast, Skeleton
+├── lib/                       → cn, utilidades de fecha y hooks genéricos
 └── config/                    → env.ts: única lectura tipada de variables de entorno
 ```
 

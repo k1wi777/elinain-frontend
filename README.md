@@ -32,7 +32,7 @@ La aplicación queda disponible en [http://localhost:3000](http://localhost:3000
 
 ### Variables de entorno
 
-Las variables viven en un archivo `.env.local` en la raíz del proyecto y **no se versionan**. Cuando se integre la API se usará `NEXT_PUBLIC_API_URL` para las peticiones directas al backend; el resto de operaciones pasan por el BFF en `app/api/`.
+Las variables viven en un archivo `.env.local` en la raíz del proyecto y **no se versionan**. `API_URL` la usa el servidor (BFF y Server Components) y `NEXT_PUBLIC_API_URL` queda disponible en el cliente para peticiones directas al backend; las operaciones autenticadas pasan por el BFF en `app/api/`. La lectura tipada de variables vive en `shared/config/env.ts`.
 
 ## Scripts
 
