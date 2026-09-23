@@ -21,12 +21,15 @@ export function ListadoConRelaciones() {
   const fincas = useTodasLasFincas();
 
   if (terceros.isPending || fincas.isPending) {
-    return <p className="text-sm text-zinc-500">Cargando…</p>;
+    return <p className="text-sm text-zinc-400">Cargando…</p>;
   }
 
   if (terceros.error || fincas.error) {
     return (
-      <p role="alert" className="text-sm text-red-600">
+      <p
+        role="alert"
+        className="rounded-xl border border-red-400/20 bg-red-400/8 px-4 py-3 text-sm text-red-200"
+      >
         No se pudieron cargar los socios de participación ni las fincas.
       </p>
     );

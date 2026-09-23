@@ -3,48 +3,69 @@ import { Skeleton } from "@/shared/ui";
 /**
  * Skeleton del listado de contratos (`/contratos`).
  *
- * Reproduce el contenedor y el ancho de `page.tsx` para que la transición al contenido real
- * no provoque saltos de layout.
+ * Reproduce la estructura final de la ruta: encabezado con descripción y CTA, cuatro
+ * tarjetas de resumen, chips de filtro y tabla oscura, con el mismo ancho `max-w-7xl` de
+ * `page.tsx` para que la transición al contenido real no provoque saltos de layout.
  */
 export default function ContratosLoading() {
   return (
-    <section aria-busy="true" className="mx-auto w-full max-w-4xl">
+    <section
+      aria-busy="true"
+      className="mx-auto flex w-full max-w-7xl flex-col gap-8"
+    >
       <span className="sr-only">Cargando…</span>
-      <Skeleton className="mb-6 h-8 w-40" />
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-end">
-          <Skeleton className="h-10 w-44" />
+      <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="max-w-3xl">
+          <Skeleton className="mb-4 h-3 w-48 bg-white/10" />
+          <Skeleton className="h-12 w-40 bg-white/10" />
+          <Skeleton className="mt-4 h-5 w-full max-w-2xl bg-white/10" />
         </div>
-        <div className="overflow-hidden rounded-lg border border-zinc-200">
-          <div className="flex items-center gap-4 border-b border-zinc-200 bg-zinc-50 px-4 py-3">
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-36" />
-            <Skeleton className="ml-auto h-4 w-16" />
+        <Skeleton className="h-12 w-full rounded-xl bg-elinain-surface sm:w-48" />
+      </header>
+      <div className="flex flex-col gap-6">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[0, 1, 2, 3].map((indice) => (
+            <Skeleton
+              key={indice}
+              className="h-32 rounded-2xl bg-elinain-surface"
+            />
+          ))}
+        </div>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-2">
+            {[0, 1, 2].map((indice) => (
+              <Skeleton
+                key={indice}
+                className="h-10 w-28 rounded-full bg-elinain-surface"
+              />
+            ))}
           </div>
-          <div className="flex items-center gap-4 border-t border-zinc-200 px-4 py-3">
-            <Skeleton className="h-4 w-36" />
-            <Skeleton className="h-4 w-40" />
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="ml-auto h-8 w-24" />
-          </div>
-          <div className="flex items-center gap-4 border-t border-zinc-200 px-4 py-3">
-            <Skeleton className="h-4 w-40" />
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-36" />
-            <Skeleton className="ml-auto h-8 w-24" />
-          </div>
-          <div className="flex items-center gap-4 border-t border-zinc-200 px-4 py-3">
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-36" />
-            <Skeleton className="h-4 w-40" />
-            <Skeleton className="ml-auto h-8 w-24" />
-          </div>
-          <div className="flex items-center gap-4 border-t border-zinc-200 px-4 py-3">
-            <Skeleton className="h-4 w-36" />
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="ml-auto h-8 w-24" />
+          <div className="overflow-x-auto">
+            <div className="flex min-w-[720px] flex-col gap-2">
+              <div className="flex items-center gap-4 px-5 pt-1 pb-3">
+                <Skeleton className="h-3 w-28 bg-white/10" />
+                <Skeleton className="h-3 w-32 bg-white/10" />
+                <Skeleton className="h-3 w-36 bg-white/10" />
+                <Skeleton className="h-3 w-24 bg-white/10" />
+                <Skeleton className="h-3 w-28 bg-white/10" />
+                <Skeleton className="h-3 w-32 bg-white/10" />
+                <Skeleton className="ml-auto h-3 w-16 bg-white/10" />
+              </div>
+              {["w-40", "w-44", "w-36", "w-40"].map((ancho, indice) => (
+                <div
+                  key={`${ancho}-${indice}`}
+                  className="flex items-center gap-4 rounded-2xl border border-white/6 bg-elinain-surface px-5 py-6"
+                >
+                  <Skeleton className="h-4 w-36 bg-white/10" />
+                  <Skeleton className="h-4 w-40 bg-white/10" />
+                  <Skeleton className="h-4 w-28 bg-white/10" />
+                  <Skeleton className="h-4 w-24 bg-white/10" />
+                  <Skeleton className="h-4 w-32 bg-white/10" />
+                  <Skeleton className="h-4 w-28 bg-white/10" />
+                  <Skeleton className="ml-auto h-8 w-24 bg-white/10" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

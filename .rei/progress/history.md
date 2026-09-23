@@ -933,3 +933,40 @@
   finaliza con código de salida `0`. V5 (validación manual sobre `/fincas`, pestaña Listado)
   queda a cargo del usuario con los pasos documentados en `impl.md`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_16-29__rediseno-visual-listado-contratos`
+
+- **Work Item:** `2026-09-23_16-29__rediseno-visual-listado-contratos` — Rediseño visual del
+  listado de contratos (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se refinó visualmente la ruta `/contratos` (página de listado, no el
+  detalle) con la composición oscura premium del shell, conservando comportamiento, rutas,
+  paginación, queries, mensajes y acciones. (1) `page.tsx` queda como contenedor delgado
+  `mx-auto w-full max-w-7xl`; `ContratosListado` compone el encabezado (eyebrow dorado, `h1`
+  "Contratos" con `aria-labelledby`, descripción) y el CTA `Nuevo contrato`
+  (`/contratos/nuevo`). (2) Lógica pura nueva `features/contratos/resumen.ts`
+  (`calcularResumenContratos`: contratos activos, cabezas en pie, peso promedio y split
+  promedio, ignorando nulos y redondeando a entero) consumida por cuatro tarjetas
+  `glass-panel` con `—` en carga/error y `aria-live="polite"`. (3) Chips de filtro con
+  contador (`Todos`/`Activos`/`Cerrados`) que reemplazan al `Select` y reinician la
+  paginación. (4) Tabla `tema="oscuro"` con las columnas Código/Apertura, Tercero (avatar de
+  iniciales), Finca/Predio, Estatus (badge + fecha de cierre), Participación (texto + barra),
+  Lote & Peso prom. (cabezas, kg y raza) y Acciones (`Ver detalle`/`Editar`), usando solo
+  campos reales de `ContratoRespuestaDto` y las proyecciones `TerceroContrato`/`FincaContrato`.
+  (5) Estados de carga, error y vacío adaptados al tema oscuro y `loading.tsx` sincronizado.
+  Sin buscador, menú kebab, «Ajustes Lotes», proyección de ganancia ni métricas derivadas de
+  multiplicaciones.
+- **Archivos modificados:** `app/(dashboard)/contratos/{page.tsx,loading.tsx,_components/listado-con-relaciones.tsx}`,
+  `features/contratos/components/ContratosListado.tsx`; creados
+  `features/contratos/resumen.ts` y `features/contratos/__tests__/resumen.test.ts`. Sin
+  cambios en hooks, `api/`, tipos, queries, mutaciones, paginación, rutas, `shared/ui` ni el
+  detalle del contrato; sin dependencias nuevas.
+- **Resultado de la verificación:** V1 (`format:check`), V2 (`lint`), V3 (`typecheck`) y V4
+  (`test`, 45 suites / 374 tests, incluidos los 8 nuevos de `resumen.test.ts`) en verde,
+  ejecutados por el Reviewer; `bash .rei/init.sh` finaliza con código de salida `0`. V5
+  (validación manual sobre `/contratos`, ruta protegida) queda a cargo del usuario con los
+  pasos documentados en `impl.md`.
+- **Estado final:** `done`.

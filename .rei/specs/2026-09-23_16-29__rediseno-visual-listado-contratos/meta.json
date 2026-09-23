@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-23_16-29__rediseno-visual-listado-contratos",
+  "title": "Rediseño visual del listado de contratos",
+  "description": "Refactor visual de la página /contratos (listado, no el detalle de un contrato) tomando como referencia la captura aportada por el usuario y la estética oscura premium ya aplicada en dashboard, socios de participación y fincas. Se puede enriquecer la página con secciones y textos nuevos siempre que se construyan solo con campos reales de ContratoRespuestaDto (fecha_apertura, estado, porcentaje_comerciante, porcentaje_tercero, cantidad_actual, peso_promedio_actual, valor_kilo_referencia, raza) y de las relaciones ya compuestas en app/ (tercero y finca). Alcance acordado: encabezado con título y descripción; cuatro tarjetas de resumen reales (contratos activos, cabezas en pie, peso promedio en pie y split promedio comerciante/tercero); filtro de estado como chips con contador (Todos/Activos/Cerrados) reutilizando el filtrado en cliente existente; tabla oscura que adopta la agrupación de la referencia con datos reales (Código/Apertura, Tercero, Finca/Predio, Estatus, Participación, Lote & Peso prom., Acciones). Se conservan sin cambios la ruta, el alta y edición, las acciones Ver detalle y Editar, la paginación, las queries, los mensajes y los modales. No se añade buscador, menú desplegable de acciones, 'Ajustes Lotes', proyección de ganancia diaria, ni métricas derivadas de multiplicaciones (capital en ganado) ni de otros módulos; no se inventan hectáreas, lotes, estados 'en liquidación' ni datos ausentes del DTO. No se agregan dependencias; la lógica pura nueva (suma/promedios del resumen) se cubre con tests.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-23T16:29:23-05:00"
+}
