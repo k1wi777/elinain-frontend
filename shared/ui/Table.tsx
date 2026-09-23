@@ -40,6 +40,13 @@ export type TableProps<T> = {
   paginacion?: PaginacionTabla;
   /** Tema visual opcional; conserva el tema claro por defecto. */
   tema?: TemaTabla;
+  /**
+   * Clases de padding vertical aplicadas a las celdas de datos.
+   *
+   * Es una prop visual opcional: si se omite, se conservan los paddings del tema. Permite
+   * aumentar el aire vertical por fila sin alterar encabezados ni controladores.
+   */
+  paddingFilas?: string;
 };
 
 const ALINEACIONES: Record<AlineacionColumna, string> = {
@@ -63,6 +70,7 @@ export function Table<T>({
   mensajeVacio = "No hay registros para mostrar.",
   paginacion,
   tema = "claro",
+  paddingFilas,
 }: TableProps<T>) {
   const hayFilas = filas.length > 0;
   const esOscuro = tema === "oscuro";
@@ -130,6 +138,7 @@ export function Table<T>({
                         esOscuro
                           ? "px-5 py-[1.1rem] align-middle text-zinc-200"
                           : "px-4 py-3 text-zinc-800",
+                        paddingFilas,
                         ALINEACIONES[columna.alineacion ?? "izquierda"],
                         columna.className,
                       )}

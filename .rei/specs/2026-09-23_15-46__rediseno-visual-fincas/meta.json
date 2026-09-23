@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-23_15-46__rediseno-visual-fincas",
+  "title": "Rediseño visual de fincas",
+  "description": "Refinar visualmente la ruta /fincas (pestañas Listado y Mapa) tomando como referencia de composición y densidad dos capturas aportadas por el usuario, adaptadas a la estética oscura premium ya existente en el dashboard y el rediseño de socios de participación. El alcance es únicamente de diseño: conservar la tabla Nombre/Dirección/Propietario/Acciones, las rutas /fincas/nueva y /fincas/[id]/editar, la paginación, los modales, el mapa, los pines, el popup, el hook useTodasLasFincas, las queries, las mutaciones y los mensajes funcionales sin cambios. Solo puede mostrarse información real disponible en la página: total de fincas registradas y filas visibles en la página actual, además de nombre, dirección, propietario y coordenadas. No se añaden búsqueda, filtros, exportación, hectáreas, carga ganadera, cabezas, sanidad, lotes, estados, extensión ni métricas derivadas de otros módulos. No se agregan dependencias ni lógica de negocio.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-23T15:46:55-05:00"
+}

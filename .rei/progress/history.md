@@ -868,3 +868,68 @@
   el error previo de `next/jest` antes de iniciar Jest. V5 queda pendiente de validación
   manual del usuario en `/terceros`.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_15-46__rediseno-visual-fincas`
+
+- **Work Item:** `2026-09-23_15-46__rediseno-visual-fincas` — Rediseño visual de fincas
+  (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se refinó visualmente la ruta `/fincas` (pestañas Listado y Mapa) con
+  la composición oscura premium del dashboard y el rediseño de socios, sin alterar
+  comportamiento, rutas, datos ni lógica de negocio. (1) `page.tsx` queda como contenedor
+  delgado `max-w-7xl`; `FincasTabs` compone el encabezado (eyebrow dorado, `h1` con
+  `aria-labelledby`, descripción), el CTA `Nueva finca` (`/fincas/nueva`) y el control
+  segmentado tipo píldora `Listado | Mapa`, conservando `role="tab"`, `aria-selected`,
+  `aria-controls`, el estado local `vista` y la carga diferida del mapa (`dynamic` con
+  `ssr: false`). (2) `FincasTable` añade dos tarjetas `glass-panel` con `total` y `filas.length`
+  (`—` en carga/error), usa `Table tema="oscuro"` con las columnas intactas
+  `Nombre`/`Dirección`/`Propietario`/`Acciones`, avatares de iniciales, icono de ubicación y
+  acciones `Editar`/`Eliminar` restilizadas. (3) `FincasMapa` usa superficie carbón, estados
+  oscuros y popup oscuro acotado por `.mapa-fincas` en `globals.css`; `FincaDetalleModal` pasa a
+  panel oscuro con `Modal tema="oscuro"` mostrando solo nombre, propietario, dirección y
+  coordenadas. (4) `loading.tsx` reproduce la estructura final sin saltos de layout. (5)
+  `shared/ui/Modal.tsx` añade la prop visual opcional `tema` (`"claro"` por defecto); sin
+  cambios de comportamiento para los consumidores actuales.
+- **Archivos modificados:** `app/(dashboard)/fincas/page.tsx`,
+  `app/(dashboard)/fincas/loading.tsx`,
+  `app/(dashboard)/fincas/_components/listado-con-propietarios.tsx`,
+  `features/fincas/components/{FincasTabs,FincasTable,FincasMapa,FincaDetalleModal}.tsx`,
+  `shared/ui/Modal.tsx` y `app/globals.css`. Sin cambios en hooks, `api/`, tipos, queries,
+  mutaciones, paginación, rutas, permisos, toasts ni mensajes funcionales; sin cambios en
+  `package.json`/`package-lock.json`; sin dependencias nuevas.
+- **Resultado de la verificación:** V1 (`format:check`), V2 (`lint`), V3 (`typecheck`) y V4
+  (`test`, 44 suites / 366 tests) en verde, ejecutados por el Reviewer; `bash .rei/init.sh`
+  finaliza con código de salida `0`. V5 (validación manual de ambas pestañas, estados y
+  responsive) queda a cargo del usuario con los pasos documentados en `impl.md`.
+- **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_16-01__mejora-visual-tabla-fincas`
+
+- **Work Item:** `2026-09-23_16-01__mejora-visual-tabla-fincas` — Mejora visual de la tabla
+  de fincas (`type: task`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se refinó la tabla del listado de `/fincas` (pestaña Listado) con
+  filas tipo tarjeta rica, usando solo datos reales del DTO `FincaRespuestaDto`. (1) Columna
+  `Nombre`: icono de predio `svg` inline (sin dependencias) con acento dorado sobre
+  `bg-white/[0.08]`, `finca.nombre` en blanco y debajo `ID: {finca.id}` en texto pequeño
+  tenue truncado con CSS; `obtenerIniciales` se conserva solo para el avatar del propietario.
+  (2) Columna `Dirección`: pin existente más una segunda línea con `latitud, longitud` reales.
+  (3) Densidad tipo tarjeta: `Table` gana la prop visual opcional `paddingFilas` (por defecto
+  sin efecto) y `FincasTable` la usa con `py-6`. (4) Acciones: `Editar` y `Eliminar` con
+  `shrink-0`/`whitespace-nowrap` y paleta oscura, conservando rutas y comportamiento; el
+  esqueleto de `loading.tsx` pasa a `py-6` para acompañar la densidad.
+- **Archivos modificados:** `features/fincas/components/FincasTable.tsx`,
+  `shared/ui/Table.tsx` y `app/(dashboard)/fincas/loading.tsx`. Sin cambios en hooks, `api/`,
+  tipos, queries, mutaciones, paginación, rutas, modales, toasts ni mensajes funcionales; sin
+  cambios en `package.json`/`package-lock.json`; sin dependencias nuevas.
+- **Resultado de la verificación:** V1 (`format:check`), V2 (`lint`), V3 (`typecheck`) y V4
+  (`test`, 44 suites / 366 tests) en verde, ejecutados por el Reviewer; `bash .rei/init.sh`
+  finaliza con código de salida `0`. V5 (validación manual sobre `/fincas`, pestaña Listado)
+  queda a cargo del usuario con los pasos documentados en `impl.md`.
+- **Estado final:** `done`.

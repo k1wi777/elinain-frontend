@@ -1,0 +1,8 @@
+{
+  "id": "2026-09-23_16-01__mejora-visual-tabla-fincas",
+  "title": "Mejora visual de la tabla de fincas",
+  "description": "Enriquecer visualmente la tabla del listado de /fincas con un estilo de fila tipo tarjeta inspirado en la referencia aportada por el usuario, usando exclusivamente datos reales del DTO FincaRespuestaDto: id, nombre, direccion, latitud, longitud y el propietario resuelto por tercero_id. El alcance es únicamente de presentación: conservar las columnas lógicas Nombre/Dirección/Propietario/Acciones, la paginación, las rutas /fincas/nueva y /fincas/[id]/editar, los modales, toasts, mensajes, hooks, queries y mutaciones sin cambios. No se añaden badges de estado, extensiones, ocupación, lotes, hectáreas, cabezas ni ninguna métrica ausente del DTO; tampoco búsqueda, filtros ni acciones nuevas. Se permite mostrar el id real de la finca bajo el nombre y las coordenadas reales bajo la dirección, además de un icono de predio y el avatar del propietario. No se agregan dependencias ni lógica de negocio.",
+  "type": "task",
+  "status": "done",
+  "created_at": "2026-09-23T16:01:02-05:00"
+}

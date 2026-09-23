@@ -53,3 +53,33 @@ body {
     inset 0 1px 0 rgb(255 255 255 / 0.04);
   backdrop-filter: blur(16px);
 }
+
+/* Popup de Leaflet del mapa de fincas: superficie oscura del sistema. */
+.mapa-fincas.leaflet-container {
+  background: var(--elinain-bg);
+}
+
+.mapa-fincas .leaflet-popup-content-wrapper {
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 0.9rem;
+  background: var(--elinain-surface-elevated);
+  box-shadow: 0 24px 48px rgb(0 0 0 / 0.45);
+  color: #e4e4e7;
+}
+
+.mapa-fincas .leaflet-popup-tip {
+  border: 1px solid rgb(255 255 255 / 0.08);
+  background: var(--elinain-surface-elevated);
+}
+
+.mapa-fincas .leaflet-popup-content {
+  margin: 0.85rem 1rem;
+}
+
+.mapa-fincas .leaflet-popup-close-button {
+  color: #a1a1aa;
+}
+
+.mapa-fincas .leaflet-popup-close-button:hover {
+  color: #ffffff;
+}

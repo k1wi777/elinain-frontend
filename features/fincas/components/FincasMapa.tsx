@@ -73,12 +73,15 @@ export function FincasMapa({ propietarios }: Props) {
   const fincas = consulta.data ?? [];
 
   if (consulta.isPending) {
-    return <p className="text-sm text-zinc-500">Cargando mapa…</p>;
+    return <p className="text-sm text-zinc-400">Cargando mapa…</p>;
   }
 
   if (consulta.error) {
     return (
-      <p role="alert" className="text-sm text-red-600">
+      <p
+        role="alert"
+        className="rounded-xl border border-red-400/20 bg-red-400/8 px-4 py-3 text-sm text-red-200"
+      >
         {mensajeErrorListarFincas(consulta.error.status)}
       </p>
     );
@@ -87,7 +90,7 @@ export function FincasMapa({ propietarios }: Props) {
   return (
     <div className="flex flex-col gap-3">
       {fincas.length === 0 ? (
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-zinc-400">
           Aún no tienes fincas registradas.
         </p>
       ) : null}
@@ -95,7 +98,7 @@ export function FincasMapa({ propietarios }: Props) {
       <div
         role="application"
         aria-label="Mapa de fincas"
-        className="overflow-hidden rounded-md border border-zinc-300"
+        className="overflow-hidden rounded-2xl border border-white/6 bg-elinain-surface p-1 shadow-[0_22px_48px_rgb(0_0_0_/_0.2)]"
       >
         <MapContainer
           center={CENTRO_COLOMBIA}
@@ -103,7 +106,7 @@ export function FincasMapa({ propietarios }: Props) {
           minZoom={ZOOM_MINIMO}
           maxBounds={LIMITES_COLOMBIA}
           maxBoundsViscosity={1}
-          className="h-[32rem] w-full"
+          className="mapa-fincas h-[32rem] w-full rounded-xl"
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -117,19 +120,19 @@ export function FincasMapa({ propietarios }: Props) {
               icon={icono}
             >
               <Popup>
-                <div className="flex flex-col gap-1">
-                  <strong className="text-sm text-zinc-900">
+                <div className="flex flex-col gap-1.5">
+                  <strong className="text-sm font-semibold text-white">
                     {finca.nombre}
                   </strong>
-                  <span className="text-xs text-zinc-600">
+                  <span className="text-xs text-zinc-400">
                     {nombreDePropietario(propietariosPorId, finca.tercero_id)}
                   </span>
-                  <span className="text-xs text-zinc-600">
+                  <span className="text-xs text-zinc-400">
                     {finca.direccion}
                   </span>
                   <Button
                     variante="secundario"
-                    className="mt-1"
+                    className="mt-1 border-white/8 bg-white/[0.03] text-xs text-zinc-200 hover:bg-white/[0.08] hover:text-white focus-visible:ring-elinain-gold"
                     onClick={() => setFincaDetalle(finca)}
                   >
                     Ver detalle
