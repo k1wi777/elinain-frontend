@@ -82,7 +82,10 @@ export async function POST(request: Request): Promise<NextResponse> {
     });
 
     const respuesta = new NextResponse(null, { status: 201 });
-    fijarSesion(respuesta, acceso.tokenAcceso);
+    fijarSesion(respuesta, {
+      tokenAcceso: acceso.tokenAcceso,
+      tokenRefresco: acceso.tokenRefresco,
+    });
 
     return respuesta;
   } catch (error) {

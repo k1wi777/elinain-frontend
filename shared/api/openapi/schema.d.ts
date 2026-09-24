@@ -30,8 +30,42 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Inicia sesión y emite el JWT de acceso */
+        /** Inicia sesión y emite el par de tokens (acceso y refresco) */
         post: operations["UsuariosController_acceder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/usuarios/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Renueva los tokens de acceso y refresco mediante rotación (RTR) */
+        post: operations["UsuariosController_refrescar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/usuarios/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cierra la sesión revocando el token de refresco */
+        post: operations["UsuariosController_cerrarSesion"];
         delete?: never;
         options?: never;
         head?: never;
@@ -608,6 +642,11 @@ export interface components {
              * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
              */
             tokenAcceso: string;
+            /**
+             * @description Token de refresco criptográfico opaco para rotación de credenciales
+             * @example 4a6b29f9c0e4818a38a7c29e19d7b42c676d1...
+             */
+            tokenRefresco: string;
             /** @description Perfil mínimo del comerciante autenticado */
             usuario: components["schemas"]["UsuarioRegistradoDto"];
         };
@@ -653,6 +692,20 @@ export interface components {
              * @example 401
              */
             codigoEstado: number;
+        };
+        RefrescarTokenDto: {
+            /**
+             * @description Token de refresco emitido en el login o en el último refresh
+             * @example 4a6b29f9c0e4818a38a7c29e19d7b42c676d1...
+             */
+            tokenRefresco: string;
+        };
+        CerrarSesionDto: {
+            /**
+             * @description Token de refresco de la sesión que se desea cerrar
+             * @example 4a6b29f9c0e4818a38a7c29e19d7b42c676d1...
+             */
+            tokenRefresco: string;
         };
         CrearTerceroDto: {
             /**
@@ -2017,6 +2070,123 @@ export interface operations {
                      *     }
                      */
                     "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_refrescar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefrescarTokenDto"];
+            };
+        };
+        responses: {
+            /** @description Tokens renovados exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaAccesoDto"];
+                };
+            };
+            /** @description Token de refresco inválido o con formato incorrecto */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Error de validación en la petición: El token de refresco es obligatorio",
+                     *       "errores": [
+                     *         "El token de refresco es obligatorio"
+                     *       ],
+                     *       "codigoEstado": 400,
+                     *       "ruta": "/api/v1/usuarios/refresh",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
+                };
+            };
+            /** @description Token de refresco inválido, expirado o revocado por reutilización */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Token de refresco inválido o expirado",
+                     *       "errores": [
+                     *         "Token de refresco inválido o expirado"
+                     *       ],
+                     *       "codigoEstado": 401,
+                     *       "ruta": "/api/v1/usuarios/refresh",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorNoAutorizadoDto"];
+                };
+            };
+            /** @description Error interno del servidor */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "exito": false,
+                     *       "mensaje": "Error interno del servidor",
+                     *       "codigoEstado": 500,
+                     *       "ruta": "/api/v1/usuarios/refresh",
+                     *       "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["RespuestaErrorServidorDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_cerrarSesion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CerrarSesionDto"];
+            };
+        };
+        responses: {
+            /** @description Sesión cerrada exitosamente */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Petición inválida */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RespuestaErrorValidacionDto"];
                 };
             };
         };

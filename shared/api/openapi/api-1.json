@@ -174,7 +174,141 @@
             }
           }
         },
-        "summary": "Inicia sesión y emite el JWT de acceso",
+        "summary": "Inicia sesión y emite el par de tokens (acceso y refresco)",
+        "tags": [
+          "usuarios"
+        ]
+      }
+    },
+    "/api/v1/usuarios/refresh": {
+      "post": {
+        "operationId": "UsuariosController_refrescar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefrescarTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tokens renovados exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaAccesoDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Token de refresco inválido o con formato incorrecto",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error de validación en la petición: El token de refresco es obligatorio",
+                  "errores": [
+                    "El token de refresco es obligatorio"
+                  ],
+                  "codigoEstado": 400,
+                  "ruta": "/api/v1/usuarios/refresh",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token de refresco inválido, expirado o revocado por reutilización",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorNoAutorizadoDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Token de refresco inválido o expirado",
+                  "errores": [
+                    "Token de refresco inválido o expirado"
+                  ],
+                  "codigoEstado": 401,
+                  "ruta": "/api/v1/usuarios/refresh",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorServidorDto"
+                },
+                "example": {
+                  "exito": false,
+                  "mensaje": "Error interno del servidor",
+                  "codigoEstado": 500,
+                  "ruta": "/api/v1/usuarios/refresh",
+                  "marcaTiempo": "2026-09-21T16:00:00.000Z"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Renueva los tokens de acceso y refresco mediante rotación (RTR)",
+        "tags": [
+          "usuarios"
+        ]
+      }
+    },
+    "/api/v1/usuarios/logout": {
+      "post": {
+        "operationId": "UsuariosController_cerrarSesion",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CerrarSesionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sesión cerrada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "exito": true,
+                    "mensaje": "Sesión cerrada correctamente"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Petición inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaErrorValidacionDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cierra la sesión revocando el token de refresco",
         "tags": [
           "usuarios"
         ]
@@ -4103,6 +4237,11 @@
             "description": "JWT de acceso firmado con expiración (usar como Bearer)",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
           },
+          "tokenRefresco": {
+            "type": "string",
+            "description": "Token de refresco criptográfico opaco para rotación de credenciales",
+            "example": "4a6b29f9c0e4818a38a7c29e19d7b42c676d1..."
+          },
           "usuario": {
             "description": "Perfil mínimo del comerciante autenticado",
             "allOf": [
@@ -4114,6 +4253,7 @@
         },
         "required": [
           "tokenAcceso",
+          "tokenRefresco",
           "usuario"
         ]
       },
@@ -4184,6 +4324,33 @@
           "marcaTiempo",
           "mensaje",
           "codigoEstado"
+        ]
+      },
+      "RefrescarTokenDto": {
+        "type": "object",
+        "properties": {
+          "tokenRefresco": {
+            "type": "string",
+            "description": "Token de refresco emitido en el login o en el último refresh",
+            "example": "4a6b29f9c0e4818a38a7c29e19d7b42c676d1...",
+            "minLength": 32
+          }
+        },
+        "required": [
+          "tokenRefresco"
+        ]
+      },
+      "CerrarSesionDto": {
+        "type": "object",
+        "properties": {
+          "tokenRefresco": {
+            "type": "string",
+            "description": "Token de refresco de la sesión que se desea cerrar",
+            "example": "4a6b29f9c0e4818a38a7c29e19d7b42c676d1..."
+          }
+        },
+        "required": [
+          "tokenRefresco"
         ]
       },
       "CrearTerceroDto": {

@@ -1156,3 +1156,44 @@
   protegidas) queda a cargo del usuario con los pasos documentados en `impl.md`; no se marca como
   superada.
 - **Estado final:** `done`.
+
+---
+
+## 2026-09-23 — `2026-09-23_19-36__autenticacion-refresh-token-bff`
+
+- **Work Item:** `2026-09-23_19-36__autenticacion-refresh-token-bff` — Autenticación: refresh
+  token con rotación en el BFF y el middleware (`type: feature`).
+- **Agentes:** `spec_author` (planificación), `implementer` (implementación), `reviewer`
+  (revisión y cierre).
+- **Trabajo realizado:** se completó el ciclo de vida de la sesión sobre el nuevo modelo de dos
+  tokens del backend (R1–R26, T1–T12). (1) Contrato: se copió `/home/jose/Documentos/elinain/api-1.json`
+  sobre `shared/api/openapi/api-1.json` y se regeneró `schema.d.ts` con `generate:api`
+  (reproducible byte a byte), con `tokenRefresco` en `AccesoRespuestaDto`, `RefrescarTokenDto`,
+  `CerrarSesionDto` y las rutas `/usuarios/refresh` y `/usuarios/logout`. (2) Cookies y base
+  compartida Edge-safe: `session-cookie.ts` (httpOnly, `sameSite: lax`, `secure` por producción,
+  `path: /`; `maxAge` del acceso por `exp`, refresco como cookie de sesión, limpieza con
+  `maxAge: 0`), `refresh-coordinator.ts` (single-flight por token con retención de 15 s),
+  `session-renovacion.ts` (`esSesionInvalida` y `crearRenovadorConFetch`), `session-refresh.ts`
+  (reintento único reactivo) y `session-navegacion.ts` (`MARGEN_RENOVACION_MS = 60_000`). (3)
+  Refresco reactivo en `server-client.ts`: coordinador a nivel de módulo, rotación de cookies,
+  fallo definitivo → limpiar y 401, transitorio → propagar sin limpiar; rutas excluidas
+  `/usuarios/{acceso,registro,refresh,logout}`. (4) Refresco proactivo en `middleware.ts`: en
+  rutas protegidas decide con el margen de 60 s, renueva con `fetch` nativo, escribe ambas
+  cookies en request y response y devuelve `NextResponse.next({ request })`; rechazo definitivo →
+  limpiar + `/login`; transitorio → continuar. (5) Auth: login y registro guardan ambos tokens
+  (204/201 sin cuerpo); logout revoca el refresco en el backend (best-effort) y limpia ambas
+  cookies. (6) Tests Jest de lógica pura (4 suites / 31 tests). Sin dependencias nuevas, sin
+  cambios de UI ni en `features/*`.
+- **Archivos modificados:** creados `shared/api/{refresh-coordinator,session-renovacion,session-refresh,session-navegacion}.ts`
+  y sus tests en `shared/api/__tests__/`; modificados `shared/api/openapi/{api-1.json,schema.d.ts}`,
+  `shared/api/{session-cookie,server-client}.ts`, `middleware.ts`,
+  `app/api/auth/{_lib/sesion.ts,login/route.ts,registro/route.ts,logout/route.ts}`. Sin cambios en
+  `package.json`/`package-lock.json`, `features/*`, `shared/ui`, `shared/api/http-client.ts`,
+  `shared/api/session.ts`, ESLint, Prettier ni Jest; sin dependencias nuevas.
+- **Resultado de la verificación:** V1 (`format:check`), V2 (`lint`), V3 (`typecheck`) y V4
+  (`test`, 56 suites / 435 tests, incluidos los 31 nuevos) en verde, ejecutados por el Reviewer;
+  `bash .rei/init.sh` finaliza con código de salida `0`. V5 (login/registro con ambos tokens,
+  navegación con acceso vencido o a ≤60 s que renueva sin ir a `/login`, refresco rechazado →
+  `/login`, fallo transitorio que no cierra sesión y logout con revocación) queda a cargo del
+  usuario con los pasos documentados en `impl.md`; no se marca como superada.
+- **Estado final:** `done`.

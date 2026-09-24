@@ -1,58 +1,45 @@
 import type { NextResponse } from "next/server";
 
-import { obtenerExpiracionJwt } from "@/shared/api/session";
-import { SESSION_COOKIE_NAME } from "@/shared/api/session-cookie";
-import { getServerEnv } from "@/shared/config/env";
+import {
+  opcionesCookieAcceso,
+  opcionesCookieExpirada,
+  opcionesCookieRefresco,
+  REFRESH_COOKIE_NAME,
+  SESSION_COOKIE_NAME,
+  type TokensSesion,
+} from "@/shared/api/session-cookie";
 
 /**
- * Atributos comunes de la cookie de sesión.
+ * Guarda el par de tokens de la sesión en cookies httpOnly.
  *
- * El token nunca es legible por JavaScript (`httpOnly`), solo viaja por HTTPS en
- * producción (`secure`) y su alcance es todo el sitio para que el BFF y los Server
- * Components puedan leerla.
+ * El acceso se emite con `maxAge` acorde a su `exp`; el refresco, como cookie de sesión
+ * porque su vigencia es opaca. Los tokens nunca se exponen en el cuerpo de la respuesta.
+ *
+ * @param response Respuesta del BFF sobre la que se escriben las cookies.
+ * @param tokens Par de tokens devuelto por el backend.
  */
-function atributosCookie() {
-  return {
-    httpOnly: true,
-    sameSite: "lax" as const,
-    secure: getServerEnv().isProduction,
-    path: "/",
-  };
+export function fijarSesion(
+  response: NextResponse,
+  tokens: TokensSesion,
+): void {
+  response.cookies.set(
+    SESSION_COOKIE_NAME,
+    tokens.tokenAcceso,
+    opcionesCookieAcceso(tokens.tokenAcceso),
+  );
+  response.cookies.set(
+    REFRESH_COOKIE_NAME,
+    tokens.tokenRefresco,
+    opcionesCookieRefresco(),
+  );
 }
 
 /**
- * Guarda el token de acceso en la cookie httpOnly de sesión.
+ * Elimina las cookies de acceso y de refresco para cerrar la sesión en el navegador.
  *
- * Cuando el JWT declara `exp`, la cookie caduca al mismo tiempo que el token; si no lo
- * declara, se emite como cookie de sesión (sin `maxAge`) sin inventar una duración.
- *
- * @param response Respuesta del BFF sobre la que se escribe la cookie.
- * @param tokenAcceso JWT devuelto por el backend.
- */
-export function fijarSesion(response: NextResponse, tokenAcceso: string): void {
-  const expiracion = obtenerExpiracionJwt(tokenAcceso);
-
-  if (expiracion === undefined) {
-    response.cookies.set(SESSION_COOKIE_NAME, tokenAcceso, atributosCookie());
-    return;
-  }
-
-  const maxAge = Math.max(0, expiracion - Math.floor(Date.now() / 1000));
-
-  response.cookies.set(SESSION_COOKIE_NAME, tokenAcceso, {
-    ...atributosCookie(),
-    maxAge,
-  });
-}
-
-/**
- * Elimina la cookie de sesión para cerrar la sesión en el navegador.
- *
- * @param response Respuesta del BFF sobre la que se limpia la cookie.
+ * @param response Respuesta del BFF sobre la que se limpia la sesión.
  */
 export function limpiarSesion(response: NextResponse): void {
-  response.cookies.set(SESSION_COOKIE_NAME, "", {
-    ...atributosCookie(),
-    maxAge: 0,
-  });
+  response.cookies.set(SESSION_COOKIE_NAME, "", opcionesCookieExpirada());
+  response.cookies.set(REFRESH_COOKIE_NAME, "", opcionesCookieExpirada());
 }
